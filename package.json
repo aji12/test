@@ -1,5 +1,5 @@
 {
-  "name": "thorshammer",
+  "name": "tgramindobot",
   "version": "2.0.0",
   "description": "A Simple Global Anti-Spam Bot For Telegram",
   "main": "bot.js",
@@ -9,19 +9,21 @@
   "keywords": [
     "telegram",
     "banhammer"
-  ],    
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kamikazechaser/ThorsHammer"
+    "url": "https://github.com/rizaumami/TGramIndoBot"
   },
-  "author": "Mohammed Sohail <sohailsameja@gmail.com>",
+  "author": "Sahri Riza Umami <riza@openmailbox.org>",
   "license": "AGPL-3.0",
   "dependencies": {
     "moment": "^2.17.1",
     "mongoose": "^4.7.8",
     "node-cron": "^1.1.2",
-    "node-telegram-bot-api": "^0.26.0",
     "rangi": "^1.0.1",
-    "tg-resolve": "^1.3.1"
+    "request": "^2.81.0",
+    "tg-resolve": "^1.3.1",
+    "tgfancy": "^0.8.0",
+    "escape-html": "^1.0.2"
   }
 }

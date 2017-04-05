@@ -13,7 +13,7 @@ const bot = new Tgfancy(config.BOT_TOKEN, {
 
 bot.getMe().then(me => {
     console.log(rangi.cyan(`Bot Is Running => ${me.username}`));
-    bot.sendMessage(config.SUDO, `Bot Started!\n${moment().format('MMMM Do YYYY, h:mm:ss a')}`, {parse_mode: 'Markdown'});
+    bot.sendMessage(config.SUDO, `<b>Bot Started!</b>\n<code>${moment().format('YYYY-MM-DD HH.mm.ss')}</code>`, {parse_mode: 'HTML'});
 });
 
 module.exports = bot;
