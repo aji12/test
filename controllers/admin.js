@@ -23,11 +23,18 @@ bot.onText(/^[\/!#]promote$/, msg => {
     });
     newMod.save(err => {
       let user = escapeHtml(msg.reply_to_message.from.first_name);
+
       if (err && err.code === 11000) {
-        bot.sendMessage(msg.chat.id, `<b>${user}</b> is already a global admin.`, {parse_mode: 'HTML'});
+        bot.sendMessage(msg.chat.id, `<b>${user}</b> is already a global admin.`, {
+          parse_mode: 'HTML'
+        });
       } else {
-        bot.sendMessage(msg.chat.id, `<b>${user}</b> is now a global admin.`, {parse_mode: 'HTML'});
-        bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b>, is now a global admin.\n${time}`, {parse_mode: 'HTML'});
+        bot.sendMessage(msg.chat.id, `<b>${user}</b> is now a global admin.`, {
+          parse_mode: 'HTML'
+        });
+        bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b>, is now a global admin.\n${time}`, {
+          parse_mode: 'HTML'
+        });
       }
     });
   }
@@ -40,13 +47,19 @@ bot.onText(/^[\/!#]demote$/, msg => {
     }, () => {
       // Demote A Global Admin
     });
+
     let user = escapeHtml(msg.reply_to_message.from.first_name);
-    bot.sendMessage(msg.chat.id, `<b>${user}</b> is no longer a global admin.`, {parse_mode: 'HTML'});
-    bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> is no longer a global admin.\n${time}`, {parse_mode: 'HTML'});
+
+    bot.sendMessage(msg.chat.id, `<b>${user}</b> is no longer a global admin.`, {
+      parse_mode: 'HTML'
+    });
+    bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> is no longer a global admin.\n${time}`, {
+      parse_mode: 'HTML'
+    });
   }
 });
 
-bot.onText(/[\/!#]promote (\d+) (.+)/, (msg, match) => {
+bot.onText(/^[\/!#]promote (\d+) (.+)/, (msg, match) => {
   if (msg.from.id == config.SUDO) {
     let newMod = new Mod({
       userid: match[1],
@@ -54,30 +67,42 @@ bot.onText(/[\/!#]promote (\d+) (.+)/, (msg, match) => {
     });
     newMod.save(err => {
       let user = escapeHtml(match[2]);
+
       if (err && err.code === 11000) {
-        bot.sendMessage(msg.chat.id, `<b>${user}</b> is already a global admin.`, {parse_mode: 'HTML'});
+        bot.sendMessage(msg.chat.id, `<b>${user}</b> is already a global admin.`, {
+          parse_mode: 'HTML'
+        });
       } else {
-        bot.sendMessage(msg.chat.id, `<b>${user}</b> is now a global admin.`, {parse_mode: 'HTML'});
-        bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> <code>([${match[1]}])</code> is now a global admin.\n${time}`, {parse_mode: 'HTML'});
+        bot.sendMessage(msg.chat.id, `<b>${user}</b> is now a global admin.`, {
+          parse_mode: 'HTML'
+        });
+        bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> <code>([${match[1]}])</code> is now a global admin.\n${time}`, {
+          parse_mode: 'HTML'
+        });
       }
     });
   }
 });
 
-bot.onText(/[\/!#]demote (\d+) (.+)/, (msg, match) => {
+bot.onText(/^[\/!#]demote (\d+) (.+)/, (msg, match) => {
   if (msg.from.id == config.SUDO) {
     let user = escapeHtml(match[2]);
+
     Mod.remove({
       userid: match[1]
     }, () => {
       // Demote A Global Admin
     });
-    bot.sendMessage(msg.chat.id, `<b>${user}</b> is no longer a global admin.`, {parse_mode: 'HTML'});
-    bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> <code>([${match[1]}])</code> is no longer a global admin.\n${time}`, {parse_mode: 'HTML'});
+    bot.sendMessage(msg.chat.id, `<b>${user}</b> is no longer a global admin.`, {
+      parse_mode: 'HTML'
+    });
+    bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> <code>([${match[1]}])</code> is no longer a global admin.\n${time}`, {
+      parse_mode: 'HTML'
+    });
   }
 });
 
-bot.onText(/[\/!#]promote (@\w+) (.+)/, (msg, match) => {
+bot.onText(/^[\/!#]promote (@\w+) (.+)/, (msg, match) => {
   if (msg.from.id == config.SUDO) {
     tgresolve(config.BOT_TOKEN, match[1], (error, result) => {
       let newMod = new Mod({
@@ -86,18 +111,25 @@ bot.onText(/[\/!#]promote (@\w+) (.+)/, (msg, match) => {
       });
       newMod.save(err => {
         let user = escapeHtml(result.first_name);
+
         if (err && err.code === 11000) {
-          bot.sendMessage(msg.chat.id, `<b>${user}</b> is already a global admin.`, {parse_mode: 'HTML'});
+          bot.sendMessage(msg.chat.id, `<b>${user}</b> is already a global admin.`, {
+            parse_mode: 'HTML'
+          });
         } else {
-          bot.sendMessage(msg.chat.id, `<b>${user}</b> is now a global admin.`, {parse_mode: 'HTML'});
-          bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> <code>([${result.id}])</code> is now a global admin.\n${time}`, {parse_mode: 'HTML'});
+          bot.sendMessage(msg.chat.id, `<b>${user}</b> is now a global admin.`, {
+            parse_mode: 'HTML'
+          });
+          bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> <code>([${result.id}])</code> is now a global admin.\n${time}`, {
+            parse_mode: 'HTML'
+          });
         }
       });
     });
   }
 });
 
-bot.onText(/[\/!#]demote (@\w+) (.+)/, (msg, match) => {
+bot.onText(/^[\/!#]demote (@\w+) (.+)/, (msg, match) => {
   if (msg.from.id == config.SUDO) {
     tgresolve(config.BOT_TOKEN, match[1], (error, result) => {
       Mod.remove({
@@ -105,9 +137,15 @@ bot.onText(/[\/!#]demote (@\w+) (.+)/, (msg, match) => {
       }, () => {
         // Demote A Global Admin
       });
+
       let user = escapeHtml(result.first_name);
-      bot.sendMessage(msg.chat.id, `*${user}* is no longer a global admin.`, {parse_mode: 'HTML'});
-      bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> <code>([${result.id}])</code> is no longer a global admin.\n${time}`, {parse_mode: 'HTML'});
+
+      bot.sendMessage(msg.chat.id, `*${user}* is no longer a global admin.`, {
+        parse_mode: 'HTML'
+      });
+      bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> <code>([${result.id}])</code> is no longer a global admin.\n${time}`, {
+        parse_mode: 'HTML'
+      });
     });
   }
 });

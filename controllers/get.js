@@ -4,10 +4,14 @@ const bot = require('../core/telegram');
 
 function sendError(msg, error) {
   let err = JSON.parse(error.response.body);
-  bot.sendMessage(msg.chat.id, `<code>${err.description}</code>`, {reply_to_message_id: msg.message_id, parse_mode: 'HTML'});
+  
+  bot.sendMessage(msg.chat.id, `<code>${err.description}</code>`, {
+    reply_to_message_id: msg.message_id,
+    parse_mode: 'HTML'
+  });
 };
 
-bot.onText(/[\/!#](.+) (.+)/, (msg, match) => {
+bot.onText(/^[\/!#](.+) (.+)/, (msg, match) => {
   if (`${match[1]}` == 'getphoto') {
     bot.sendPhoto(msg.chat.id, `${match[2]}`).catch((error) => {
       sendError(msg, error);

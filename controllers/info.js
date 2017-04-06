@@ -25,10 +25,14 @@ bot.onText(/^[\/!#]banlist$/, msg => {
           arr.push(result.name);
           arr.push(result.userid);
         });
+
         let fixed = arr.join('\n');
+
         fs.writeFile('banlist.txt', fixed, (err) => {
           if (err) throw err;
-          bot.sendDocument(config.LOG_CHANNEL, `banlist.txt`, {caption: `Generated on ${moment().format('YYYY-MM-DD HH.mm.ss')}`});
+          bot.sendDocument(config.LOG_CHANNEL, `banlist.txt`, {
+            caption: `Generated on ${moment().format('YYYY-MM-DD HH.mm.ss')}`
+          });
         });
       });
     }
@@ -41,13 +45,19 @@ bot.onText(/^[\/!#]globaladmins$/, msg => {
     'name': 1,
     '_id': 0
   });
+
   const arr = [];
+
   query.exec((err, results) => {
-  if (err) throw err;
+    if (err) throw err;
     results.forEach(result => {
-    arr.push('• ' + escapeHtml(result.name) + ' <code>[' + result.userid + ']</code>');
-  });
-  let fixed = arr.join('\n');
-    bot.sendMessage(msg.chat.id, `<b>Global Admins</b>\n${fixed}`, {parse_mode: 'HTML'});
+      arr.push('• ' + escapeHtml(result.name) + ' <code>[' + result.userid + ']</code>');
+    });
+
+    let fixed = arr.join('\n');
+
+    bot.sendMessage(msg.chat.id, `<b>Global Admins</b>\n${fixed}`, {
+      parse_mode: 'HTML'
+    });
   });
 });

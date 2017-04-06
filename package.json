@@ -1,7 +1,7 @@
 {
   "name": "tgramindobot",
   "version": "2.0.0",
-  "description": "A Simple Global Anti-Spam Bot For Telegram",
+  "description": "A simple Node.js Telegram bot",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js"

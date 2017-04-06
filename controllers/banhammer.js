@@ -16,6 +16,7 @@ bot.onText(/^[\/!#]hammer$/, msg => {
   }, (err, count) => {
     if (count > 0 || config.SUDO == msg.from.id) {
       bot.kickChatMember(msg.chat.id, msg.reply_to_message.from.id);
+
       let newBan = new Ban({
         userid: msg.reply_to_message.from.id,
         name: msg.reply_to_message.from.first_name
@@ -23,11 +24,18 @@ bot.onText(/^[\/!#]hammer$/, msg => {
       newBan.save(err => {
         let user = escapeHtml(msg.reply_to_message.from.first_name);
         if (err && err.code === 11000) {
-          bot.sendMessage(msg.chat.id, `<b>${user}</b> is already globally banned.`, {parse_mode: 'HTML'});
+          bot.sendMessage(msg.chat.id, `<b>${user}</b> is already globally banned.`, {
+            parse_mode: 'HTML'
+          });
         } else {
           let user = escapeHtml(msg.from.first_name);
-          bot.sendMessage(msg.chat.id, `<b>${user}</b> has been globally banned.`, {parse_mode: 'HTML'});
-          bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> has been globally banned.\nBy: _${user}_\n${time}`, {parse_mode: 'HTML'});
+
+          bot.sendMessage(msg.chat.id, `<b>${user}</b> has been globally banned.`, {
+            parse_mode: 'HTML'
+          });
+          bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> has been globally banned.\nBy: _${user}_\n${time}`, {
+            parse_mode: 'HTML'
+          });
         }
       });
     }
@@ -35,47 +43,61 @@ bot.onText(/^[\/!#]hammer$/, msg => {
 });
 
 bot.onText(/^[\/!#]unhammer$/, msg => {
-    Mod.count({
-        userid: msg.from.id
-    }, (err, count) => {
-        if (count > 0 || config.SUDO == msg.from.id) {
-            bot.unbanChatMember(msg.chat.id, msg.reply_to_message.from.id);
-            Ban.remove({
-                userid: msg.reply_to_message.from.id
-            }, () => {
-                // Globally Unhammered
-            });
-            let user = escapeHtml(msg.reply_to_message.from.first_name);
-            bot.sendMessage(msg.chat.id, `<b>${user}</b> has been globally unbanned.`, {parse_mode: 'HTML'});
-            bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> has been globally unbanned.\nBy: _${msg.from.first_name}_\n${time}`, {parse_mode: 'HTML'});
-        }
-    });
-});
-
-bot.onText(/[\/!#]hammer (\d+)/, (msg, match) => {
   Mod.count({
     userid: msg.from.id
   }, (err, count) => {
     if (count > 0 || config.SUDO == msg.from.id) {
+      bot.unbanChatMember(msg.chat.id, msg.reply_to_message.from.id);
+      Ban.remove({
+        userid: msg.reply_to_message.from.id
+      }, () => {
+        // Globally Unhammered
+      });
+
+      let user = escapeHtml(msg.reply_to_message.from.first_name);
+
+      bot.sendMessage(msg.chat.id, `<b>${user}</b> has been globally unbanned.`, {
+        parse_mode: 'HTML'
+      });
+      bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> has been globally unbanned.\nBy: _${msg.from.first_name}_\n${time}`, {
+        parse_mode: 'HTML'
+      });
+    }
+  });
+});
+
+bot.onText(/^[\/!#]hammer (\d+)/, (msg, match) => {
+  Mod.count({
+    userid: msg.from.id
+  }, (err, count) => {
+    if (count > 0 || config.SUDO == msg.from.id) {
+
       let newBan = new Ban({
         userid: match[1]
       });
       newBan.save(err => {
         let user = escapeHtml(msg.from.first_name);
+
         if (err && err.code === 11000) {
-          bot.sendMessage(msg.chat.id, `<b>${match[1]}</b> is already globally banned.`, {parse_mode: 'HTML'});
+          bot.sendMessage(msg.chat.id, `<b>${match[1]}</b> is already globally banned.`, {
+            parse_mode: 'HTML'
+          });
         } else {
-          bot.sendMessage(msg.chat.id, `<b>${match[1]}</b> has been globally banned.`, {parse_mode: 'HTML'});
-          bot.sendMessage(config.LOG_CHANNEL, `<code>(${match[1]})</code> has been globally banned.\nBy: <i>${user}</i>\n${time}`, {parse_mode: 'HTML'});
+          bot.sendMessage(msg.chat.id, `<b>${match[1]}</b> has been globally banned.`, {
+            parse_mode: 'HTML'
+          });
+          bot.sendMessage(config.LOG_CHANNEL, `<code>(${match[1]})</code> has been globally banned.\nBy: <i>${user}</i>\n${time}`, {
+            parse_mode: 'HTML'
+          });
         }
       });
     }
   });
 });
 
-bot.onText(/[\/!#]unhammer (\d+)/, (msg, match) => {
+bot.onText(/^[\/!#]unhammer (\d+)/, (msg, match) => {
   Mod.count({
-      userid: msg.from.id
+    userid: msg.from.id
   }, (err, count) => {
     if (count > 0 || config.SUDO == msg.from.id) {
       Ban.remove({
@@ -86,13 +108,18 @@ bot.onText(/[\/!#]unhammer (\d+)/, (msg, match) => {
         }
       });
       let user = escapeHtml(msg.from.first_name);
-      bot.sendMessage(msg.chat.id, `<b>${match[1]}</b> has been globally unbanned.`, {parse_mode: 'HTML'});
-      bot.sendMessage(config.LOG_CHANNEL, `<i>(${match[1]})</i> has been globally unbanned.\nBy: <i>${user}</i>\n${time}`, {parse_mode: 'HTML'});
+
+      bot.sendMessage(msg.chat.id, `<b>${match[1]}</b> has been globally unbanned.`, {
+        parse_mode: 'HTML'
+      });
+      bot.sendMessage(config.LOG_CHANNEL, `<i>(${match[1]})</i> has been globally unbanned.\nBy: <i>${user}</i>\n${time}`, {
+        parse_mode: 'HTML'
+      });
     }
   });
 });
 
-bot.onText(/[\/!#]hammer (@\w+)/, (msg, match) => {
+bot.onText(/^[\/!#]hammer (@\w+)/, (msg, match) => {
   Mod.count({
     userid: msg.from.id
   }, (err, count) => {
@@ -104,11 +131,18 @@ bot.onText(/[\/!#]hammer (@\w+)/, (msg, match) => {
           console.log(result)
         newBan.save(err => {
           let user = escapeHtml(result.first_name);
+
           if (err && err.code === 11000) {
-            bot.sendMessage(msg.chat.id, `<b>${user}</b> is already globally banned.`, {parse_mode: 'HTML'});
+            bot.sendMessage(msg.chat.id, `<b>${user}</b> is already globally banned.`, {
+              parse_mode: 'HTML'
+            });
           } else {
-            bot.sendMessage(msg.chat.id, `<b>${user}</b> has been globally banned.`, {parse_mode: 'HTML'});
-            bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> <code>(${result.id})</code> has been globally banned.\nBy: <i>${msg.from.first_name}</i>\n${time}`, {parse_mode: 'HTML'});
+            bot.sendMessage(msg.chat.id, `<b>${user}</b> has been globally banned.`, {
+              parse_mode: 'HTML'
+            });
+            bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> <code>(${result.id})</code> has been globally banned.\nBy: <i>${msg.from.first_name}</i>\n${time}`, {
+              parse_mode: 'HTML'
+            });
           }
         });
       });
@@ -116,7 +150,7 @@ bot.onText(/[\/!#]hammer (@\w+)/, (msg, match) => {
   });
 });
 
-bot.onText(/[\/!#]unhammer (@\w+)/, (msg, match) => {
+bot.onText(/^[\/!#]unhammer (@\w+)/, (msg, match) => {
   Mod.count({
     userid: msg.from.id
   }, (err, count) => {
@@ -129,9 +163,15 @@ bot.onText(/[\/!#]unhammer (@\w+)/, (msg, match) => {
             console.log('User Not Found!')
           }
         });
+
         let user = escapeHtml(result.first_name);
-        bot.sendMessage(msg.chat.id, `<b>${user}</b> has been globally unbanned.`, {parse_mode: 'HTML'});
-        bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> <code>(${result.id})</code> has been globally unbanned.\nBy: <i>${msg.from.first_name}</i>\n${time}`, {parse_mode: 'HTML'});
+
+        bot.sendMessage(msg.chat.id, `<b>${user}</b> has been globally unbanned.`, {
+          parse_mode: 'HTML'
+        });
+        bot.sendMessage(config.LOG_CHANNEL, `<b>${user}</b> <code>(${result.id})</code> has been globally unbanned.\nBy: <i>${msg.from.first_name}</i>\n${time}`, {
+          parse_mode: 'HTML'
+        });
       });
     }
   });
