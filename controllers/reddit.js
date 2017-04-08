@@ -5,9 +5,9 @@ const escapeHtml = require('escape-html');
 const request = require('request');
 
 bot.onText(/^[\/!#](reddit|r) (.+)/, (msg, match) => {
+  const opts = {disable_web_page_preview: 'true', parse_mode: 'HTML'}
   // Returns 8 results if in private, and 4 if in groups
-  let limit = (msg.chat.type == 'private') ? 8 : 4;
-  let sub = [];
+  const limit = (msg.chat.type == 'private') ? 8 : 4;
   // If no r/ in front of the query, search reddit for query
   let input = `${match[2]}`;
   let title = `<b>Results for</b> ${input}:`;
@@ -22,8 +22,15 @@ bot.onText(/^[\/!#](reddit|r) (.+)/, (msg, match) => {
   }
 
   request(url, function(error, response, body) {
-    let json = JSON.parse(body);
-    let reddit = json.data.children;
+    if (error || response.statusCode !== 200) {
+      opts.reply_to_message_id = msg.message_id;
+      bot.sendMessage(msg.chat.id, "Malformed query.", opts);
+      return;
+    }
+
+    const json = JSON.parse(body);
+    const reddit = json.data.children;
+    let sub = [];
 
     for(let i = 0; i < reddit.length; i++) {
       sub.push('• <a href="https://redd.it/' + reddit[i].data.id + '">' + escapeHtml(reddit[i].data.title) + '</a>');
@@ -32,14 +39,9 @@ bot.onText(/^[\/!#](reddit|r) (.+)/, (msg, match) => {
     if (sub.length > 0) {
       let subreddit = sub.join('\n');
 
-      bot.sendMessage(msg.chat.id, `${title}\n${subreddit}`, {
-        disable_web_page_preview: 'true', parse_mode: 'HTML'
-      });
+      bot.sendMessage(msg.chat.id, `${title}\n${subreddit}`, opts);
     } else {
-      bot.sendMessage(msg.chat.id, "There doesn't seem to be anything...", {
-        disable_web_page_preview: 'true',
-        parse_mode: 'HTML'
-      });
+      bot.sendMessage(msg.chat.id, "There doesn't seem to be anything...", opts);
     }
   });
 });

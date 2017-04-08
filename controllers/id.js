@@ -23,13 +23,13 @@ bot.onText(/^[\/!#]id/, msg => {
   let user = msg.from;
   let uname = msg.text.slice(4);
 
-  if (msg.reply_to_message) {
-    user = msg.reply_to_message.from;
-  };
-
+  if (msg.reply_to_message) user = msg.reply_to_message.from;
   if (uname.match(/@\w+/)) {
     tgresolve(config.BOT_TOKEN, uname, (error, result) => {
-      getUserProperties(msg, result);
+      if (result) {
+        if (result.type != 'user') result.first_name = result.title;
+        getUserProperties(msg, result);
+      }
     });
   } else {
     getUserProperties(msg, user);
@@ -37,32 +37,27 @@ bot.onText(/^[\/!#]id/, msg => {
 });
 
 bot.onText(/^[\/!#]whoami$/, msg => {
-  let name = msg.from.last_name ? msg.from.first_name + ' ' + msg.from.last_name : msg.from.first_name;
+  const uid = '[<code>' + msg.from.id + '</code>]';
+  let name = msg.from.first_name;
   let chat = ', and you are messaging <b>' + escapeHtml(msg.chat.title) + '</b> ';
 
+  if (msg.from.last_name) name += msg.from.last_name;
+
   if (msg.from.username) {
-    name = '<b>' + escapeHtml(name) + '</b> (@' + msg.from.username + ') [<code>' + msg.from.id + '</code>]';
+    name = '<b>' + escapeHtml(name) + '</b> (@' + msg.from.username + ') ' + uid;
   } else {
-    name = '<b>' + escapeHtml(name) + '</b> [<code>' + msg.from.id + '</code>]';
+    name = '<b>' + escapeHtml(name) + '</b> ' + uid;
   };
 
-  if (msg.chat.username) {
-    chat = chat + '(@' + msg.chat.username + ')';
-  };
+  if (msg.chat.username) chat += '(@' + msg.chat.username + ')';
 
   if (msg.chat.type == 'private') {
-    console.log(msg.chat.type);
     bot.getMe().then(me => {
-      let user = name + ', and you are messaging <b>' + escapeHtml(me.first_name) + '</b> (@' + me.username + ') [<code>' + me.id + '</code>]';
-      bot.sendMessage(msg.chat.id, `You are ${user}.`, {
-        reply_to_message_id: msg.message_id,
-        parse_mode: 'HTML'
-      });
+      name += ', and you are messaging <b>' + escapeHtml(me.first_name) + '</b> (@' + me.username + ') [<code>' + me.id + '</code>]';
+      bot.sendMessage(msg.chat.id, `You are ${name}.`, {parse_mode: 'HTML'});
     });
   } else {
-    if (msg.chat.username) {
-      name = name + chat + '(@' + msg.chat.username + ')';
-    };
+    name += chat + ' [<code>' + msg.chat.id + '</code>]';
     bot.sendMessage(msg.chat.id, `You are ${name}.`, {
       reply_to_message_id: msg.message_id,
       parse_mode: 'HTML'
