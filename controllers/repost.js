@@ -1,41 +1,32 @@
-'use strict';
+'use strict'
 
-const bot = require('../core/telegram');
+const bot = require('../core/telegram')
 
-bot.onText(/^[\/!#]repost (.+)/, (msg, match) => {
+bot.onText(/^[/!#]repost (.+)/, (msg, match) => {
   if (msg.reply_to_message) {
-    let message = msg.reply_to_message;
-    let [chat_id, ...captext] = `${match[1]}`.split(' ');
+    const message = msg.reply_to_message
+    let [chatId, ...captext] = `${match[1]}`.split(' ')
+    const CAPTEXT = {caption: captext.join(' ')}
 
     if (message.photo) {
-      bot.sendPhoto(chat_id, message.photo[0].file_id, {
-        caption: captext.join(' ')
-      });
+      bot.sendPhoto(chatId, message.photo[0].file_id, CAPTEXT)
     }
     if (message.voice) {
-      bot.sendVoice(chat_id, message.voice.file_id, {
-        caption: captext.join(' ')
-      });
+      bot.sendVoice(chatId, message.voice.file_id, CAPTEXT)
     }
     if (message.audio) {
-      bot.sendAudio(chat_id, message.audio.file_id, {
-        caption: captext.join(' ')
-      });
+      bot.sendAudio(chatId, message.audio.file_id, CAPTEXT)
     }
     if (message.video) {
-      bot.sendVideo(chat_id, message.video.file_id, {
-        caption: captext.join(' ')
-      });
+      bot.sendVideo(chatId, message.video.file_id, CAPTEXT)
     }
     if (message.document) {
-      bot.sendDocument(chat_id, message.document.file_id, {
-        caption: captext.join(' ')
-      });
+      bot.sendDocument(chatId, message.document.file_id, CAPTEXT)
     }
     if (message.text) {
-      bot.sendMessage(chat_id, message.text, {
+      bot.sendMessage(chatId, message.text, {
         parse_mode: 'HTML'
-      });
+      })
     }
   }
-});
+})

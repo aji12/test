@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
-const bot = require('../core/telegram');
-const locale = require('../core/locale.json');
-const escapeHtml = require('escape-html');
+const bot = require('../core/telegram')
+const locale = require('../core/locale.json')
+const escapeHtml = require('escape-html')
 
 const helpKeyboard = [[{
   text: `🇬🇧 English`,
@@ -50,127 +50,109 @@ const inlineKeyboard = [[{
   switch_inline_query_current_chat: `help id`
 }]]
 
-bot.onText(/^[\/!#]start$/, msg => {
+function getLocale (langId) {
+  let lang = locale.en
+
+  if (langId === 'en') {
+    lang = locale.en
+  }
+  if (langId === 'es') {
+    lang = locale.es
+  }
+  if (langId === 'pt') {
+    lang = locale.pt
+  }
+  if (langId === 'fa') {
+    lang = locale.fa
+  }
+  if (langId === 'en') {
+    lang = locale.ar
+  }
+  if (langId === 'es') {
+    lang = locale.it
+  }
+  if (langId === 'ar') {
+    lang = locale.ar
+  }
+  if (langId === 'it') {
+    lang = locale.it
+  }
+  if (langId === 'id') {
+    lang = locale.id
+  }
+
+  return lang
+}
+
+bot.onText(/^[/!#]start$/, msg => {
   bot.sendMessage(msg.from.id, `*Select language:*`, {
     parse_mode: 'Markdown',
     reply_markup: {
       inline_keyboard: helpKeyboard
     }
-  });
+  })
 });
 
-bot.onText(/^[\/!#]help$/, msg => {
+bot.onText(/^[/!#]help$/, msg => {
   bot.sendMessage(msg.from.id, `*Select language:*`, {
     parse_mode: 'Markdown',
     reply_markup: {
       inline_keyboard: helpKeyboard
     }
   }).catch((error) => {
-    bot.sendMessage(msg.chat.id, 'Please message me privately for a list of commands.', {
-      reply_to_message_id: msg.message_id}
-    );
-  });
+    if (error) {
+      bot.sendMessage(msg.chat.id, 'Please message me privately for a list of commands.', {
+        reply_to_message_id: msg.message_id}
+      )
+    }
+  })
 });
 
 bot.on('callback_query', msg => {
-  let user = escapeHtml(msg.from.first_name);
-  let langCode = msg.data.slice(5);
-  let lang = msg.data.slice(5);
+  let user = escapeHtml(msg.from.first_name)
+  let langCode = msg.data.slice(5)
+  let lang = msg.data.slice(5)
+  lang = getLocale(lang)
 
-  if (lang == `en`) {
-    lang = locale.en
-  }
-  if (lang == `es`) {
-    lang = locale.es
-  }
-  if (lang == `pt`) {
-    lang = locale.pt
-  }
-  if (lang == `fa`) {
-    lang = locale.fa
-  }
-  if (lang == `en`) {
-    lang = locale.ar
-  }
-  if (lang == `es`) {
-    lang = locale.it
-  }
-  if (lang == `ar`) {
-    lang = locale.ar
-  }
-  if (lang == `it`) {
-    lang = locale.it
-  }
-  if (lang == `id`) {
-    lang = locale.id
-  }
-
-  if (msg.data == `help_${langCode}`) {
+  if (msg.data === `help_${langCode}`) {
     bot.editMessageText(`<b>Hai ${user},</b>\n\n${lang.start}`, {
       parse_mode: 'HTML',
       message_id: msg.message.message_id,
       chat_id: msg.message.chat.id,
       reply_markup: {
-      inline_keyboard: [[{
-        text: `🔨 ${lang.banhammer_help}`,
-        callback_data: `banhammer_help_${langCode}`
-      }, {
-        text: `🔰 ${lang.superuser_help}`,
-        callback_data: `superuser_help_${langCode}`
-      }], [{
-        text: `🛃 ${lang.globaladmin_help}`,
-        callback_data: `globaladmin_help_${langCode}`
-      }, {
-        text: `👥 ${lang.ingroup_help}`,
-        callback_data: `ingroup_help_${langCode}`
-      }], [{
-        text: `ℹ️️ ${lang.about_help}`,
-        callback_data: `about_help_${langCode}`
-      }, {
-        text: `👍 ${lang.credits_help}`,
-        callback_data: `credits_help_${langCode}`
-      }], [{
-        text: `🔙`,
-        callback_data: `recycle_help`
-      }]]
+        inline_keyboard: [[{
+          text: `🔨 ${lang.banhammer_help}`,
+          callback_data: `banhammer_help_${langCode}`
+        }, {
+          text: `🔰 ${lang.superuser_help}`,
+          callback_data: `superuser_help_${langCode}`
+        }], [{
+          text: `🛃 ${lang.globaladmin_help}`,
+          callback_data: `globaladmin_help_${langCode}`
+        }, {
+          text: `👥 ${lang.ingroup_help}`,
+          callback_data: `ingroup_help_${langCode}`
+        }], [{
+          text: `ℹ️️ ${lang.about_help}`,
+          callback_data: `about_help_${langCode}`
+        }, {
+          text: `👍 ${lang.credits_help}`,
+          callback_data: `credits_help_${langCode}`
+        }], [{
+          text: `🔙`,
+          callback_data: `recycle_help`
+        }]]
       }
     })
   }
 });
 
 bot.on('callback_query', msg => {
-  let langCode = msg.data.slice(15);
-  let lang = msg.data.slice(15);
+  let langCode = msg.data.slice(15)
+  let lang = msg.data.slice(15)
+  lang = getLocale(lang)
 
-  if (lang == `en`) {
-    lang = locale.en
-  }
-  if (lang == `es`) {
-    lang = locale.es
-  }
-  if (lang == `pt`) {
-    lang = locale.pt
-  }
-  if (lang == `fa`) {
-    lang = locale.fa
-  }
-  if (lang == `en`) {
-    lang = locale.ar
-  }
-  if (lang == `es`) {
-    lang = locale.it
-  }
-  if (lang == `ar`) {
-    lang = locale.ar
-  }
-  if (lang == `it`) {
-    lang = locale.it
-  }
-  if (lang == `id`) {
-    lang = locale.id
-  }
-
-  if (msg.data == `banhammer_help_${langCode}`) {
+  if (msg.data === `banhammer_help_${langCode}`) {
     bot.editMessageText(`${lang.banhammerinfo}`, {
       parse_mode: 'Markdown',
       message_id: msg.message.message_id,
@@ -184,7 +166,7 @@ bot.on('callback_query', msg => {
     })
   }
 
-  if (msg.data == `superuser_help_${langCode}`) {
+  if (msg.data === `superuser_help_${langCode}`) {
     bot.editMessageText(`${lang.superuserinfo}`, {
       parse_mode: 'Markdown',
       message_id: msg.message.message_id,
@@ -200,38 +182,11 @@ bot.on('callback_query', msg => {
 });
 
 bot.on('callback_query', msg => {
-  let langCode = msg.data.slice(17);
-  let lang = msg.data.slice(17);
+  let langCode = msg.data.slice(17)
+  let lang = msg.data.slice(17)
+  lang = getLocale(lang)
 
-  if (lang == `en`) {
-    lang = locale.en
-  }
-  if (lang == `es`) {
-    lang = locale.es
-  }
-  if (lang == `pt`) {
-    lang = locale.pt
-  }
-  if (lang == `fa`) {
-    lang = locale.fa
-  }
-  if (lang == `en`) {
-    lang = locale.ar
-  }
-  if (lang == `es`) {
-    lang = locale.it
-  }
-  if (lang == `ar`) {
-    lang = locale.ar
-  }
-  if (lang == `it`) {
-    lang = locale.it
-  }
-  if (lang == `id`) {
-    lang = locale.id
-  }
-
-  if (msg.data == `globaladmin_help_${langCode}`) {
+  if (msg.data === `globaladmin_help_${langCode}`) {
     bot.editMessageText(`${lang.globaladmininfo}`, {
       parse_mode: 'Markdown',
       message_id: msg.message.message_id,
@@ -247,38 +202,11 @@ bot.on('callback_query', msg => {
 });
 
 bot.on('callback_query', msg => {
-  let langCode = msg.data.slice(13);
-  let lang = msg.data.slice(13);
+  let langCode = msg.data.slice(13)
+  let lang = msg.data.slice(13)
+  lang = getLocale(lang)
 
-  if (lang == `en`) {
-    lang = locale.en
-  }
-  if (lang == `es`) {
-    lang = locale.es
-  }
-  if (lang == `pt`) {
-    lang = locale.pt
-  }
-  if (lang == `fa`) {
-    lang = locale.fa
-  }
-  if (lang == `en`) {
-    lang = locale.ar
-  }
-  if (lang == `es`) {
-    lang = locale.it
-  }
-  if (lang == `ar`) {
-    lang = locale.ar
-  }
-  if (lang == `it`) {
-    lang = locale.it
-  }
-  if (lang == `id`) {
-    lang = locale.id
-  }
-
-  if (msg.data == `ingroup_help_${langCode}`) {
+  if (msg.data === `ingroup_help_${langCode}`) {
     bot.editMessageText(`${lang.ingroupinfo}`, {
       parse_mode: 'Markdown',
       message_id: msg.message.message_id,
@@ -292,7 +220,7 @@ bot.on('callback_query', msg => {
     })
   }
 
-  if (msg.data == `credits_help_${langCode}`) {
+  if (msg.data === `credits_help_${langCode}`) {
     bot.editMessageText(`${lang.creditsinfo}`, {
       parse_mode: 'Markdown',
       message_id: msg.message.message_id,
@@ -308,38 +236,11 @@ bot.on('callback_query', msg => {
 });
 
 bot.on('callback_query', msg => {
-  let langCode = msg.data.slice(11);
-  let lang = msg.data.slice(11);
+  let langCode = msg.data.slice(11)
+  let lang = msg.data.slice(11)
+  lang = getLocale(lang)
 
-  if (lang == `en`) {
-    lang = locale.en
-  }
-  if (lang == `es`) {
-    lang = locale.es
-  }
-  if (lang == `pt`) {
-    lang = locale.pt
-  }
-  if (lang == `fa`) {
-    lang = locale.fa
-  }
-  if (lang == `en`) {
-    lang = locale.ar
-  }
-  if (lang == `es`) {
-    lang = locale.it
-  }
-  if (lang == `ar`) {
-    lang = locale.ar
-  }
-  if (lang == `it`) {
-    lang = locale.it
-  }
-  if (lang == `id`) {
-    lang = locale.id
-  }
-
-  if (msg.data == `about_help_${langCode}`) {
+  if (msg.data === `about_help_${langCode}`) {
     bot.editMessageText(`${lang.aboutinfo}`, {
       parse_mode: 'Markdown',
       message_id: msg.message.message_id,
@@ -356,38 +257,11 @@ bot.on('callback_query', msg => {
 });
 
 bot.on('callback_query', msg => {
-  let langCode = msg.data.slice(15);
-  let lang = msg.data.slice(15);
+  let langCode = msg.data.slice(15)
+  let lang = msg.data.slice(15)
+  lang = getLocale(lang)
 
-  if (lang == `en`) {
-    lang = locale.en
-  }
-  if (lang == `es`) {
-    lang = locale.es
-  }
-  if (lang == `pt`) {
-    lang = locale.pt
-  }
-  if (lang == `fa`) {
-    lang = locale.fa
-  }
-  if (lang == `en`) {
-    lang = locale.ar
-  }
-  if (lang == `es`) {
-    lang = locale.it
-  }
-  if (lang == `ar`) {
-    lang = locale.ar
-  }
-  if (lang == `it`) {
-    lang = locale.it
-  }
-  if (lang == `id`) {
-    lang = locale.id
-  }
-
-  if (msg.data == `banhammer_help_${langCode}`) {
+  if (msg.data === `banhammer_help_${langCode}`) {
     bot.editMessageText(`${lang.banhammerinfo}`, {
       parse_mode: 'Markdown',
       message_id: msg.message.message_id,
@@ -403,7 +277,7 @@ bot.on('callback_query', msg => {
 });
 
 bot.on('callback_query', msg => {
-  if (msg.data == `recycle_help`) {
+  if (msg.data === `recycle_help`) {
     bot.editMessageText(`*Select Language*`, {
       parse_mode: 'Markdown',
       message_id: msg.message.message_id,
@@ -416,38 +290,11 @@ bot.on('callback_query', msg => {
 });
 
 bot.on('callback_query', msg => {
-  let langCode = msg.data.slice(13);
-  let lang = msg.data.slice(13);
+  let langCode = msg.data.slice(13)
+  let lang = msg.data.slice(13)
+  lang = getLocale(lang)
 
-  if (lang == `en`) {
-    lang = locale.en
-  }
-  if (lang == `es`) {
-    lang = locale.es
-  }
-  if (lang == `pt`) {
-    lang = locale.pt
-  }
-  if (lang == `fa`) {
-    lang = locale.fa
-  }
-  if (lang == `en`) {
-    lang = locale.ar
-  }
-  if (lang == `es`) {
-    lang = locale.it
-  }
-  if (lang == `ar`) {
-    lang = locale.ar
-  }
-  if (lang == `it`) {
-    lang = locale.it
-  }
-  if (lang == `id`) {
-    lang = locale.id
-  }
-
-  if (msg.data == `recycle_help_${langCode}`) {
+  if (msg.data === `recycle_help_${langCode}`) {
     bot.editMessageText(`*Help Menu*`, {
       parse_mode: 'Markdown',
       message_id: msg.message.message_id,
@@ -481,40 +328,13 @@ bot.on('callback_query', msg => {
 });
 
 bot.on('inline_query', msg => {
-  let langCode = msg.query.slice(5);
-  let lang = msg.query.slice(5);
+  let langCode = msg.query.slice(5)
+  let lang = msg.query.slice(5)
+  lang = getLocale(lang)
 
-  if (lang == `en`) {
-    lang = locale.en
-  }
-  if (lang == `es`) {
-    lang = locale.es
-  }
-  if (lang == `pt`) {
-    lang = locale.pt
-  }
-  if (lang == `fa`) {
-    lang = locale.fa
-  }
-  if (lang == `en`) {
-    lang = locale.ar
-  }
-  if (lang == `es`) {
-    lang = locale.it
-  }
-  if (lang == `ar`) {
-    lang = locale.ar
-  }
-  if (lang == `it`) {
-    lang = locale.it
-  }
-  if (lang == `id`) {
-    lang = locale.id
-  }
+  let opts = []
 
-  let opts = [];
-
-  if (msg.query == `help ${langCode}`) {
+  if (msg.query === `help ${langCode}`) {
     opts = [
       {
         type: `article`,
@@ -582,5 +402,5 @@ bot.on('inline_query', msg => {
       }
     ]
   }
-  bot.answerInlineQuery(msg.id, opts);
-});
+  bot.answerInlineQuery(msg.id, opts)
+})
