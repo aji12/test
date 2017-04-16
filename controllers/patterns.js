@@ -5,14 +5,23 @@ const config = require('../core/config')
 const escapeHtml = require('escape-html')
 
 bot.onText(/^\/?s\/(.+)\/(.+)\/?/, (msg, match) => {
-  // Only process a replied message
+  // Return if there is no message to change.
   if (!msg.reply_to_message) { return }
-  // Instead of creating a function to avoid recursive process, just avoid bot post
-  if (msg.reply_to_message.from.id == config.BOT_ID) { return }
 
   let input = msg.reply_to_message.text
+
+  if (!input) { return }
+
+  if (msg.reply_to_message.from.id == config.BOT_ID) {
+    const pre = new RegExp('^Did you mean:\n"', '')
+    const post = new RegExp('"$', '')
+    input = input.replace(pre, '')
+    input = input.replace(post, '')
+    console.log(input)
+  }
+
   let regexp = `${match[1]}`
-  let replacement = `${match[2]}`
+  let replacement = `${match[2]}` || ''
   let re = new RegExp(regexp, 'g')
   let output = input.replace(re, `${replacement}`)
 

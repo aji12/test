@@ -1,18 +1,23 @@
-'use strict';
+'use strict'
 
-const bot = require('../core/telegram');
-const escapeHtml = require('escape-html');
-const tgresolve = require('tg-resolve');
-const config = require('../core/config');
+const bot = require('../core/telegram')
+const escapeHtml = require('escape-html')
+const tgresolve = require('tg-resolve')
+const config = require('../core/config')
 
 function getUserProperties (msg, user) {
-  let name = user.last_name ? user.first_name + ' ' + user.last_name : user.first_name;
+  let name = '<b>' + escapeHtml(user.first_name) + '</b> '
 
-  if (user.username) {
-    name = '<b>' + escapeHtml(name) + '</b>\nID: <code>' + user.id + '</code>\nUsername: <a href="https://t.me/' + user.username + '">' + user.username + '</a>'
-  } else {
-    name = '<b>' + escapeHtml(name) + '</b>\nID: <code>' + user.id + '</code>'
-  };
+  if (user.last_name) {
+    name += '<b>' + escapeHtml(user.last_name) + '</b>'
+    name += '\nFirst name: ' + escapeHtml(user.first_name) + '\nLast name: ' + escapeHtml(user.last_name)
+  }
+  if (user.username) name += '\nUsername: <a href="https://t.me/' + user.username + '">@' + user.username + '</a>'
+
+  name += '\nID: <code>' + user.id + '</code>'
+
+  if (user.type) name += '\nType: ' + user.type
+
   bot.sendMessage(msg.chat.id, name, {
     reply_to_message_id: msg.message_id,
     parse_mode: 'HTML'
@@ -29,7 +34,6 @@ bot.onText(/^[/!#]id/, msg => {
   if (uname.match(/@\w+/)) {
     tgresolve(config.BOT_TOKEN, uname, (error, result) => {
       if (error) {
-        console.log(error);
         bot.sendMessage(msg.chat.id, 'Unable to connect to @pwrtelegram.', {
           reply_to_message_id: msg.message_id
         })
@@ -47,20 +51,17 @@ bot.onText(/^[/!#]id/, msg => {
       parse_mode: 'HTML'
     })
   }
-});
+})
 
 bot.onText(/^[/!#]whoami$/, msg => {
-  const uid = '[<code>' + msg.from.id + '</code>]'
-  let name = msg.from.first_name
+  let name = '<b>' + escapeHtml(msg.from.first_name) + '</b>'
   let chat = ', and you are messaging <b>' + escapeHtml(msg.chat.title) + '</b> '
 
-  if (msg.from.last_name) name += ' ' + msg.from.last_name
+  if (msg.from.last_name) name += ' <b>' + escapeHtml(msg.from.last_name) + '</b>'
 
-  if (msg.from.username) {
-    name = '<b>' + escapeHtml(name) + '</b> (@' + msg.from.username + ') ' + uid
-  } else {
-    name = '<b>' + escapeHtml(name) + '</b> ' + uid
-  };
+  if (msg.from.username) name += ' (@' + msg.from.username + ')'
+
+  name += ' [<code>' + msg.from.id + '</code>]'
 
   if (msg.chat.username) chat += '(@' + msg.chat.username + ')'
 
