@@ -7,6 +7,8 @@ Bot ini adalah _fork_ dari [ThorsHammer](https://github.com/kamikazechaser/Thors
 
 `TGramIndoBot` dikhususkan untuk diterapkan di [OpenShift](https://www.openshift.com/). Jika Anda membutuhkan bot yang bisa diterapkan ke layanan lain, silahkan rujuk [ThorsHammer](https://github.com/kamikazechaser/ThorsHammer).
 
+Silakan coba [@tgramindobot](https://t.me/tgramindobot) untuk demo.
+
 ### Perintah
 
 Awali perintah dengan `/`, `!`, atau `#`.
