@@ -34,6 +34,7 @@ bot.onText(/^[/!#]id/, msg => {
   if (uname.match(/@\w+/)) {
     tgresolve(config.BOT_TOKEN, uname, (error, result) => {
       if (error) {
+        console.log(error);
         bot.sendMessage(msg.chat.id, 'Unable to connect to @pwrtelegram.', {
           reply_to_message_id: msg.message_id
         })

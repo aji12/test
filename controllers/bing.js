@@ -7,11 +7,6 @@ const utils = require('../core/utils')
 const Bing = require('node-bing-api')({ accKey: config.BING })
 
 function getBing (msg, query) {
-  if (!config.BING) {
-    bot.sendMessage(config.SUDO, "bing.js requires an API key, and you haven't got one configured!")
-    return
-  }
-
   const limit = (msg.chat.type === 'private') ? 8 : 4
 
   if (!query) {

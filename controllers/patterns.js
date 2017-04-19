@@ -3,6 +3,7 @@
 const bot = require('../core/telegram')
 const config = require('../core/config')
 const escapeHtml = require('escape-html')
+const utils = require('../core/utils')
 
 bot.onText(/^\/?s\/(.+)\/(.+)\/?/, (msg, match) => {
   // Return if there is no message to change.
@@ -17,7 +18,6 @@ bot.onText(/^\/?s\/(.+)\/(.+)\/?/, (msg, match) => {
     const post = new RegExp('"$', '')
     input = input.replace(pre, '')
     input = input.replace(post, '')
-    console.log(input)
   }
 
   let regexp = `${match[1]}`
@@ -25,16 +25,12 @@ bot.onText(/^\/?s\/(.+)\/(.+)\/?/, (msg, match) => {
   let re = new RegExp(regexp, 'g')
   let output = input.replace(re, `${replacement}`)
 
-  // 4096 is the limit characters count of Telegram post
+  // 4096 is the characters limit count of Telegram post
   if (escapeHtml(output).length >= 4000) {
     output = escapeHtml(output).slice(0, 4000)
   } else {
     output = escapeHtml(output)
   };
 
-  bot.sendMessage(msg.chat.id, `<b>Did you mean:</b>\n"${output}"`, {
-    reply_to_message_id: msg.reply_to_message.message_id,
-    disable_web_page_preview: 'true',
-    parse_mode: 'HTML'
-  })
+  bot.sendMessage(msg.chat.id, `<b>Did you mean:</b>\n"${output}"`, utils.optionalParams(msg.reply_to_message))
 })

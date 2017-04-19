@@ -12,37 +12,37 @@ function sendError (msg, error) {
   })
 };
 
-bot.onText(/^[/!#](.+) (.+)/, (msg, match) => {
+bot.onText(/^[/!#]get(.+) (.+)/, (msg, match) => {
   const CMD = `${match[1]}`
   const URL = `${match[2]}`
 
-  if (msg.from.id != config.SUDO) {
-    if (!URL.match(/^http/)) {
+  if (!URL.match(/^http/)) {
+    if (msg.from.id != config.SUDO) {
       return console.log('Blocking an attempt to get local files!')
     }
   }
 
-  if (CMD === 'getphoto') {
+  if (CMD === 'photo') {
     bot.sendPhoto(msg.chat.id, URL).catch((error) => {
       sendError(msg, error)
     })
   }
-  if (CMD === 'getvoice') {
+  if (CMD === 'voice') {
     bot.sendVoice(msg.chat.id, URL).catch((error) => {
       sendError(msg, error)
     })
   }
-  if (CMD === 'getaudio') {
+  if (CMD === 'audio') {
     bot.sendAudio(msg.chat.id, URL).catch((error) => {
       sendError(msg, error)
     })
   }
-  if (CMD === 'getvideo') {
+  if (CMD === 'video') {
     bot.sendVideo(msg.chat.id, URL).catch((error) => {
       sendError(msg, error)
     })
   }
-  if (CMD === 'getdoc') {
+  if (CMD === 'doc') {
     bot.sendDocument(msg.chat.id, URL).catch((error) => {
       sendError(msg, error)
     })

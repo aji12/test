@@ -1,3 +1,6 @@
+'use strict'
+
+const bot = require('../core/telegram')
 const escapeHtml = require('escape-html')
 const locale = require('../core/locale.json')
 const JsonDB = require('node-json-db')
@@ -69,13 +72,21 @@ Util.getUserLang = function(msg) {
   try {
     db.reload()
     let dbLang = db.getData(`/${msg.from.id}/lang`)
-    console.log('=======================', dbLang)
     lang = locale[`${dbLang}`]
   } catch (error) {
     console.error(error)
   }
 
   return lang
+}
+
+Util.sendError = function (msg, error) {
+  let err = JSON.parse(error.response.body)
+
+  bot.sendMessage(msg.chat.id, `${err.description}`, {
+    reply_to_message_id: msg.message_id,
+    parse_mode: 'HTML'
+  })
 }
 
 Util.optionalParams = function(msg) {

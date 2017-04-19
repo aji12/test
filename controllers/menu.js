@@ -33,12 +33,6 @@ const langKeyboard = [[{
   text: '🇬🇧 English',
   callback_data: 'setlang_en'
 }, {
-  text: '🇪🇸 Español',
-  callback_data: 'setlang_es'
-}], [{
-  text: 'الرئيسية 🇸🇦',
-  callback_data: 'setlang_ar'
-}, {
   text: '🇮🇩 Bahasa Indonesia',
   callback_data: 'setlang_id'
 }]]
@@ -73,7 +67,6 @@ bot.onText(/^[/!#]help$/, msg => {
       inline_keyboard: initKbd
     }
   }).catch((error) => {
-    console.log(error)
     if (error) {
       bot.sendMessage(msg.chat.id, 'Please message me privately for a list of commands.', {
         reply_to_message_id: msg.message_id}
@@ -104,11 +97,9 @@ bot.on('callback_query', msg => {
     db.push(`/${msg.from.id}/`, {lang: setlangCode})
 
     let choosenLang = ''
-    if (setlangCode === 'ar') choosenLang = 'الرئيسية 🇸🇦'
     if (setlangCode === 'en') choosenLang = '🇬🇧 English'
-    if (setlangCode === 'es') choosenLang = '🇪🇸 Español'
     if (setlangCode === 'id') choosenLang = '🇮🇩 Bahasa Indonesia'
-    bot.editMessageText(`${settedLang.settedlang} <b>${choosenLang}</b>!`, setlangParams)
+    bot.editMessageText(`${settedLang.settedlang} <b>${choosenLang}</b>!`, setlangParams).catch((error) => console.log(error.response.body))
   }
 
   if (msg.data === 'mainMenu') {
@@ -116,7 +107,7 @@ bot.on('callback_query', msg => {
     params.reply_markup = {
       inline_keyboard: initKbd
     }
-    bot.editMessageText(`<b>Hai ${name},</b>\n\n${lang.start}`, params)
+    bot.editMessageText(`<b>Hai ${name},</b>\n\n${lang.start}`, params).catch((error) => console.log(error.response.body))
   }
 
   if (msg.data === 'links') {
@@ -125,42 +116,39 @@ bot.on('callback_query', msg => {
         text: `${lang.source}`,
         url: 'https://github.com/rizaumami/TGramIndoBot'
       }, {
-        text: `${lang.group}`,
+        text: 'TGramIndo',
         url: 'https://t.me/tgramindo'
-      }], [{
-        text: `${lang.about_help}`,
-        callback_data: `about_help_${lang.lang}`
-      }, {
-        text: `${lang.credits_help}`,
-        callback_data: `credits_help_${lang.lang}`
       }], [{
         text: `${lang.back}`,
         callback_data: 'mainMenu'
+      }, {
+        text: `${lang.about_help}`,
+        callback_data: 'about_about'
       }]]
     }
-    bot.editMessageText(`${lang.link}`, params)
+    bot.editMessageText(`${lang.link}`, params).catch((error) => console.log(error.response.body))
   }
 
   if (msg.data === 'ahelps') {
     params.reply_markup = {
       inline_keyboard: [[{
         text: `🔨 ${lang.banhammer_help}`,
-        callback_data: `banhammer_help_${lang.lang}`
+        callback_data: 'adm_banhammer'
       }, {
         text: `🔰 ${lang.superuser_help}`,
-        callback_data: `superuser_help_${lang.lang}`
+        callback_data: 'adm_superuser'
       }], [{
         text: `🛃 ${lang.globaladmin_help}`,
-        callback_data: `globaladmin_help_${lang.lang}`
+        callback_data: 'adm_globaladmin'
       }, {
         text: `👥 ${lang.ingroup_help}`,
-        callback_data: `ingroup_help_${lang.lang}`
+        callback_data: 'adm_ingroup'
       }], [{
         text: `${lang.back}`,
         callback_data: 'mainMenu'
       }]]
     }
-    bot.editMessageText(`${lang.ahelp}`, params)
+    bot.editMessageText(`${lang.ahelp}`, params).catch((error) => console.log(error.response.body))
   }
 
   if (msg.data === 'cmds') {
@@ -181,6 +169,9 @@ bot.on('callback_query', msg => {
         text: 'Kaskus',
         callback_data: 'cmd_kaskus'
       }], [{
+        text: 'KBBI',
+        callback_data: 'cmd_kbbi'
+      }, {
         text: 'Math',
         callback_data: 'cmd_math'
       }, {
@@ -200,14 +191,14 @@ bot.on('callback_query', msg => {
         callback_data: 'mainMenu'
       }]]
     }
-    bot.editMessageText(`${lang.cmdhelp}`, params)
+    bot.editMessageText(`${lang.cmdhelp}`, params).catch((error) => console.log(error.response.body))
   }
 
   if (msg.data === 'settings') {
     params.reply_markup = {
       inline_keyboard: langKeyboard
     }
-    bot.editMessageText(`<b>${lang.selectlang}:</b>`, params)
+    bot.editMessageText(`<b>${lang.selectlang}:</b>`, params).catch((error) => console.log(error.response.body))
   }
 
   const cmdParams = params
@@ -221,44 +212,9 @@ bot.on('callback_query', msg => {
     }]]
   }
 
-  if (msg.data === 'cmd_bing') {
-    bot.editMessageText(`${lang.bing}`, cmdParams)
-  }
-
-  if (msg.data === 'cmd_get') {
-    bot.editMessageText(`${lang.get}`, cmdParams)
-  }
-
-  if (msg.data === 'cmd_id') {
-    bot.editMessageText(`${lang.id}`, cmdParams)
-  }
-
-  if (msg.data === 'cmd_jsondump') {
-    bot.editMessageText(`${lang.jsondump}`, cmdParams)
-  }
-
-  if (msg.data === 'cmd_kaskus') {
-    bot.editMessageText(`${lang.kaskus}`, cmdParams)
-  }
-
-  if (msg.data === 'cmd_math') {
-    bot.editMessageText(`${lang.math}`, cmdParams)
-  }
-
-  if (msg.data === 'cmd_patterns') {
-    bot.editMessageText(`${lang.patterns}`, cmdParams)
-  }
-
-  if (msg.data === 'cmd_reddit') {
-    bot.editMessageText(`${lang.reddit}`, cmdParams)
-  }
-
-  if (msg.data === 'cmd_repost') {
-    bot.editMessageText(`${lang.repost}`, cmdParams)
-  }
-
-  if (msg.data === 'cmd_urbandictionary') {
-    bot.editMessageText(`${lang.urbandictionary}`, cmdParams)
+  if (msg.data.match(/^cmd_/)) {
+    const plug = msg.data.slice(4)
+    bot.editMessageText(`${lang[plug]}`, cmdParams).catch((error) => console.log(error.response.body))
   }
 
   const ahelpParams = params
@@ -272,20 +228,9 @@ bot.on('callback_query', msg => {
     }]]
   }
 
-  if (msg.data === `banhammer_help_${lang.lang}`) {
-    bot.editMessageText(`${lang.banhammerinfo}`, ahelpParams)
-  }
-
-  if (msg.data === `superuser_help_${lang.lang}`) {
-    bot.editMessageText(`${lang.superuserinfo}`, ahelpParams)
-  }
-
-  if (msg.data === `globaladmin_help_${lang.lang}`) {
-    bot.editMessageText(`${lang.globaladmininfo}`, ahelpParams)
-  }
-
-  if (msg.data === `ingroup_help_${lang.lang}`) {
-    bot.editMessageText(`${lang.ingroupinfo}`, ahelpParams)
+  if (msg.data.match(/^adm_/)) {
+    const plug = msg.data.slice(4) + 'info'
+    bot.editMessageText(`${lang[plug]}`, cmdParams).catch((error) => console.log(error.response.body))
   }
 
   const lnkParams = params
@@ -299,11 +244,8 @@ bot.on('callback_query', msg => {
     }]]
   }
 
-  if (msg.data === `credits_help_${lang.lang}`) {
-    bot.editMessageText(`${lang.creditsinfo}`, lnkParams)
-  }
-
-  if (msg.data === `about_help_${lang.lang}`) {
-    bot.editMessageText(`${lang.aboutinfo}`, lnkParams)
+  if (msg.data.match(/^about_/)) {
+    const plug = msg.data.slice(6) + 'info'
+    bot.editMessageText(`${lang[plug]}`, lnkParams).catch((error) => console.log(error.response.body))
   }
 })
