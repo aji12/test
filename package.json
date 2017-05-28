@@ -1,6 +1,6 @@
 {
   "name": "tgramindobot",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A simple Node.js Telegram bot",
   "main": "bot.js",
   "scripts": {
@@ -17,6 +17,8 @@
   "author": "Sahri Riza Umami <riza@openmailbox.org>",
   "license": "AGPL-3.0",
   "dependencies": {
+    "adhan": "^2.0.1",
+    "feedparser": "^2.2.0",
     "moment": "^2.17.1",
     "mongoose": "^4.7.8",
     "node-bing-api": "^3.2.1",

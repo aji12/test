@@ -1,10 +1,10 @@
 'use strict'
 
 const bot = require('../core/telegram')
-const escapeHtml = require('escape-html')
 const config = require('../core/config')
+const escapeHtml = require('escape-html')
+const request = require('request')
 const utils = require('../core/utils')
-const Bing = require('node-bing-api')({ accKey: config.BING })
 
 function getBing (msg, query) {
   const limit = (msg.chat.type === 'private') ? 8 : 4
@@ -14,12 +14,17 @@ function getBing (msg, query) {
     return
   }
 
-  Bing.web(query, {
-    count: limit  // Number of results (max 50)
-  }, function (error, res, body) {
-    if (error) return console.log('Shit happens...')
+  request({
+    url: 'https://api.cognitive.microsoft.com/bing/v5.0/search?q=' + query + '&' + limit,
+    method: 'GET',
+    headers: {
+      'Ocp-Apim-Subscription-Key': config.BING
+    }
+  }, (error, res, body) => {
+    if ((error) || !(body)) return console.log('Shit happens...')
 
-    const webPages = body.webPages ? body.webPages.value : 0
+    const bbody = JSON.parse(body)
+    const webPages = bbody.webPages ? bbody.webPages.value : 0
 
     if (webPages === 0) {
       bot.sendMessage(msg.chat.id, `No results found for <b>${query}</b>`, utils.optionalParams(msg))
@@ -29,23 +34,21 @@ function getBing (msg, query) {
     let bingo = []
 
     for (let i = 0; i < webPages.length; i++) {
-      bingo.push('• <a href="' + webPages[i].displayUrl + '">' + escapeHtml(webPages[i].name) + '</a>')
+      let link = webPages[i].displayUrl.replace(/ /, '%20')
+      bingo.push('• <a href="' + link + '">' + escapeHtml(webPages[i].name) + '</a>')
     }
 
-    let subreddit = bingo.join('\n')
+    const subreddit = bingo.join('\n')
     const title = `<b>Bing results for</b> ${query}<b>:</b>`
 
     bot.sendMessage(msg.chat.id, `${title}\n${subreddit}`, utils.optionalParams(msg))
   })
 }
 
-bot.onText(/^[/!#](b|bing)/, (msg) => {
-  if (!msg.reply_to_message) { return }
-  const query = msg.reply_to_message.text
-  getBing(msg, query)
-})
-
-bot.onText(/^[/!#](b|bing) /, (msg) => {
-  const query = msg.text.replace(/^[/!#](b|bing) /, '')
-  getBing(msg, query)
+bot.onText(/^[/!#](b|b (.+)|bing|bing (.+))/, (msg, match) => {
+  if (msg.reply_to_message) {
+    getBing(msg, msg.reply_to_message.text)
+  } else {
+    getBing(msg, msg.text.replace(/^[/!#](b|bing) /, ''))
+  }
 })

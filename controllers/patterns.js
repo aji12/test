@@ -20,8 +20,8 @@ bot.onText(/^\/?s\/(.+)\/(.+)\/?/, (msg, match) => {
     input = input.replace(post, '')
   }
 
-  let regexp = `${match[1]}`
-  let replacement = `${match[2]}` || ''
+  let regexp = utils.regexEscape(`${match[1]}`)
+  let replacement = utils.regexEscape(`${match[2]}`) || ''
   let re = new RegExp(regexp, 'g')
   let output = input.replace(re, `${replacement}`)
 

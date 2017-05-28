@@ -8,7 +8,7 @@ bot.onText(/^[/!#]ud (.+)/, (msg) => {
   const url = 'http://api.urbandictionary.com/v0/define?term=' + encodeURIComponent(slang)
   const opts = {disable_web_page_preview: 'true', parse_mode: 'HTML'}
 
-  request(url, function (error, response, body) {
+  request(url, (error, response, body) => {
     opts.reply_to_message_id = msg.message_id
     if (error || response.statusCode !== 200) {
       bot.sendMessage(msg.chat.id, 'Connection error.', opts)

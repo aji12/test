@@ -5,6 +5,10 @@ module.exports = {
   BOT_TOKEN: process.env.BOT_TOKEN || '',
   // Bots ID number. It is numbers before colon in bots token.
   BOT_ID: process.env.BOT_ID || '',
+  // Bots username - without @
+  BOT_UNAME: '',
+  // Simple JSON database
+  DATABASE: 'db.json',
   // Bot owner ID number.
   SUDO: process.env.SUDO || '',
   // The channel, group, or user to send error reports to.
@@ -12,4 +16,7 @@ module.exports = {
   // Bing Congnitive Services key. Required by bing.js
   // https://www.microsoft.com/cognitive-services/en-us/bing-web-search-api
   BING: ''
-};
+  // https://developer.oxforddictionaries.com. Required by dictionary.js
+  OXFORDID: '',
+  OXFORDKEY: ''
+}

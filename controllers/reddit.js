@@ -21,10 +21,10 @@ bot.onText(/^[/!#](reddit|r) (.+)/, (msg, match) => {
     url = `https://www.reddit.com/r/${input}/.json?limit=${limit}`
   }
 
-  request(url, function (error, response, body) {
-    if (error || response.statusCode !== 200) {
-      opts.reply_to_message_id = msg.message_id
+  request(url, (error, response, body) => {
+    opts.reply_to_message_id = msg.message_id
 
+    if (error || response.statusCode !== 200 || (body.length <= 4)) {
       bot.sendMessage(msg.chat.id, 'Malformed query.', opts)
       return
     }

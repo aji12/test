@@ -6,17 +6,17 @@ const tgresolve = require('tg-resolve')
 const config = require('../core/config')
 
 function getUserProperties (msg, user) {
-  let name = '<b>' + escapeHtml(user.first_name) + '</b> '
+  let name = `<b> ${escapeHtml(user.first_name)} </b> `
 
   if (user.last_name) {
-    name += '<b>' + escapeHtml(user.last_name) + '</b>'
-    name += '\nFirst name: ' + escapeHtml(user.first_name) + '\nLast name: ' + escapeHtml(user.last_name)
+    name += `<b> ${escapeHtml(user.last_name)}</b>`
+    name += `\nFirst name: ${escapeHtml(user.first_name)} \nLast name: ${escapeHtml(user.last_name)}`
   }
-  if (user.username) name += '\nUsername: <a href="https://t.me/' + user.username + '">@' + user.username + '</a>'
+  if (user.username) name += `\nUsername: <a href="https://t.me/${user.username}">@${user.username}</a>`
 
-  name += '\nID: <code>' + user.id + '</code>'
+  name += `\nID: <code>${user.id}</code>\nLanguage: ${user.language_code}`
 
-  if (user.type) name += '\nType: ' + user.type
+  if (user.type) name += `\nType: ${user.type}`
 
   bot.sendMessage(msg.chat.id, name, {
     reply_to_message_id: msg.message_id,
@@ -55,25 +55,25 @@ bot.onText(/^[/!#]id/, msg => {
 })
 
 bot.onText(/^[/!#]whoami$/, msg => {
-  let name = '<b>' + escapeHtml(msg.from.first_name) + '</b>'
-  let chat = ', and you are messaging <b>' + escapeHtml(msg.chat.title) + '</b> '
+  let name = `<b>${escapeHtml(msg.from.first_name)}</b>`
+  let chat = `, and you are messaging <b>${escapeHtml(msg.chat.title)}</b> `
 
-  if (msg.from.last_name) name += ' <b>' + escapeHtml(msg.from.last_name) + '</b>'
+  if (msg.from.last_name) name += ` <b>${escapeHtml(msg.from.last_name)}</b>`
 
-  if (msg.from.username) name += ' (@' + msg.from.username + ')'
+  if (msg.from.username) name += ` (@${msg.from.username})`
 
-  name += ' [<code>' + msg.from.id + '</code>]'
+  name += ` [<code>${msg.from.id}</code>]`
 
-  if (msg.chat.username) chat += '(@' + msg.chat.username + ')'
+  if (msg.chat.username) chat += `(@${msg.chat.username})`
 
   if (msg.chat.type === 'private') {
     bot.getMe().then(me => {
-      name += ', and you are messaging <b>' + escapeHtml(me.first_name) + '</b> (@' + me.username + ') [<code>' + me.id + '</code>]'
+      name += `, and you are messaging <b>${escapeHtml(me.first_name)}</b> (@${me.username}) [<code>${me.id}</code>]`
 
       bot.sendMessage(msg.chat.id, `You are ${name}.`, {parse_mode: 'HTML'})
     })
   } else {
-    name += chat + ' [<code>' + msg.chat.id + '</code>]'
+    name += chat + ` [<code>${msg.chat.id}</code>]`
 
     bot.sendMessage(msg.chat.id, `You are ${name}.`, {
       reply_to_message_id: msg.message_id,

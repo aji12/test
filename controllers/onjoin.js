@@ -23,7 +23,7 @@ bot.on('new_chat_participant', msg => {
 bot.on('new_chat_participant', msg => {
   bot.getMe().then(me => {
     if (msg.new_chat_participant.username === me.username) {
-      bot.sendMessage(msg.chat.id, `<code>Hello there! I am a group administration bot, hit the button below to learn more about me!</code>`, {
+      bot.sendMessage(msg.chat.id, `Hello there! I am <b>${me.first_name}</b>, hit the button below to learn more about me!`, {
         parse_mode: 'HTML',
         reply_markup: {
           inline_keyboard: [[{

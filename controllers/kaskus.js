@@ -4,6 +4,7 @@ const bot = require('../core/telegram')
 const utils = require('../core/utils')
 const scrapy = require('node-scrapy')
 const escapeHtml = require('escape-html')
+const kaskusUrl = 'https://m.kaskus.co.id'
 
 const kaskusForums = {
   6: 'Image',
@@ -382,13 +383,13 @@ const kaskusForums = {
 }
 
 function getKaskus (msg, forumId) {
-  const url = 'https://m.kaskus.co.id/forum/' + forumId
+  let url = kaskusUrl + '/forum/' + forumId
   let model = {
     forum: 'title',
     tautan: {
       selector: '.list-entry a.link_thread_title',
       get: 'href',
-      prefix: '• <a href="https://m.kaskus.co.id',
+      prefix: '• <a href="' + kaskusUrl,
       suffix: '">'
     },
     judul: {
@@ -398,35 +399,37 @@ function getKaskus (msg, forumId) {
   }
 
   if (forumId === 'hotthread') {
+    url = kaskusUrl + '/forum/hotthread'
     model = {
       forum: 'title',
       tautan: {
-        selector: '.list-entry a',
+        selector: '.list-today .list-today-wrapper .title a',
         get: 'href',
-        prefix: '• <a href="https://m.kaskus.co.id',
+        prefix: '• <a href="' + kaskusUrl,
         suffix: '">'
       },
       judul: {
-        selector: '.detail a',
+        selector: '.list-today .list-today-wrapper .title .hot-thread-title',
         get: 'text'
       }
     }
   }
 
-  scrapy.scrape(url, model, function (err, data) {
-    if (err) return console.error(err) // Handle error
+  scrapy.scrape(url, model, (err, data) => {
+    if (err) return console.error(err)
+
     if (!data.tautan) {
-      bot.sendMessage(msg.chat.id, 'Invalid Forum specified', utils.optionalParams(msg))
+      bot.sendMessage(msg.chat.id, `Gagal membaca forum <a href="${kaskusUrl}/forum/${forumId}">${kaskusForums[forumId]}</a>.`, utils.optionalParams(msg))
       return
     }
 
     let threads = []
+    let n = 0
 
     if (forumId === 'hotthread') {
-      for (let i = 0; i < data.tautan.length; i += 3) {
-        if (!data.judul[i].match(/sticky/)) {
-          threads.push(data.tautan[i] + escapeHtml(data.judul[i]) + '</a>')
-        }
+      for (let i = 2; i < data.tautan.length; i += 3) {
+        threads.push(data.tautan[i] + escapeHtml(data.judul[n]) + '</a>')
+        n = n + 1
       }
     } else {
       for (let i = 0; i < data.tautan.length; i++) {
@@ -437,16 +440,17 @@ function getKaskus (msg, forumId) {
     }
 
     let kaskus = threads.join('\n')
+    kaskus = kaskus.replace(/\/\?ref=htarchive&med=hot_thread/g, '')
 
     bot.sendMessage(msg.chat.id, '<b>' + data.forum + '</b>\n' + kaskus, utils.optionalParams(msg))
   })
 }
 
-bot.onText(/^[/!#](k|kaskus) (\w+)/, (msg, match) => {
-  const query = `${match[2]}`
+bot.onText(/^[/!#](k|kaskus) (.+)/, (msg, match) => {
+  const query = match[2]
 
   if (query.match(/^\d+$/)) {
-    getKaskus(msg, `${match[2]}`)
+    getKaskus(msg, query)
   } else if (query === 'ht') {
     getKaskus(msg, 'hotthread')
   } else {
@@ -459,21 +463,41 @@ bot.onText(/^[/!#](k|kaskus) (\w+)/, (msg, match) => {
     }
 
     for (let key in kaskusForums) {
-      if (new RegExp(query, 'i').test(kaskusForums[key])) {
-        ids.push('• [<code>' + key + '</code>] ' + kaskusForums[key])
-        fid = key
+      if (msg.chat.type === 'private') {
+        if (new RegExp(query, 'i').test(kaskusForums[key])) {
+          ids.push([{text: key + '. ' + kaskusForums[key], callback_data: 'kaskus_' + key}])
+          fid = key
+        }
+      } else {
+        if (new RegExp(query, 'i').test(kaskusForums[key])) {
+          ids.push('• ' + kaskusForums[key] + ' (<code>' + key + '</code>)')
+          fid = key
+        }
       }
     }
 
-    if (ids.length == 0) {
+    if (ids.length === 0) {
       bot.sendMessage(msg.chat.id, 'Invalid Forum specified.', utils.optionalParams(msg))
-    } else if (ids.length == 1) {
+    } else if (ids.length === 1) {
       getKaskus(msg, fid)
     } else {
-      const mirip = ids.join('\n')
-      const title = `Berikut daftar forum dengan kata kunci "<b>${match[2]}</b>":\n`
-
-      bot.sendMessage(msg.chat.id, title + mirip, utils.optionalParams(msg))
+      const header = 'Tidak menemukan forum bernama "<i>' + query + '</i>"\nBerikut daftar forum yang mirip:\n'
+      if (msg.chat.type === 'private') {
+        bot.sendMessage(msg.chat.id, header, {
+          parse_mode: 'HTML',
+          reply_markup: {
+            inline_keyboard: ids
+          }
+        })
+      } else {
+        bot.sendMessage(msg.chat.id, header + ids.join('\n'), utils.optionalParams(msg))
+      }
     }
+  }
+})
+
+bot.on('callback_query', msg => {
+  if (msg.data.match(/kaskus_/)) {
+    getKaskus(msg.message, msg.data.slice(7))
   }
 })
