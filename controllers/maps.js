@@ -12,7 +12,7 @@ bot.onText(/^[/!#](maps|loc) (.+)/, (msg, match) => {
         reply_to_message_id: msg.message_id,
         reply_markup: {
           inline_keyboard: [[{
-            text: `${lang.maps_inline}`,
+            text: `${lang.maps.dlg[0]}`,
             url: 'https://www.google.com/maps?q=' + geo.lat + ',' + geo.lon
           }]]
         }

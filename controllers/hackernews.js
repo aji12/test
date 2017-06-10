@@ -1,7 +1,6 @@
 'use strict'
 
 const bot = require('../core/telegram')
-const escapeHtml = require('escape-html')
 const FeedParser = require('feedparser')
 const request = require('request')
 const utils = require('../core/utils')
@@ -15,7 +14,6 @@ bot.onText(/^[/!#](hn|hackernews)$/, (msg) => {
 
   req.on('error', function (error) {
     bot.sendMessage(msg.chat.id, 'Request error.', utils.optionalParams(msg))
-    return
   })
 
   req.on('response', function (res) {
@@ -23,16 +21,13 @@ bot.onText(/^[/!#](hn|hackernews)$/, (msg) => {
 
     if (res.statusCode !== 200) {
       bot.sendMessage(msg.chat.id, 'Bad status code.', utils.optionalParams(msg))
-      return
-    }
-    else {
+    } else {
       stream.pipe(feedparser)
     }
   })
 
   feedparser.on('error', function (error) {
     bot.sendMessage(msg.chat.id, 'FeedParser error.', utils.optionalParams(msg))
-    return
   })
 
   feedparser.on('readable', function () {
@@ -48,6 +43,6 @@ bot.onText(/^[/!#](hn|hackernews)$/, (msg) => {
 
   feedparser.on('end', function () {
     const output = results.slice(0, limit).join('\n')
-    bot.sendMessage(msg.chat.id, output, utils.optionalParams(msg))
+    bot.sendMessage(msg.chat.id, '<b>Hacker News</b>\n' + output, utils.optionalParams(msg))
   })
 })

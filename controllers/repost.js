@@ -1,20 +1,20 @@
 'use strict'
 
 const bot = require('../core/telegram')
-const config = require('../core/config')
+const config = require('../data/config.json')
 const utils = require('../core/utils')
 
 bot.onText(/^[/!#]repost (.+)/, (msg, match) => {
   const target = `${match[1]}`.replace(/ .+/, '')
   const lang = utils.getUserLang(msg)
 
-  if ((!target.match(/^-/)) && (msg.from.id != config.SUDO)) {
-    bot.sendMessage(msg.from.id, `${lang.repostdenied}`, utils.optionalParams(msg))
+  if ((!target.match(/^-/)) && (msg.from.id !== config.sudo.ID)) {
+    bot.sendMessage(msg.from.id, `${lang.repost.dlg[0]}`, utils.optionalParams(msg))
     return
   }
 
   bot.getChatAdministrators(target).then(admins => admins.some(child => child.user.id === msg.from.id)).then(isAdmin => {
-    if ((msg.from.id != config.SUDO) && !(isAdmin)) {
+    if ((msg.from.id !== config.sudo.ID) && !(isAdmin)) {
       return console.log('Not a sudoer or groups owner!')
     }
 

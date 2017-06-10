@@ -1,8 +1,8 @@
 'use strict'
 
 const bot = require('../core/telegram')
-const escapeHtml = require('escape-html')
 const request = require('request')
+const utils = require('../core/utils')
 
 bot.onText(/^[/!#](reddit|r) (.+)/, (msg, match) => {
   const opts = {disable_web_page_preview: 'true', parse_mode: 'HTML'}
@@ -34,7 +34,7 @@ bot.onText(/^[/!#](reddit|r) (.+)/, (msg, match) => {
     let sub = []
 
     for (let i = 0; i < reddit.length; i++) {
-      sub.push('• <a href="https://redd.it/' + reddit[i].data.id + '">' + escapeHtml(reddit[i].data.title) + '</a>')
+      sub.push('• <a href="https://redd.it/' + reddit[i].data.id + '">' + utils.escapeHtml(reddit[i].data.title) + '</a>')
     }
 
     if (sub.length > 0) {

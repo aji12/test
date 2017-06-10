@@ -1,0 +1,39 @@
+{
+  "mongo": {
+    "comment": "MongoDB database link; e.g 'mongodb://USERNAME:PASSWORD@ds027479.mongolab.com:27479/DATABASE_NAME'. MONGO_URI: process.env.MONGODB_URL || '' ",
+    "URI": "process.env.MONGODB_URL"
+  },
+  "bot": {
+    "token_comment": "Your authorization token from the @botfather. Is string and quoted.",
+    "TOKEN": "",
+    "id_comment": "Bots ID number. It is numbers before colon in bots token. Is number and not quoted.",
+    "ID": ,
+    "uname_comment": "Bots username - without @",
+    "UNAME": ""
+  },
+  "database": {
+    "comment": "Simple JSON database",
+    "DB": "db.json"
+  },
+  "sudo": {
+    "comment": "Bot owner ID number. Is number and not quoted.",
+    "ID": 
+  },
+  "log": {
+    "comment": "The channel, group, or user to send error reports to. Is number and not quoted.",
+    "CHANNEL": 
+  },
+  "bing": {
+    "comment": "https://www.microsoft.com/cognitive-services/en-us/bing-web-search-api",
+    "KEY": ""
+  },
+  "oxford": {
+    "comment": "https://developer.oxforddictionaries.com",
+    "ID": "",
+    "KEY": ""
+  },
+  "quran": {
+    "comment": "http://globalquran.com/contribute/signup.php",
+    "KEY": ""
+  }
+}

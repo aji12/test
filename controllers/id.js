@@ -1,16 +1,16 @@
 'use strict'
 
 const bot = require('../core/telegram')
-const escapeHtml = require('escape-html')
 const tgresolve = require('tg-resolve')
-const config = require('../core/config')
+const config = require('../data/config.json')
+const utils = require('../core/utils')
 
 function getUserProperties (msg, user) {
-  let name = `<b> ${escapeHtml(user.first_name)} </b> `
+  let name = `<b> ${utils.escapeHtml(user.first_name)} </b> `
 
   if (user.last_name) {
-    name += `<b> ${escapeHtml(user.last_name)}</b>`
-    name += `\nFirst name: ${escapeHtml(user.first_name)} \nLast name: ${escapeHtml(user.last_name)}`
+    name += `<b> ${utils.escapeHtml(user.last_name)}</b>`
+    name += `\nFirst name: ${utils.escapeHtml(user.first_name)} \nLast name: ${utils.escapeHtml(user.last_name)}`
   }
   if (user.username) name += `\nUsername: <a href="https://t.me/${user.username}">@${user.username}</a>`
 
@@ -32,14 +32,14 @@ bot.onText(/^[/!#]id/, msg => {
   if (msg.reply_to_message) user = msg.reply_to_message.from
 
   if (uname.match(/@\w+/)) {
-    tgresolve(config.BOT_TOKEN, uname, (error, result) => {
+    tgresolve(config.bot.TOKEN, uname, (error, result) => {
       if (error) {
-        console.log(error);
+        console.log(error)
         bot.sendMessage(msg.chat.id, 'Unable to connect to @pwrtelegram.', {
           reply_to_message_id: msg.message_id
         })
       } else {
-        if (result.title) result.first_name = result.title;
+        if (result.title) result.first_name = result.title
         getUserProperties(msg, result)
       }
     })
@@ -55,10 +55,10 @@ bot.onText(/^[/!#]id/, msg => {
 })
 
 bot.onText(/^[/!#]whoami$/, msg => {
-  let name = `<b>${escapeHtml(msg.from.first_name)}</b>`
-  let chat = `, and you are messaging <b>${escapeHtml(msg.chat.title)}</b> `
+  let name = `<b>${utils.escapeHtml(msg.from.first_name)}</b>`
+  let chat = `, and you are messaging <b>${utils.escapeHtml(msg.chat.title)}</b> `
 
-  if (msg.from.last_name) name += ` <b>${escapeHtml(msg.from.last_name)}</b>`
+  if (msg.from.last_name) name += ` <b>${utils.escapeHtml(msg.from.last_name)}</b>`
 
   if (msg.from.username) name += ` (@${msg.from.username})`
 
@@ -66,18 +66,21 @@ bot.onText(/^[/!#]whoami$/, msg => {
 
   if (msg.chat.username) chat += `(@${msg.chat.username})`
 
-  if (msg.chat.type === 'private') {
-    bot.getMe().then(me => {
-      name += `, and you are messaging <b>${escapeHtml(me.first_name)}</b> (@${me.username}) [<code>${me.id}</code>]`
+  switch (msg.chat.type) {
+    case 'private':
+      bot.getMe().then(me => {
+        name += `, and you are messaging <b>${utils.escapeHtml(me.first_name)}</b> (@${me.username}) [<code>${me.id}</code>]`
 
-      bot.sendMessage(msg.chat.id, `You are ${name}.`, {parse_mode: 'HTML'})
-    })
-  } else {
-    name += chat + ` [<code>${msg.chat.id}</code>]`
+        bot.sendMessage(msg.chat.id, `You are ${name}.`, {parse_mode: 'HTML'})
+      })
+      break
+    default:
+      name += chat + ` [<code>${msg.chat.id}</code>]`
 
-    bot.sendMessage(msg.chat.id, `You are ${name}.`, {
-      reply_to_message_id: msg.message_id,
-      parse_mode: 'HTML'
-    })
+      bot.sendMessage(msg.chat.id, `You are ${name}.`, {
+        reply_to_message_id: msg.message_id,
+        parse_mode: 'HTML'
+      })
+      break
   }
 })

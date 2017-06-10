@@ -20,18 +20,21 @@ bot.onText(/^[/!#]dump$/, (msg) => {
       try {
         const getDumpState = utils.db.getData(`/${msg.from.id}/dump`)
         const jdlang = utils.getUserLang(msg)
-        if (getDumpState) {
-          if (getDumpState === 'on') {
+
+        switch (getDumpState) {
+          case 'on':
             utils.db.push(`/${msg.from.id}/`, {dump: 'off'}, false)
             dumpState = 'off'
-            bot.sendMessage(msg.chat.id, `${jdlang.jsondump_1}`, utils.optionalParams(msg))
-          } else if (getDumpState === 'off') {
+            bot.sendMessage(msg.chat.id, `${jdlang.jsondump.dlg[0]}`, utils.optionalParams(msg))
+            break
+          case 'off':
             utils.db.push(`/${msg.from.id}/`, {dump: 'on'}, false)
             dumpState = 'on'
-            bot.sendMessage(msg.chat.id, `${jdlang.jsondump_2}`, utils.optionalParams(msg))
-          }
-        } else {
-          utils.db.push(`/${msg.from.id}/`, {dump: 'on'}, false)
+            bot.sendMessage(msg.chat.id, `${jdlang.jsondump.dlg[1]}`, utils.optionalParams(msg))
+            break
+          default:
+            utils.db.push(`/${msg.from.id}/`, {dump: 'on'}, false)
+            break
         }
       } catch (error) {
         utils.db.push(`/${msg.from.id}/`, {dump: 'on'}, false)

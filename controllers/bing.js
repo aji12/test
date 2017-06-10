@@ -1,8 +1,7 @@
 'use strict'
 
 const bot = require('../core/telegram')
-const config = require('../core/config')
-const escapeHtml = require('escape-html')
+const config = require('../data/config.json')
 const request = require('request')
 const utils = require('../core/utils')
 
@@ -18,7 +17,7 @@ function getBing (msg, query) {
     url: 'https://api.cognitive.microsoft.com/bing/v5.0/search?q=' + query + '&' + limit,
     method: 'GET',
     headers: {
-      'Ocp-Apim-Subscription-Key': config.BING
+      'Ocp-Apim-Subscription-Key': config.bing.KEY
     }
   }, (error, res, body) => {
     if ((error) || !(body)) return console.log('Shit happens...')
@@ -35,7 +34,7 @@ function getBing (msg, query) {
 
     for (let i = 0; i < webPages.length; i++) {
       let link = webPages[i].displayUrl.replace(/ /, '%20')
-      bingo.push('• <a href="' + link + '">' + escapeHtml(webPages[i].name) + '</a>')
+      bingo.push('• <a href="' + link + '">' + utils.escapeHtml(webPages[i].name) + '</a>')
     }
 
     const subreddit = bingo.join('\n')
@@ -45,7 +44,7 @@ function getBing (msg, query) {
   })
 }
 
-bot.onText(/^[/!#](b|b (.+)|bing|bing (.+))/, (msg, match) => {
+bot.onText(/^[/!#](b|b (.+)|bing|bing (.+))$/, (msg, match) => {
   if (msg.reply_to_message) {
     getBing(msg, msg.reply_to_message.text)
   } else {

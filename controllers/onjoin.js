@@ -2,7 +2,7 @@
 
 const bot = require('../core/telegram')
 const Ban = require('../models/banmodel')
-const escapeHtml = require('escape-html')
+const utils = require('../core/utils')
 
 bot.on('new_chat_participant', msg => {
   Ban.count({
@@ -10,7 +10,7 @@ bot.on('new_chat_participant', msg => {
   }, (err, count) => {
     if (err) { return console.log('Err') }
     if (count > 0) {
-      let user = escapeHtml(msg.new_chat_participant.first_name)
+      let user = utils.escapeHtml(msg.new_chat_participant.first_name)
       bot.kickChatMember(msg.chat.id, msg.new_chat_participant.id)
       bot.sendMessage(msg.chat.id, `<b>${user}</b> is globally banned!`, {
         reply_to_message_id: msg.message_id,
@@ -18,12 +18,12 @@ bot.on('new_chat_participant', msg => {
       )
     }
   })
-});
+})
 
 bot.on('new_chat_participant', msg => {
   bot.getMe().then(me => {
     if (msg.new_chat_participant.username === me.username) {
-      bot.sendMessage(msg.chat.id, `Hello there! I am <b>${me.first_name}</b>, hit the button below to learn more about me!`, {
+      bot.sendMessage(msg.chat.id, `<code>Hello there! I am a group administration bot, hit the button below to learn more about me!</code>`, {
         parse_mode: 'HTML',
         reply_markup: {
           inline_keyboard: [[{

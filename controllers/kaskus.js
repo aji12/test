@@ -3,8 +3,9 @@
 const bot = require('../core/telegram')
 const utils = require('../core/utils')
 const scrapy = require('node-scrapy')
-const escapeHtml = require('escape-html')
 const kaskusUrl = 'https://m.kaskus.co.id'
+const instantViewHash = '&rhash=35800363c0e8b6'
+let forum
 
 const kaskusForums = {
   6: 'Image',
@@ -382,15 +383,55 @@ const kaskusForums = {
   851: 'Tribunnews.com'
 }
 
+function viewThread (msg, pageNum) {
+  let kaskus
+  let page = Number(pageNum)
+
+  try {
+    kaskus = utils.db.getData(`/${msg.chat.id}/kaskus`)
+  } catch (error) {
+    console.error(error.message)
+    return
+  }
+
+  if (page < 0) {
+    page = kaskus.length - 1
+  } else if (page >= kaskus.length) {
+    page = 0
+  }
+
+  let kasPage = `${kaskusUrl}${kaskus[page][1]}`
+  let kasthread = `<a href="https://t.me/iv?url=${kasPage}${instantViewHash}">•</a> <a href="${kasPage}">${utils.escapeHtml(kaskus[page][2])}</a>`
+  let threadParams = {
+    chat_id: msg.chat.id,
+    message_id: msg.message_id,
+    parse_mode: 'HTML',
+    reply_markup: {
+      inline_keyboard: [[{
+        text: '<',
+        callback_data: 'page_' + (page - 1)
+      }, {
+        text: (page + 1) + '/' + kaskus.length,
+        callback_data: 'page_0'
+      }, {
+        text: '>',
+        callback_data: 'page_' + (page + 1)
+      }]]
+    }
+  }
+
+  bot.editMessageText(forum + '\n' + kasthread, threadParams).catch((error) => {
+    bot.sendMessage(msg.chat.id, forum + '\n' + kasthread, threadParams)
+  })
+}
+
 function getKaskus (msg, forumId) {
   let url = kaskusUrl + '/forum/' + forumId
   let model = {
     forum: 'title',
     tautan: {
       selector: '.list-entry a.link_thread_title',
-      get: 'href',
-      prefix: '• <a href="' + kaskusUrl,
-      suffix: '">'
+      get: 'href'
     },
     judul: {
       selector: '.list-entry a.link_thread_title',
@@ -404,9 +445,7 @@ function getKaskus (msg, forumId) {
       forum: 'title',
       tautan: {
         selector: '.list-today .list-today-wrapper .title a',
-        get: 'href',
-        prefix: '• <a href="' + kaskusUrl,
-        suffix: '">'
+        get: 'href'
       },
       judul: {
         selector: '.list-today .list-today-wrapper .title .hot-thread-title',
@@ -426,23 +465,41 @@ function getKaskus (msg, forumId) {
     let threads = []
     let n = 0
 
-    if (forumId === 'hotthread') {
-      for (let i = 2; i < data.tautan.length; i += 3) {
-        threads.push(data.tautan[i] + escapeHtml(data.judul[n]) + '</a>')
-        n = n + 1
-      }
-    } else {
-      for (let i = 0; i < data.tautan.length; i++) {
-        if (!data.judul[i].match(/sticky/)) {
-          threads.push(data.tautan[i] + escapeHtml(data.judul[i]) + '</a>')
+    switch (forumId) {
+      case 'hotthread':
+        for (let i = 2; i < data.tautan.length; i += 3) {
+          let linkht = data.tautan[i].replace(/\/\?ref=htarchive&med=hot_thread/, '')
+          threads.push({1: linkht, 2: data.judul[n]})
+          n = n + 1
         }
-      }
+        break
+      default:
+        for (let i = 0; i < data.tautan.length; i++) {
+          if (!data.judul[i].match(/sticky/)) {
+            threads.push({1: data.tautan[i], 2: data.judul[i]})
+          }
+        }
+        break
     }
 
-    let kaskus = threads.join('\n')
-    kaskus = kaskus.replace(/\/\?ref=htarchive&med=hot_thread/g, '')
+    forum = '<b>' + data.forum + '</b>\n'
+    utils.db.push(`/${msg.chat.id}/kaskus`, threads)
 
-    bot.sendMessage(msg.chat.id, '<b>' + data.forum + '</b>\n' + kaskus, utils.optionalParams(msg))
+    switch (msg.chat.type) {
+      case 'private':
+        viewThread(msg, 0)
+        break
+      default:
+        let kasForum = []
+
+        for (let i = 0; i < threads.length; i++) {
+          kasForum.push('• <a href="' + kaskusUrl + threads[i][1] + '">' + utils.escapeHtml(threads[i][2]) + '</a>')
+        }
+
+        kasForum = kasForum.join('\n')
+        bot.sendMessage(msg.chat.id, forum + kasForum, utils.optionalParams(msg))
+        break
+    }
   })
 }
 
@@ -463,35 +520,47 @@ bot.onText(/^[/!#](k|kaskus) (.+)/, (msg, match) => {
     }
 
     for (let key in kaskusForums) {
-      if (msg.chat.type === 'private') {
+      try {
         if (new RegExp(query, 'i').test(kaskusForums[key])) {
-          ids.push([{text: key + '. ' + kaskusForums[key], callback_data: 'kaskus_' + key}])
-          fid = key
+          switch (msg.chat.type) {
+            case 'private':
+              ids.push([{text: key + '. ' + kaskusForums[key], callback_data: 'kaskus_' + key}])
+              fid = key
+              break
+            default:
+              ids.push(`• <a href="${kaskusUrl}/forum/${key}">${kaskusForums[key]}</a> (<code>${key}</code>)`)
+              fid = key
+              break
+          }
         }
-      } else {
-        if (new RegExp(query, 'i').test(kaskusForums[key])) {
-          ids.push('• ' + kaskusForums[key] + ' (<code>' + key + '</code>)')
-          fid = key
-        }
+      } catch (error) {
+        console.log('>> kaskus.js: The query is a regular expression.')
+        return
       }
     }
 
-    if (ids.length === 0) {
-      bot.sendMessage(msg.chat.id, 'Invalid Forum specified.', utils.optionalParams(msg))
-    } else if (ids.length === 1) {
-      getKaskus(msg, fid)
-    } else {
-      const header = 'Tidak menemukan forum bernama "<i>' + query + '</i>"\nBerikut daftar forum yang mirip:\n'
-      if (msg.chat.type === 'private') {
-        bot.sendMessage(msg.chat.id, header, {
-          parse_mode: 'HTML',
-          reply_markup: {
-            inline_keyboard: ids
-          }
-        })
-      } else {
-        bot.sendMessage(msg.chat.id, header + ids.join('\n'), utils.optionalParams(msg))
-      }
+    switch (ids.length) {
+      case 0:
+        bot.sendMessage(msg.chat.id, 'Invalid Forum specified.', utils.optionalParams(msg))
+        break
+      case 1:
+        getKaskus(msg, fid)
+        break
+      default:
+        const header = 'Tidak menemukan forum bernama "<i>' + query + '</i>"\nBerikut daftar forum yang mirip:\n'
+        switch (msg.chat.type) {
+          case 'private':
+            bot.sendMessage(msg.chat.id, header, {
+              parse_mode: 'HTML',
+              reply_markup: {
+                inline_keyboard: ids
+              }
+            })
+            break
+          default:
+            bot.sendMessage(msg.chat.id, header + ids.join('\n'), utils.optionalParams(msg))
+            break
+        }
     }
   }
 })
@@ -499,5 +568,8 @@ bot.onText(/^[/!#](k|kaskus) (.+)/, (msg, match) => {
 bot.on('callback_query', msg => {
   if (msg.data.match(/kaskus_/)) {
     getKaskus(msg.message, msg.data.slice(7))
+  }
+  if (msg.data.match(/page_/)) {
+    viewThread(msg.message, msg.data.slice(5))
   }
 })

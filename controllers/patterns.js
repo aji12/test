@@ -1,36 +1,42 @@
 'use strict'
 
 const bot = require('../core/telegram')
-const config = require('../core/config')
-const escapeHtml = require('escape-html')
+const config = require('../data/config.json')
 const utils = require('../core/utils')
 
 bot.onText(/^\/?s\/(.+)\/(.+)\/?/, (msg, match) => {
+  const message = msg.reply_to_message
   // Return if there is no message to change.
-  if (!msg.reply_to_message) { return }
+  if (!message) { return }
 
-  let input = msg.reply_to_message.text
+  let input = message.text
+  let re
 
   if (!input) { return }
 
-  if (msg.reply_to_message.from.id == config.BOT_ID) {
-    const pre = new RegExp('^Did you mean:\n"', '')
+  if (message.from.id === config.bot.ID) {
+    const head = '^Did you mean:\n"'
+    const pre = new RegExp(head, '')
     const post = new RegExp('"$', '')
     input = input.replace(pre, '')
     input = input.replace(post, '')
   }
 
-  let regexp = utils.regexEscape(`${match[1]}`)
-  let replacement = utils.regexEscape(`${match[2]}`) || ''
-  let re = new RegExp(regexp, 'g')
-  let output = input.replace(re, `${replacement}`)
+  try {
+    re = new RegExp(match[1], 'g')
+  } catch (error) {
+    bot.sendMessage(msg.chat.id, `SyntaxError: Invalid regular expression: <code>/${match[1]}/</code>: Nothing to repeat`, utils.optionalParams(msg))
+    return
+  }
+
+  let output = input.replace(re, match[2])
 
   // 4096 is the characters limit count of Telegram post
-  if (escapeHtml(output).length >= 4000) {
-    output = escapeHtml(output).slice(0, 4000)
+  if (utils.escapeHtml(output).length >= 4000) {
+    output = utils.escapeHtml(output).slice(0, 4000)
   } else {
-    output = escapeHtml(output)
-  };
+    output = utils.escapeHtml(output)
+  }
 
-  bot.sendMessage(msg.chat.id, `<b>Did you mean:</b>\n"${output}"`, utils.optionalParams(msg.reply_to_message))
+  bot.sendMessage(msg.chat.id, `<b>Did you mean:</b>\n"${output}"`, utils.optionalParams(message))
 })

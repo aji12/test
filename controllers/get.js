@@ -1,7 +1,7 @@
 'use strict'
 
 const bot = require('../core/telegram')
-const config = require('../core/config')
+const config = require('../data/config.json')
 
 function sendError (msg, error) {
   let err = JSON.parse(error.response.body)
@@ -17,34 +17,36 @@ bot.onText(/^[/!#]get(.+) (.+)/, (msg, match) => {
   const URL = `${match[2]}`
 
   if (!URL.match(/^http/)) {
-    if (msg.from.id != config.SUDO) {
+    if (msg.from.id !== config.sudo.ID) {
       return console.log('Blocking an attempt to get local files!')
     }
   }
 
-  if (CMD === 'photo') {
-    bot.sendPhoto(msg.chat.id, URL).catch((error) => {
-      sendError(msg, error)
-    })
-  }
-  if (CMD === 'voice') {
-    bot.sendVoice(msg.chat.id, URL).catch((error) => {
-      sendError(msg, error)
-    })
-  }
-  if (CMD === 'audio') {
-    bot.sendAudio(msg.chat.id, URL).catch((error) => {
-      sendError(msg, error)
-    })
-  }
-  if (CMD === 'video') {
-    bot.sendVideo(msg.chat.id, URL).catch((error) => {
-      sendError(msg, error)
-    })
-  }
-  if (CMD === 'doc') {
-    bot.sendDocument(msg.chat.id, URL).catch((error) => {
-      sendError(msg, error)
-    })
+  switch (CMD) {
+    case 'photo':
+      bot.sendPhoto(msg.chat.id, URL).catch((error) => {
+        sendError(msg, error)
+      })
+      break
+    case 'voice':
+      bot.sendVoice(msg.chat.id, URL).catch((error) => {
+        sendError(msg, error)
+      })
+      break
+    case 'audio':
+      bot.sendAudio(msg.chat.id, URL).catch((error) => {
+        sendError(msg, error)
+      })
+      break
+    case 'video':
+      bot.sendVideo(msg.chat.id, URL).catch((error) => {
+        sendError(msg, error)
+      })
+      break
+    case 'doc':
+      bot.sendDocument(msg.chat.id, URL).catch((error) => {
+        sendError(msg, error)
+      })
+      break
   }
 })
