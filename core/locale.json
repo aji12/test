@@ -6,18 +6,33 @@
     },
     "admin": {
       "btn": "Admin Help",
-      "info": "If promoted to groups administrator, I can help you to do simple administrators task, i.e kick, ban, and block globally banned users from entering group.\n\nYou can use either <code>/, !, or #</code> as command prefixes."
+      "info": "If promoted to groups administrator, I can help you to do simple administrators task, i.e kick, ban, and block globally banned users from entering group.\n\nYou can use either <code>/, !, or #</code> as command prefixes.",
+      "dlg": [
+        "is already a global admin",
+        "is now a global admin",
+        "is no longer a global admin"
+      ]
     },
     "back": {
       "btn": "<< Back"
     },
     "banhammer": {
       "btn": "Banhammer",
-      "info": "<b>Banhammer Commands</b>\n\n• <code>/hammer [by reply|username|id]</code>: globally ban a user from all groups.\n• <code>/unhammer [by reply|username|id]</code>: globally unban a user from all groups."
+      "info": "<b>Banhammer Commands</b>\n\n• <code>/hammer [by reply|username|id]</code>: globally ban a user from all groups.\n• <code>/unhammer [by reply|username|id]</code>: globally unban a user from all groups.",
+      "dlg": [
+        "is already globally banned",
+        "has been globally banned",
+        "has been globally unbanned"
+      ]
     },
     "bing": {
       "btn": "Bing",
-      "info": "<b>Bing</b>\n\nReturns 4 (group) or 8 (private) Bing's top search results for the given query.\n\n<code>/bing [query]\n/b [query]</code>\nSearches Bing\n\n<code>/bing\n/b</code>\nSearches Bing by reply. The search query is the replied message text.\n\n<b>Example:</b>\n• <code>/b merbot telegram bot</code>\n• <code>/bing tdcli bot</code>"
+      "info": "<b>Bing</b>\n\nReturns 4 (group) or 8 (private) Bing's top search results for the given query.\n\n<code>/bing [query]\n/b [query]</code>\nSearches Bing\n\n<code>/bing\n/b</code>\nSearches Bing by reply. The search query is the replied message text.\n\n<b>Example:</b>\n• <code>/b merbot telegram bot</code>\n• <code>/bing tdcli bot</code>",
+      "dlg": [
+        "Sorry, I am only capable to search text queries",
+        "No results found for",
+        "Bing results for"
+      ]
     },
     "cmds": {
       "btn": "Commands",
@@ -28,11 +43,22 @@
     },
     "dictionary": {
       "btn": "Dictionary",
-      "info": "<b>Oxford Dictionary</b>\n\nReturns English words definition or translations from www.oxforddictionaries.com.\n\n<code>/d [word]</code>\n<code>/dict [word]</code>\n<code>/dictionary [word]</code>\nRetrieve English dictionary entries for a given word.\n\n<code>/t [source]-[target] [word]</code>\n<code>/trans [source]-[target] [word]</code>\n<code>/translate [source]-[target] [word]</code>\nReturns target language translations for a given word ID and source language.\nTarget and source languages are:\n• en - English:\n• es - Spanish\n• ro - Romanian\n• ms - Malaysia\n• id - Indonesian\n\n<b>Example:</b>\n• <code>/d change</code>\n• <code>/dict robot</code>\n• <code>/dictionary telegram</code>\n• <code>/t en-id change</code>\n• <code>/trans ms-en pusing</code>\n• <code>/translate en-es crazy</code>"
+      "info": "<b>Oxford Dictionary</b>\n\nReturns English words definition or translations from www.oxforddictionaries.com.\n\n<code>/d [word]</code>\n<code>/dict [word]</code>\n<code>/dictionary [word]</code>\nRetrieve English dictionary entries for a given word.\n\n<code>/t [source]-[target] [word]</code>\n<code>/trans [source]-[target] [word]</code>\n<code>/translate [source]-[target] [word]</code>\nReturns target language translations for a given word ID and source language.\nTarget and source languages are:\n• en - English:\n• es - Spanish\n• ro - Romanian\n• ms - Malaysia\n• id - Indonesian\n\n<b>Example:</b>\n• <code>/d change</code>\n• <code>/dict robot</code>\n• <code>/dictionary telegram</code>\n• <code>/t en-id change</code>\n• <code>/trans ms-en pusing</code>\n• <code>/translate en-es crazy</code>",
+      "dlg": [
+        "No exact matches found for",
+        "An error occurred while processing the data",
+        "See"
+      ]
     },
+    "error": [
+      "Connection error"
+    ],
     "get": {
       "btn": "Get",
-      "info": "<b>Get</b>\n\nGet files by its URL.\nThis plugin utilize how a <a href=\"https://core.telegram.org/bots/api#sending-files\">bot can get a file from world wide web</a>. Provide <code>/get</code> with an HTTP URL for the file to be sent, and it will download and send the file. 5 MB max size for photos and 20 MB max for other types of content.\n\n<code>/getphoto URL\n/getvoice URL\n/getaudio URL\n/getvideo URL\n/getdoc URL\n</code>\nGet photo, voice, audio, video, and document from given URL into current chat.\n\n<b>Example:</b>\n• <code>/getphoto https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png</code>\n• <code>/getdoc http://bsd.pendidikan.id/data/SD_5/Senang_Belajar_Ilmu_Pengetahuan_Alam_Kelas_5_S_Rositawaty_Aris_Muharam_2008.pdf</code>"
+      "info": "<b>Get</b>\n\nGet files by its URL.\nThis plugin utilize how a <a href=\"https://core.telegram.org/bots/api#sending-files\">bot can get a file from world wide web</a>. Provide <code>/get</code> with an HTTP URL for the file to be sent, and it will download and send the file. 5 MB max size for photos and 20 MB max for other types of content.\n\n<code>/getphoto URL\n/getvoice URL\n/getaudio URL\n/getvideo URL\n/getdoc URL\n</code>\nGet photo, voice, audio, video, and document from given URL into current chat.\n\n<b>Example:</b>\n• <code>/getphoto https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png</code>\n• <code>/getdoc http://bsd.pendidikan.id/data/SD_5/Senang_Belajar_Ilmu_Pengetahuan_Alam_Kelas_5_S_Rositawaty_Aris_Muharam_2008.pdf</code>",
+      "dlg": [
+        "is trying to get local files:"
+      ]
     },
     "globaladmin": {
       "btn": "Global Admin",
@@ -40,7 +66,10 @@
     },
     "grouproll": {
       "btn": "Group Roll",
-      "info": "<b>Group Roll</b>\n\nPromote channels or groups network to bot users.\nThis function is for bot owner (sudo users) only.\n\n<code>/grouproll</code>\nReply the groups/channels list.\n\n<code>/grouproll [the-list]</code>\nSends channels/groups list message.\n\n<b>Example:</b>\n• <code>/grouproll &lt;b&gt;Join Pegel Empire!&lt;/b&gt;\n➜ @pegel10N\n➜ @pegelaudio\n➜ @pegeldroid\n➜ @pegelEnglish\n➜ @pegeLinux\n➜ @pegelthinkpad\n➜ @pegelwindows\n➜ @pegelwrt\n➜ @tgramindo</code>"
+      "info": "<b>Group Roll</b>\n\nPromote channels or groups network to bot users.\nThis function is for bot owner (sudo users) only.\n\n<code>/grouproll</code>\nReply the groups/channels list.\n\n<code>/grouproll [the-list]</code>\nSends channels/groups list message.\n\n<b>Example:</b>\n• <code>/grouproll &lt;b&gt;Join Pegel Empire!&lt;/b&gt;\n➜ @pegel10N\n➜ @pegelaudio\n➜ @pegeldroid\n➜ @pegelEnglish\n➜ @pegeLinux\n➜ @pegelthinkpad\n➜ @pegelwindows\n➜ @pegelwrt\n➜ @tgramindo</code>",
+      "dlg": [
+        "Group roll has been save"
+      ]
     },
     "hackernews": {
       "btn": "Hacker News",
@@ -56,15 +85,38 @@
     },
     "id": {
       "btn": "ID",
-      "info": "<b>ID</b>\n\nSends the name, ID, and (if applicable) username for the given user, group, channel or bot.\n\n<code>/id</code>\nReturns the IDs of the replied users.\n\n<code>/id @username</code>Return the IDs for the given username.\nThis feature utilize @pwrtelegram service, which is sometimes unreliable.\n\n<code>/id</code>\nReturns your IDs\n\n<code>/whoami</code>\nReturns user and chat info for you.\n\n<b>Example:</b>\n• /id\n• <code>/id @tgramindo</code>\n• /whoami"
+      "info": "<b>ID</b>\n\nSends the name, ID, and (if applicable) username for the given user, group, channel or bot.\n\n<code>/id</code>\nReturns the IDs of the replied users.\n\n<code>/id @username</code>Return the IDs for the given username.\nThis feature utilize @pwrtelegram service, which is sometimes unreliable.\n\n<code>/id</code>\nReturns your IDs\n\n<code>/whoami</code>\nReturns user and chat info for you.\n\n<b>Example:</b>\n• /id\n• <code>/id @tgramindo</code>\n• /whoami",
+      "dlg": [
+        "First name",
+        "Last name",
+        "Username",
+        "Language",
+        "Unable to connect to @pwrtelegram.",
+        "Type /id, by post or reply.\nPost /id @username to resolve the @username\n\n<b>Disclaimer</b>: Resolving a username is using @pwrtelegram service, which is sometimes unreliable",
+        "and you are messaging",
+        "You are"
+      ]
+    },
+    "info": {
+      "dlg": [
+        "Generated on",
+        "Global Admins"
+      ]
     },
     "ingroup": {
       "btn": "In-group",
-      "info": "<b>In-group Commands</b>\n\n• <code>/kick [by reply]</code>: kick a user from the group.\n• <code>/ban [by reply]</code>: ban a user from the group.\n• <code>/admins</code>: lists the administrators of the group.\n• <code>/globaladmins</code>: lists global admins who have the power to use the banhammer."
+      "info": "<b>In-group Commands</b>\n\n• <code>/kick [by reply]</code>: kick a user from the group.\n• <code>/ban [by reply]</code>: ban a user from the group.\n• <code>/admins</code>: lists the administrators of the group.\n• <code>/globaladmins</code>: lists global admins who have the power to use the banhammer.",
+      "dlg": [
+        "is too privileged to be kicked",
+        "has been kicked",
+        "is too privileged to be banned",
+        "has been banned",
+        "has been unbanned"
+      ]
     },
     "jsondump": {
       "btn": "JSON dump",
-      "info": "<b>JSON dump</b>\n\nReturns the raw JSON for you or the replied message.\n\n<code>/dump</code>\nReturns the raw JSON of your message or the replied message.\nIf not replying a message and in private message, this command will toggle message dump function on or off. When it's on, then every message will be dumped.",
+      "info": "<b>JSON dump</b>\n\nReturns the raw JSON for you or the replied message.\n\n<code>/dump</code>\nReturns the raw JSON of your message or the replied message.\nIf not replying a message and in private message, this command will toggle message dump function on or off. When it's on, then every message will be dumped.\n\n<b>Note</b>: Bot won't print messages JSON in a group if it has no access to message or not the groups admin.",
       "dlg": [
         "Message dump function has been disabled.\nSend /dump again to turn it on.",
         "Message dump function has been enabled.\nSend /dump again turn it off."
@@ -96,12 +148,25 @@
       "btn": "Math",
       "info": "<b>Math</b>\n\nReturns solutions to mathematical expressions and conversions between common units. Results provided by mathjs.org.\n\n<code>/calc [expression]</code>\nSolves the given mathematical expression.\n\n<b>Example:</b>\n• <code>/calc 1000000*(1+.25)/6</code>"
     },
+    "menu": {
+      "dlg": [
+        "Still empty.\nSee manual for Group Roll, or type <code>/help grouproll</code>"
+      ]
+    },
     "next": {
       "btn": "Next >"
     },
+    "onmessage": {
+      "dlg": [
+        "is globally banned!"
+      ]
+    },
     "patterns": {
       "btn": "Patterns",
-      "info": "<b>Patterns</b>\n\nReplace all matches for the given pattern.\n\n<code>s/[pattern]/[substitution]</code>\nReplace all matches of <code>pattern</code> in the replied message by <code>subtitution</code>.\n\n<b>Example:</b>\n• <code>s/right/wrong</code>"
+      "info": "<b>Patterns</b>\n\nReplace all matches for the given pattern.\n\n<code>s/[pattern]/[substitution]</code>\nReplace all matches of <code>pattern</code> in the replied message by <code>subtitution</code>.\n\n<b>Example:</b>\n• <code>s/right/wrong</code>",
+      "dlg": [
+        "Did you mean"
+      ]
     },
     "prev": {
       "btn": "< Previous"
@@ -117,7 +182,12 @@
     },
     "reddit": {
       "btn": "Reddit",
-      "info": "<b>Reddit</b>\n\nReturns the 4 (if in group) or 8 (if in PM) top posts or results for a given subreddit or query.\n\n<code>/r r/subreddit\n/reddit r/subreddit</code>\nReturns the top posts for a given subreddit.\n\n<code>/r [query]\n/reddit [query]</code>\nReturns the top results for a given query.\n\n<b>Example:</b>\n• <code>/r r/linux</code>\n• <code>/reddit r/telegrambots</code>\n• <code>/r telegram</code>"
+      "info": "<b>Reddit</b>\n\nReturns the 4 (if in group) or 8 (if in PM) top posts or results for a given subreddit or query.\n\n<code>/r r/subreddit\n/reddit r/subreddit</code>\nReturns the top posts for a given subreddit.\n\n<code>/r [query]\n/reddit [query]</code>\nReturns the top results for a given query.\n\n<b>Example:</b>\n• <code>/r r/linux</code>\n• <code>/reddit r/telegrambots</code>\n• <code>/r telegram</code>",
+      "dlg": [
+        "Search results",
+        "Page not found.",
+        "There doesn't seem to be anything here."
+      ]
     },
     "repost": {
       "btn": "Repost",
@@ -130,7 +200,16 @@
       "btn": "Salat",
       "info": "<b>Salat</b>\n\nReturns todays prayer times.\n\n<code>/salat [area]</code>\nReturns todays prayer times for that area\n<b>Example</b>:\n<code>/salat Jakarta</code>\nWill return today salat time for Jakarta.\n\n<code>/salat [method] [area]</code>\nReturns todays prayer times for that area calculated by [method]\n<b>Example</b>:\n<code>/salat 1 Surabaya</code>\nWill return today salat time for Surabaya using Muslim World League method.\n\nAvailable methods are:\n1. Muslim World League.\n2. Egyptian General Authority of Survey.5\n3. University of Islamic Sciences, Karachi.\n4. Umm al-Qura University, Makkah.\n5. Modified version of Umm al-Qura used in UAE.\n6. Modified version of Umm al-Qura used in Qatar.\n7. Method used by the country of Kuwait.\n8. Moonsighting Committee.\n9. Referred to as the ISNA method. This method is included for completeness but is not recommended.\n10. Fajr angle: 0, Isha angle: 0.\n\nFurther information: https://github.com/batoulapps/Adhan",
       "dlg": [
-        "Unable to find place named",
+        "Muslim World League",
+        "Egyptian General Authority of Survey",
+        "University of Islamic Sciences, Karachi",
+        "Umm al-Qura University, Makkah",
+        "Modified version of Umm al-Qura used in UAE",
+        "Modified version of Umm al-Qura used in Qatar",
+        "Method used by the country of Kuwait",
+        "Moonsighting Committee",
+        "North America (ISNA)",
+        "Other",
         "Calculation method",
         "Salat times for",
         "Local time",
@@ -163,7 +242,10 @@
     },
     "urbandictionary": {
       "btn": "Urban Dictionary",
-      "info": "<b>Urban Dictionary</b>\n\nReturns a definition from www.urbandictionary.com.\n\n<code>/ud [query]</code>\nReturns <code>word</code> definition from www.urbandictionary.com.\n\n<b>Example:</b>\n• <code>/ud fam</code>"
+      "info": "<b>Urban Dictionary</b>\n\nReturns a definition from www.urbandictionary.com.\n\n<code>/ud [query]</code>\nReturns <code>word</code> definition from www.urbandictionary.com.\n\n<b>Example:</b>\n• <code>/ud fam</code>",
+      "dlg": [
+        "There aren't yet any definitions for"
+      ]
     }
   },
   "id": {
@@ -173,18 +255,33 @@
     },
     "admin": {
       "btn": "Bantuan Admin",
-      "info": "Jika dijadikan sebagai admin grup, Saya dapat membantu mengerjakan tugas-tugas admin seperti mengeluarkan anggota dari grup (<i>kick</i>), mengeluarkan anggota dari grup dan mencegahnya kembali masuk (<i>ban</i>), dan mencegah para <i>spammer</i>, yang telah di-<i>ban</i> secara global, agar tidak masuk ke dalam grup.\n\nAwali perintah dengan <code>/</code>, <code>!</code>, atau <code>#</code>."
+      "info": "Jika dijadikan sebagai admin grup, Saya dapat membantu mengerjakan tugas-tugas admin seperti mengeluarkan anggota dari grup (<i>kick</i>), mengeluarkan anggota dari grup dan mencegahnya kembali masuk (<i>ban</i>), dan mencegah para <i>spammer</i>, yang telah di-<i>ban</i> secara global, agar tidak masuk ke dalam grup.\n\nAwali perintah dengan <code>/</code>, <code>!</code>, atau <code>#</code>.",
+      "dlg": [
+        "adalah seorang admin global",
+        "kini adalah seorang admin global",
+        "bukan lagi seorang admin global"
+      ]
     },
     "back": {
       "btn": "<< Kembali"
     },
     "banhammer": {
       "btn": "Banhammer",
-      "info": "<b>Banhammer</b>\n\n<code>/hammer [reply|username|id]</code>\n<i>Ban user</i> secara global dari seluruh grup.\n\n<code>/unhammer [reply|username|id]</code>\n<i>Unban user</i> secara global dari seluruh grup."
+      "info": "<b>Banhammer</b>\n\n<code>/hammer [reply|username|id]</code>\n<i>Ban user</i> secara global dari seluruh grup.\n\n<code>/unhammer [reply|username|id]</code>\n<i>Unban user</i> secara global dari seluruh grup.",
+      "dlg": [
+        "sudah diban secara global",
+        "telah diban secara global",
+        "tidak lagi diban secara global"
+      ]
     },
     "bing": {
       "btn": "Bing",
-      "info": "<b>Bing</b>\n\n<a href=\"https://www.bing.com/\">Bing</a> adalah mesin pencari dari Microsoft. Jika digunakan di grup, perintah <code>bing</code> akan memberikan 4 buah hasil pencarian, sementara jika digunakan dalam PM akan memberikan 8 buah hasil pencarian.\n\n<code>/bing [query]\n/b [query]</code>\nMencari <i>query</i> menggunakan Bing\n\n<code>/bing\n/b</code>\nMencari dengan cara membalas pesan (<i>reply</i>). Kata kunci pencarian adalah kata yang terdapat dalam pesan yang dibalas.\n\n<b>Contoh:</b>\n• <code>/b merbot telegram bot</code>\n• <code>/bing tdcli bot</code>"
+      "info": "<b>Bing</b>\n\n<a href=\"https://www.bing.com/\">Bing</a> adalah mesin pencari dari Microsoft. Jika digunakan di grup, perintah <code>bing</code> akan memberikan 4 buah hasil pencarian, sementara jika digunakan dalam PM akan memberikan 8 buah hasil pencarian.\n\n<code>/bing [query]\n/b [query]</code>\nMencari <i>query</i> menggunakan Bing\n\n<code>/bing\n/b</code>\nMencari dengan cara membalas pesan (<i>reply</i>). Kata kunci pencarian adalah kata yang terdapat dalam pesan yang dibalas.\n\n<b>Contoh:</b>\n• <code>/b merbot telegram bot</code>\n• <code>/bing tdcli bot</code>",
+      "dlg": [
+        "Maaf, saya hanya melakukan pencarian teks",
+        "Tiada hasil untuk pencarian",
+        "Hasil pencarian Bing untuk"
+      ]
     },
     "cmds": {
       "btn": "Perintah",
@@ -195,15 +292,19 @@
     },
     "dictionary": {
       "btn": "Kamus",
-      "info": "<b>Oxford Dictionary</b>\n\nMenampilkan arti kata bahasa Inggris atau terjemah dari www.oxforddictionaries.com.\n\n<code>/d [kata]</code>\n<code>/dict [kata]</code>\n<code>/dictionary [kata]</code>\nMenampilkan definisi dari <code>kata</code> bahasa Inggris.\n\n<code>/t [source]-[target] [kata]</code>\n<code>/trans [source]-[target] [kata]</code>\n<code>/translate [source]-[target] [kata]</code>\nMenerjemahkan <code>kata</code> dari <code>source</code> ke <code>target</code>.\nKode bahasa untuk <code>target</code> dan <code>source</code> adalah:\n• en - Inggris\n• es - Spanyol\n• ro - Rumania\n• ms - Malaysia\n• id - Indonesia\n\n<b>Contoh:</b>\n• <code>/d change</code>\n• <code>/dict robot</code>\n• <code>/dictionary telegram</code>\n• <code>/t en-id change</code>\n• <code>/trans ms-en pusing</code>\n• <code>/translate en-es crazy</code>"
+      "info": "<b>Oxford Dictionary</b>\n\nMenampilkan arti kata bahasa Inggris atau terjemah dari www.oxforddictionaries.com.\n\n<code>/d [kata]</code>\n<code>/dict [kata]</code>\n<code>/dictionary [kata]</code>\nMenampilkan definisi dari <code>kata</code> bahasa Inggris.\n\n<code>/t [source]-[target] [kata]</code>\n<code>/trans [source]-[target] [kata]</code>\n<code>/translate [source]-[target] [kata]</code>\nMenerjemahkan <code>kata</code> dari <code>source</code> ke <code>target</code>.\nKode bahasa untuk <code>target</code> dan <code>source</code> adalah:\n• en - Inggris\n• es - Spanyol\n• ro - Rumania\n• ms - Malaysia\n• id - Indonesia\n\n<b>Contoh:</b>\n• <code>/d change</code>\n• <code>/dict robot</code>\n• <code>/dictionary telegram</code>\n• <code>/t en-id change</code>\n• <code>/trans ms-en pusing</code>\n• <code>/translate en-es crazy</code>",
+      "dlg": [
+        "Tiada hasil ditemukan untuk",
+        "Terjadi galat ketika mengolah data",
+        "Lihat"
+      ]
     },
     "get": {
       "btn": "Unduh",
-      "info": "<b>Get</b>\n\nMengambil berkas dari internet.\n<i>Plugin</i> ini mendayagunakan kemampuan <a href=\"https://core.telegram.org/bots/api#sending-files\">bot yang dapat mengirim berkas yang terletak di suatu laman internet</a>. Berikan perintah <code>/get</code> sebuah alamat HTTP URL dari berkas yang hendak dikirim, dan ia akan mengunduh dan mengirimkan berkas tersebut. Batasan ukuran adalah 5 MB untuk foto dan 20 MB untuk jenis berkas lainnya.\n\n<code>/getphoto URL\n/getvoice URL\n/getaudio URL\n/getvideo URL\n/getdoc URL\n</code>\nUnduh foto, suara, audio, video, dan dokumen dari alamat URL ke percakapan kini.\n\n<b>Contoh:</b>\n• <code>/getphoto https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png</code>\n• <code>/getdoc http://bsd.pendidikan.id/data/SD_5/Senang_Belajar_Ilmu_Pengetahuan_Alam_Kelas_5_S_Rositawaty_Aris_Muharam_2008.pdf</code>"
-    },
-    "links": {
-      "btn": "Tautan",
-      "info": "Berikut tautan yang mungkin bermanfaat:"
+      "info": "<b>Get</b>\n\nMengambil berkas dari internet.\n<i>Plugin</i> ini mendayagunakan kemampuan <a href=\"https://core.telegram.org/bots/api#sending-files\">bot yang dapat mengirim berkas yang terletak di suatu laman internet</a>. Berikan perintah <code>/get</code> sebuah alamat HTTP URL dari berkas yang hendak dikirim, dan ia akan mengunduh dan mengirimkan berkas tersebut. Batasan ukuran adalah 5 MB untuk foto dan 20 MB untuk jenis berkas lainnya.\n\n<code>/getphoto URL\n/getvoice URL\n/getaudio URL\n/getvideo URL\n/getdoc URL\n</code>\nUnduh foto, suara, audio, video, dan dokumen dari alamat URL ke percakapan kini.\n\n<b>Contoh:</b>\n• <code>/getphoto https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png</code>\n• <code>/getdoc http://bsd.pendidikan.id/data/SD_5/Senang_Belajar_Ilmu_Pengetahuan_Alam_Kelas_5_S_Rositawaty_Aris_Muharam_2008.pdf</code>",
+      "dlg": [
+        "mencoba mengambil berkas lokal:"
+      ]
     },
     "globaladmin": {
       "btn": "Admin Global",
@@ -211,7 +312,10 @@
     },
     "grouproll": {
       "btn": "Group Roll",
-      "info": "<b>Group Roll</b>\n\nMenampilkan daftar nama grup untuk dipromosikan kepada pengguna bot.\nFungsi ini hanya untuk pemilik bot (sudoer).\n\n<code>/grouproll</code>\nBalas pesan berisi daftar grup yang hendak ditampilkan.\n\n<code>/grouproll [daftar-grup]</code>\nMengirim <code>daftar-grup</code>.\n\n<b>Contoh:</b>\n• <code>/grouproll &lt;b&gt;Join Pegel Empire!&lt;/b&gt;\n➜ @pegel10N\n➜ @pegelaudio\n➜ @pegeldroid\n➜ @pegelEnglish\n➜ @pegeLinux\n➜ @pegelthinkpad\n➜ @pegelwindows\n➜ @pegelwrt\n➜ @tgramindo</code>"
+      "info": "<b>Group Roll</b>\n\nMenampilkan daftar nama grup untuk dipromosikan kepada pengguna bot.\nFungsi ini hanya untuk pemilik bot (sudoer).\n\n<code>/grouproll</code>\nBalas pesan berisi daftar grup yang hendak ditampilkan.\n\n<code>/grouproll [daftar-grup]</code>\nMengirim <code>daftar-grup</code>.\n\n<b>Contoh:</b>\n• <code>/grouproll &lt;b&gt;Join Pegel Empire!&lt;/b&gt;\n➜ @pegel10N\n➜ @pegelaudio\n➜ @pegeldroid\n➜ @pegelEnglish\n➜ @pegeLinux\n➜ @pegelthinkpad\n➜ @pegelwindows\n➜ @pegelwrt\n➜ @tgramindo</code>",
+      "dlg": [
+        "Group roll telah disimpan"
+      ]
     },
     "hackernews": {
       "btn": "Hacker News",
@@ -227,15 +331,38 @@
     },
     "id": {
       "btn": "ID",
-      "info": "<b>ID</b>\n\nMenampilkan nama, nomor ID (<i>identification</i>), dan (jika memungkinkan) menampilkan nama pengguna (<i>username</i>) dari <i>user, grup, channel</i> atau bot.\n\n<code>/id</code>\nMenampilkan ID Anda atau ID sesorang yang pesannya Anda balas.\n\n<code>/id @username</code>\nMenampilkan ID dari @username.\nFitur ini menggunakan layanan dari @pwrtelegram, yang terkadang tidak bisa diandalkan.\n\n<code>/whoami</code>\nMenampilkan keterangan mengenai siapa dan di percakapan mana Anda kini berada.\n\n<b>Contoh:</b>\n• /id\n• <code>/id @tgramindo</code>\n• /whoami"
+      "info": "<b>ID</b>\n\nMenampilkan nama, nomor ID (<i>identification</i>), dan (jika memungkinkan) menampilkan nama pengguna (<i>username</i>) dari <i>user, grup, channel</i> atau bot.\n\n<code>/id</code>\nMenampilkan ID Anda atau ID sesorang yang pesannya Anda balas.\n\n<code>/id @username</code>\nMenampilkan ID dari @username.\nFitur ini menggunakan layanan dari @pwrtelegram, yang terkadang tidak bisa diandalkan.\n\n<code>/whoami</code>\nMenampilkan keterangan mengenai siapa dan di percakapan mana Anda kini berada.\n\n<b>Contoh:</b>\n• /id\n• <code>/id @tgramindo</code>\n• /whoami",
+      "dlg": [
+        "Nama depan",
+        "Nama belakang",
+        "Nama pengguna",
+        "Bahasa",
+        "Tidak dapat terhubung ke @pwrtelegram.",
+        "Kirim /id, dengan mengirim biasa atau dengan membalas pesan.\nKirim /id @username untuk mengetahui identitas @username\n\n<b>Maklumat</b>: Mengetahui identitas dari @username dimungkinkan dengan menggunakan layanan @pwrtelegram, yang kadangkala tidak dapat diandalkan",
+        "dan Anda mengirim pesan ke",
+        "Anda adalah"
+      ]
+    },
+    "info": {
+      "dlg": [
+        "Generated on",
+        "Admin Global"
+      ]
     },
     "ingroup": {
       "btn": "Dalam Grup",
-      "info": "<b>Perintah dalam grup</b>\n\n<code>/kick [menggunakan reply]</code>\nKeluarkan <i>user</i> dari grup.\n\n<code>/ban [menggunakan reply]</code>\n<i>Ban user</i> dari grup.\n\n<code>/admins</code>\nDaftar administrator grup.\n\n<code>/globaladmins</code>\nDaftar admin global yang dapat menggunakan banhammer."
+      "info": "<b>Perintah dalam grup</b>\n\n<code>/kick [menggunakan reply]</code>\nKeluarkan <i>user</i> dari grup.\n\n<code>/ban [menggunakan reply]</code>\n<i>Ban user</i> dari grup.\n\n<code>/admins</code>\nDaftar administrator grup.\n\n<code>/globaladmins</code>\nDaftar admin global yang dapat menggunakan banhammer.",
+      "dlg": [
+        "adalah admin, tidak bisa ditendang",
+        "telah ditendang",
+        "adalah admin, tidak bisa diban",
+        "telah diban",
+        "sudah tidak diban lagi"
+      ]
     },
     "jsondump": {
       "btn": "JSON dump",
-      "info": "<b>JSON dump</b>\n\nMenampilkan bentuk mentah susunan JSON pesan Anda atau pesan yang Anda balas.\n\n<code>/dump</code>\nMenampilkan bentuk mentah susunan JSON pesan yang Anda balas.\nJika perintah ini dikirim dalam PM dan bukan secara membalas, maka akan menghidupkan atau mematikan fungsi <i>message dump</i>. Ketika fungsi ini hidup, maka bot akan menampilkan bentuk mentah semua pesan yang masuk.",
+      "info": "<b>JSON dump</b>\n\nMenampilkan bentuk mentah susunan JSON pesan Anda atau pesan yang Anda balas.\n\n<code>/dump</code>\nMenampilkan bentuk mentah susunan JSON pesan yang Anda balas.\nJika perintah ini dikirim dalam PM dan bukan secara membalas, maka akan menghidupkan atau mematikan fungsi <i>message dump</i>. Ketika fungsi ini hidup, maka bot akan menampilkan bentuk mentah semua pesan yang masuk.\n\n<b>Catatan</b>: Bot tidak akan mampu menampilkan JSON dari pesan dalam sebuah grup jika ia tidak memiliki akses terhadap pesan atau bukan admin grup tersebut.",
       "dlg": [
       "Fungsi <i>message dump</i> telah dimatikan.\nKirim /dump lagi untuk menghidupkannya.",
       "Fungsi <i>message dump</i> telah dihidupkan.\nKirim /dump lagi untuk mematikannya."
@@ -267,12 +394,25 @@
       "btn": "Kalkulator",
       "info": "<b>Math</b>\n\nMenampilkan hasil perhitungan matematika. Hasil hitung didapat dari mathjs.org.\n\n<code>/calc [operasi-hitung]</code>\nMenampilkan hasil <code>operasi-hitung</code>.\n\n<b>Contoh:</b>\n• <code>/calc 1000000*(1+.25)/6</code>"
     },
+    "menu": {
+      "dlg": [
+        "Masih kosong.\nLihat manual untuk Group Roll, atau ketik <code>/help grouproll</code>"
+      ]
+    },
     "next": {
       "btn": "Berikutnya >"
     },
+    "onmessage": {
+      "dlg": [
+        "telah diban secara global!"
+      ]
+    },
     "patterns": {
       "btn": "Pola",
-      "info": "<b>Patterns</b>\n\nMengganti semua kecocokan dengan pola yang diberikan.\n\n<code>s/[pola]/[pengganti]</code>\nGantikan semua <code>pola</code> yang ditemukan pada pesan yang dibalas dengan <code>pengganti</code>.\n\n<b>Contoh:</b>\n• <code>s/bener/benar</code>"
+      "info": "<b>Patterns</b>\n\nMengganti semua kecocokan dengan pola yang diberikan.\n\n<code>s/[pola]/[pengganti]</code>\nGantikan semua <code>pola</code> yang ditemukan pada pesan yang dibalas dengan <code>pengganti</code>.\n\n<b>Contoh:</b>\n• <code>s/bener/benar</code>",
+      "dlg": [
+        "Apakah maksud Anda"
+      ]
     },
     "prev": {
       "btn": "< Sebelumnya"
@@ -288,7 +428,12 @@
     },
     "reddit": {
       "btn": "Reddit",
-      "info": "<b>Reddit</b>\n\nMenampilkan 4 (jika dalam grup) atau 8 (jika melalui PM) pos atau hasil pencarian teratas dari subreddit atau kata kunci pencarian yang diberikan.\n\n<code>/r r/subreddit\n/reddit r/subreddit</code>\nMenampilkan pos teratas dari r/subreddit.\n\n<code>/r [kata-kunci]\n/reddit [kata-kunci]</code>\nMenampilkan hasil pencarian <code>kata-kunci</code> di reddit.\n\n<b>Contoh:</b>\n• <code>/r r/linux</code>\n• <code>/reddit r/telegrambots</code>\n• <code>/r telegram</code>"
+      "info": "<b>Reddit</b>\n\nMenampilkan 4 (jika dalam grup) atau 8 (jika melalui PM) pos atau hasil pencarian teratas dari subreddit atau kata kunci pencarian yang diberikan.\n\n<code>/r r/subreddit\n/reddit r/subreddit</code>\nMenampilkan pos teratas dari r/subreddit.\n\n<code>/r [kata-kunci]\n/reddit [kata-kunci]</code>\nMenampilkan hasil pencarian <code>kata-kunci</code> di reddit.\n\n<b>Contoh:</b>\n• <code>/r r/linux</code>\n• <code>/reddit r/telegrambots</code>\n• <code>/r telegram</code>",
+      "dlg": [
+        "Hasil pencarian",
+        "Laman tidak ditemukan.",
+        "Tampaknya sub tersebut kosong..."
+      ]
     },
     "repost": {
       "btn": "Kirim Ulang",
@@ -301,7 +446,16 @@
       "btn": "Salat",
       "info": "<b>Salat</b>\n\nMenampilkan waktu salat untuk hari ini.\n\n<code>/salat [daerah]</code>\nMenampilkan waktu salat untuk daerah tersebut\n<b>Contoh</b>:\n<code>/salat Jakarta</code>\nAkan menampilkan waktu salat di Jakarta untuk hari ini.\n\n<code>/salat [metode] [daerah]</code>\nMenampilkan waktu salat hari ini untuk daerah tersebut berdasar perhitungan menggunakan <code>metode</code>\n<b>Contoh</b>:\n<code>/salat 1 Surabaya</code>\nAkan menampilkan waktu salat di Surabaya untuk hari ini berdasarkan metode perhitungan Muslim World League.\n\nMetode perhitungan yang bisa digunakan:\n1. Muslim World League.\n2. Egyptian General Authority of Survey.5\n3. University of Islamic Sciences, Karachi.\n4. Umm al-Qura University, Mekah.\n5. Versi modifikasi Umm al-Qura yang digunakan di UAE.\n6. Versi modifikasi Umm al-Qura yang digunakan di Qatar.\n7. Metode negara Kuwait.\n8. Moonsighting Committee.\n9. ISNA. Disertakan semata demi kelengkapan, namun tidak disarankan.\n10. Fajr angle: 0, Isha angle: 0.\n\nInformasi lebih lanjut: https://github.com/batoulapps/Adhan",
       "dlg": [
-        "Tidak dapat menemukan tempat bernama",
+        "Liga Dunia Muslim",
+        "Otoritas Umum Survey Mesir",
+        "Universitas Sains Islam, Karachi",
+        "Universitas Umm al-Qura, Mekah",
+        "Versi perubahan dari Umm al-Qura yang digunakan di UAE",
+        "Versi perubahan dari Umm al-Qura yang digunakan di Qatar",
+        "Metode yang digunakan negara Kuwait",
+        "Komite Moonsighting",
+        "Amerika Utara (ISNA)",
+        "Lainnya",
         "Metode perhitungan",
         "Waktu salat untuk",
         "Waktu lokal",
@@ -334,7 +488,10 @@
     },
     "urbandictionary": {
       "btn": "Kamus Urban",
-      "info": "<b>Urban Dictionary</b>\n\nMenampilkan arti kata <i>slang</i> (gaul) dari www.urbandictionary.com.\n\n<code>/ud [kata]</code>\nMenampilkan penjelasan arti <code>kata</code> dari www.urbandictionary.com.\n\n<b>Contoh:</b>\n• <code>/ud fam</code>"
+      "info": "<b>Urban Dictionary</b>\n\nMenampilkan arti kata <i>slang</i> (gaul) dari www.urbandictionary.com.\n\n<code>/ud [kata]</code>\nMenampilkan penjelasan arti <code>kata</code> dari www.urbandictionary.com.\n\n<b>Contoh:</b>\n• <code>/ud fam</code>",
+      "dlg": [
+        "Belum ada definisi untuk"
+      ]
     }
   }
 }

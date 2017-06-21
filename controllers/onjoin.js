@@ -8,14 +8,13 @@ bot.on('new_chat_participant', msg => {
   Ban.count({
     userid: msg.new_chat_participant.id
   }, (err, count) => {
-    if (err) { return console.log('Err') }
+    if (err) { return console.log('>> onjoin.js: Ban count error') }
     if (count > 0) {
-      let user = utils.escapeHtml(msg.new_chat_participant.first_name)
+      const lang = utils.getUserLang(msg)
+      const user = utils.buildUserName(msg.new_chat_participant)
+
       bot.kickChatMember(msg.chat.id, msg.new_chat_participant.id)
-      bot.sendMessage(msg.chat.id, `<b>${user}</b> is globally banned!`, {
-        reply_to_message_id: msg.message_id,
-        parse_mode: 'HTML'}
-      )
+      bot.sendMessage(msg.chat.id, `${user} ${lang.onmessage.dlg[0]}`, utils.optionalParams(msg))
     }
   })
 })

@@ -10,13 +10,11 @@ bot.on('message', msg => {
   }, (err, count) => {
     if (err) { return console.log('Err') }
     if (count > 0) {
-      let user = utils.escapeHtml(msg.from.first_name)
+      const lang = utils.getUserLang(msg)
+      const user = utils.buildUserName(msg.from)
 
       bot.kickChatMember(msg.chat.id, msg.from.id)
-      bot.sendMessage(msg.chat.id, `<b>${user}</b> is globally banned!`, {
-        reply_to_message_id: msg.message_id,
-        parse_mode: 'HTML'
-      })
+      bot.sendMessage(msg.chat.id, `${user} ${lang.onmessage.dlg[0]}`, utils.optionalParams(msg))
     } else {
       // Some Random User Talking
     }

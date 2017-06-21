@@ -2,6 +2,7 @@
 
 const bot = require('../core/telegram')
 const config = require('../data/config.json')
+const utils = require('../core/utils')
 
 function sendError (msg, error) {
   let err = JSON.parse(error.response.body)
@@ -10,15 +11,19 @@ function sendError (msg, error) {
     reply_to_message_id: msg.message_id,
     parse_mode: 'HTML'
   })
-};
+}
 
 bot.onText(/^[/!#]get(.+) (.+)/, (msg, match) => {
+  const lang = utils.getUserLang(msg)
   const CMD = `${match[1]}`
   const URL = `${match[2]}`
 
   if (!URL.match(/^http/)) {
+    const user = utils.buildUserName(msg.from)
+
     if (msg.from.id !== config.sudo.ID) {
-      return console.log('Blocking an attempt to get local files!')
+      bot.sendMessage(config.log.CHANNEL, `${user} ${lang.get.dlg[0]} ${URL}`, {parse_mode: 'HTML'})
+      return
     }
   }
 

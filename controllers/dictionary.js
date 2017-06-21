@@ -6,6 +6,7 @@ const request = require('request')
 const utils = require('../core/utils')
 
 function getDescription (msg, word, source, target) {
+  const lang = utils.getUserLang(msg)
   let url = 'https://od-api.oxforddictionaries.com/api/v1/entries/'
   const input = encodeURIComponent(word)
 
@@ -28,13 +29,13 @@ function getDescription (msg, word, source, target) {
 
     switch (response.statusCode) {
       case 404:
-        bot.sendMessage(msg.chat.id, 'No exact matches found for "' + word + '"', utils.optionalParams(msg))
+        bot.sendMessage(msg.chat.id, `${lang.dictionary.dlg[0]} "${word}"`, utils.optionalParams(msg))
         return
-        break
+        // break
       case 500:
-        bot.sendMessage(msg.chat.id, 'An error occurred while processing the data.', utils.optionalParams(msg))
+        bot.sendMessage(msg.chat.id, `${lang.dictionary.dlg[1]}`, utils.optionalParams(msg))
         return
-        break
+        // break
     }
 
     const oxdat = JSON.parse(body)
@@ -54,15 +55,20 @@ function getDescription (msg, word, source, target) {
       }
       oxford = '<i>' + utils.escapeHtml(oxford.join(', ')) + '</i>'
     } else {
-      for (let i = 0; i < max; i++) {
-        let sense = oxdat.results[0].lexicalEntries[i].entries[0].senses[0]
-        if (sense.definitions) {
-          oxford.push('• ' + sense.definitions[0])
-        } else {
-          oxford.push('• ' + sense.crossReferences[0].text)
+      if (results[0].derivativeOf) {
+        const derivative = results[0].derivativeOf[0].text
+        oxford.push(`➜ ${lang.dictionary.dlg[2]} <a href="https://en.oxforddictionaries.com/definition/${derivative}">${derivative}</a>`)
+      } else {
+        for (let i = 0; i < max; i++) {
+          let sense = oxdat.results[0].lexicalEntries[i].entries[0].senses[0]
+          if (sense.definitions) {
+            oxford.push('• ' + sense.definitions[0])
+          } else {
+            oxford.push('• ' + sense.crossReferences[0].text)
+          }
         }
       }
-      oxford = utils.escapeHtml(oxford.join('\n'))
+      oxford = oxford.join('\n')
     }
     oxford = (results.length === 1) ? oxford.replace(/^• /, '') : oxford
     bot.sendMessage(msg.chat.id, '<b>' + title + '</b>\n' + oxford, utils.optionalParams(msg))

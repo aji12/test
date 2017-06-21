@@ -1,7 +1,7 @@
 {
   "mongo": {
-    "comment": "MongoDB database link; e.g 'mongodb://USERNAME:PASSWORD@ds027479.mongolab.com:27479/DATABASE_NAME'. MONGO_URI: process.env.MONGODB_URL || '' ",
-    "URI": "process.env.MONGODB_URL"
+    "comment": "MongoDB database. Openshift: OPENSHIFT_MONGODB_DB_URL. Mongolab: e.g 'mongodb://USERNAME:PASSWORD@ds027479.mongolab.com:27479/DATABASE_NAME'",
+    "URI": "OPENSHIFT_MONGODB_DB_URL"
   },
   "bot": {
     "token_comment": "Your authorization token from the @botfather. Is string and quoted.",
@@ -35,5 +35,34 @@
   "quran": {
     "comment": "http://globalquran.com/contribute/signup.php",
     "KEY": ""
+  },
+  "plugins": {
+    "admin": [
+      "banhammer",
+      "globaladmin",
+      "grouproll",
+      "ingroup",
+      "repost",
+      "superuser"
+    ],
+    "user": [
+      "bing",
+      "dictionary",
+      "get",
+      "hackernews",
+      "help",
+      "id",
+      "jsondump",
+      "kaskus",
+      "kbbi",
+      "maps",
+      "math",
+      "patterns",
+      "quran",
+      "reddit",
+      "repost",
+      "salat",
+      "urbandictionary"
+    ]
   }
 }

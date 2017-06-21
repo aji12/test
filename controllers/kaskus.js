@@ -566,10 +566,10 @@ bot.onText(/^[/!#](k|kaskus) (.+)/, (msg, match) => {
 })
 
 bot.on('callback_query', msg => {
-  if (msg.data.match(/kaskus_/)) {
+  if (msg.data.match(/^kaskus_/)) {
     getKaskus(msg.message, msg.data.slice(7))
   }
-  if (msg.data.match(/page_/)) {
+  if (msg.data.match(/^page_/)) {
     viewThread(msg.message, msg.data.slice(5))
   }
 })

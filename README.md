@@ -65,7 +65,7 @@ $ node -v
 # Clone repo
 $ git clone https://github.com/rizaumami/TGramIndoBot.git
 $ cd TGramIndoBot
-# Pastikan semua baris dalam core/config.js diisi! Kecuali MONGODB_URL, abaikan saja!
+# Pastikan semua baris dalam data/config.json diisi!
 
 # Masuk ke dalam akun Openshift web console Anda
 # Buat sebuah app

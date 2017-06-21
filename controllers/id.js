@@ -5,16 +5,16 @@ const tgresolve = require('tg-resolve')
 const config = require('../data/config.json')
 const utils = require('../core/utils')
 
-function getUserProperties (msg, user) {
+function getUserProperties (msg, lang, user) {
   let name = `<b> ${utils.escapeHtml(user.first_name)} </b> `
 
   if (user.last_name) {
     name += `<b> ${utils.escapeHtml(user.last_name)}</b>`
-    name += `\nFirst name: ${utils.escapeHtml(user.first_name)} \nLast name: ${utils.escapeHtml(user.last_name)}`
+    name += `\n${lang.id.dlg[0]}: ${utils.escapeHtml(user.first_name)} \n${lang.id.dlg[1]}: ${utils.escapeHtml(user.last_name)}`
   }
-  if (user.username) name += `\nUsername: <a href="https://t.me/${user.username}">@${user.username}</a>`
+  if (user.username) name += `\n${lang.id.dlg[2]}: <a href="https://t.me/${user.username}">@${user.username}</a>`
 
-  name += `\nID: <code>${user.id}</code>\nLanguage: ${user.language_code}`
+  name += `\nID: <code>${user.id}</code>\n${lang.id.dlg[3]}: ${user.language_code}`
 
   if (user.type) name += `\nType: ${user.type}`
 
@@ -25,6 +25,7 @@ function getUserProperties (msg, user) {
 };
 
 bot.onText(/^[/!#]id/, msg => {
+  const lang = utils.getUserLang(msg)
   const cmd = msg.text.slice(-3)
   const uname = msg.text.slice(4)
   let user = msg.from
@@ -35,52 +36,39 @@ bot.onText(/^[/!#]id/, msg => {
     tgresolve(config.bot.TOKEN, uname, (error, result) => {
       if (error) {
         console.log(error)
-        bot.sendMessage(msg.chat.id, 'Unable to connect to @pwrtelegram.', {
-          reply_to_message_id: msg.message_id
-        })
+        bot.sendMessage(msg.chat.id, `${lang.id.dlg[4]}`, utils.optionalParams(msg))
       } else {
         if (result.title) result.first_name = result.title
-        getUserProperties(msg, result)
+        getUserProperties(msg, lang, result)
       }
     })
   } else if (msg.text === cmd) {
-    getUserProperties(msg, user)
+    getUserProperties(msg, lang, user)
   } else {
-    let help = 'Type /id, by post or reply.\nPost /id @username to resolve the @username\n\n<b>Disclaimer</b>: Resolving a username is using @pwrtelegram service, which is sometimes unreliable.'
-    bot.sendMessage(msg.chat.id, help, {
-      reply_to_message_id: msg.message_id,
-      parse_mode: 'HTML'
-    })
+    let help = `${lang.id.dlg[5]}`
+    bot.sendMessage(msg.chat.id, help, utils.optionalParams(msg))
   }
 })
 
 bot.onText(/^[/!#]whoami$/, msg => {
-  let name = `<b>${utils.escapeHtml(msg.from.first_name)}</b>`
-  let chat = `, and you are messaging <b>${utils.escapeHtml(msg.chat.title)}</b> `
-
-  if (msg.from.last_name) name += ` <b>${utils.escapeHtml(msg.from.last_name)}</b>`
-
-  if (msg.from.username) name += ` (@${msg.from.username})`
-
-  name += ` [<code>${msg.from.id}</code>]`
+  const lang = utils.getUserLang(msg)
+  let name = utils.buildUserName(msg.from)
+  let chat = `, ${lang.id.dlg[6]} <b>${utils.escapeHtml(msg.chat.title)}</b> `
 
   if (msg.chat.username) chat += `(@${msg.chat.username})`
 
   switch (msg.chat.type) {
     case 'private':
       bot.getMe().then(me => {
-        name += `, and you are messaging <b>${utils.escapeHtml(me.first_name)}</b> (@${me.username}) [<code>${me.id}</code>]`
+        name += `, ${lang.id.dlg[6]} <b>${utils.escapeHtml(me.first_name)}</b> (@${me.username}) [<code>${me.id}</code>]`
 
-        bot.sendMessage(msg.chat.id, `You are ${name}.`, {parse_mode: 'HTML'})
+        bot.sendMessage(msg.chat.id, `${lang.id.dlg[7]} ${name}.`, {parse_mode: 'HTML'})
       })
       break
     default:
-      name += chat + ` [<code>${msg.chat.id}</code>]`
+      name += `${chat} [<code>${msg.chat.id}</code>]`
 
-      bot.sendMessage(msg.chat.id, `You are ${name}.`, {
-        reply_to_message_id: msg.message_id,
-        parse_mode: 'HTML'
-      })
+      bot.sendMessage(msg.chat.id, `${lang.id.dlg[7]} ${name}.`, utils.optionalParams(msg))
       break
   }
 })

@@ -5,17 +5,16 @@ const config = require('../data/config.json')
 const utils = require('../core/utils')
 
 bot.onText(/^[/!#]repost (.+)/, (msg, match) => {
-  const target = `${match[1]}`.replace(/ .+/, '')
   const lang = utils.getUserLang(msg)
+  const target = `${match[1]}`.replace(/ .+/, '')
 
   if ((!target.match(/^-/)) && (msg.from.id !== config.sudo.ID)) {
-    bot.sendMessage(msg.from.id, `${lang.repost.dlg[0]}`, utils.optionalParams(msg))
-    return
+    return bot.sendMessage(msg.from.id, `${lang.repost.dlg[0]}`, utils.optionalParams(msg))
   }
 
   bot.getChatAdministrators(target).then(admins => admins.some(child => child.user.id === msg.from.id)).then(isAdmin => {
     if ((msg.from.id !== config.sudo.ID) && !(isAdmin)) {
-      return console.log('Not a sudoer or groups owner!')
+      return console.log('>> repost.js: Not a sudoer or groups owner!')
     }
 
     const text = msg.text.replace(/^\/repost [-@]?\w+/, '')

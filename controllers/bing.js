@@ -6,10 +6,11 @@ const request = require('request')
 const utils = require('../core/utils')
 
 function getBing (msg, query) {
+  const lang = utils.getUserLang(msg)
   const limit = (msg.chat.type === 'private') ? 8 : 4
 
   if (!query) {
-    bot.sendMessage(msg.chat.id, 'Sorry, I am only capable to search text queries.', utils.optionalParams(msg))
+    bot.sendMessage(msg.chat.id, `${lang.bing.dlg[0]}.`, utils.optionalParams(msg))
     return
   }
 
@@ -20,13 +21,14 @@ function getBing (msg, query) {
       'Ocp-Apim-Subscription-Key': config.bing.KEY
     }
   }, (error, res, body) => {
-    if ((error) || !(body)) return console.log('Shit happens...')
+    if (error) return console.log(error)
+    if (!body) return console.log('>> bing.js: No results')
 
     const bbody = JSON.parse(body)
     const webPages = bbody.webPages ? bbody.webPages.value : 0
 
     if (webPages === 0) {
-      bot.sendMessage(msg.chat.id, `No results found for <b>${query}</b>`, utils.optionalParams(msg))
+      bot.sendMessage(msg.chat.id, `${lang.bing.dlg[1]} <b>${query}</b>`, utils.optionalParams(msg))
       return
     }
 
@@ -38,7 +40,7 @@ function getBing (msg, query) {
     }
 
     const subreddit = bingo.join('\n')
-    const title = `<b>Bing results for</b> ${query}<b>:</b>`
+    const title = `<b>${lang.bing.dlg[2]} </b>${query}<b>:</b>`
 
     bot.sendMessage(msg.chat.id, `${title}\n${subreddit}`, utils.optionalParams(msg))
   })

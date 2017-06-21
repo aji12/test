@@ -9,6 +9,7 @@ bot.onText(/^\/?s\/(.+)\/(.+)\/?/, (msg, match) => {
   // Return if there is no message to change.
   if (!message) { return }
 
+  const lang = utils.getUserLang(msg)
   let input = message.text
   let re
 
@@ -38,5 +39,5 @@ bot.onText(/^\/?s\/(.+)\/(.+)\/?/, (msg, match) => {
     output = utils.escapeHtml(output)
   }
 
-  bot.sendMessage(msg.chat.id, `<b>Did you mean:</b>\n"${output}"`, utils.optionalParams(message))
+  bot.sendMessage(msg.chat.id, `<b>${lang.patterns.dlg[0]}:</b>\n"${output}"`, utils.optionalParams(message))
 })

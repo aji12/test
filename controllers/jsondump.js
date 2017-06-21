@@ -5,10 +5,12 @@ const utils = require('../core/utils')
 let dumpState
 
 function varDump (msg) {
-  let msgDump = JSON.stringify(msg, null, 2)
+  let jstring = JSON.stringify(msg, null, 2)
+  jstring = jstring.substring(0, 4080)
 
-  bot.sendMessage(msg.chat.id, `<pre>${msgDump.substring(0, 4080)}</pre>`, {
-    parse_mode: 'HTML'
+  bot.sendMessage(msg.chat.id, `<pre>${jstring}</pre>`, { parse_mode: 'HTML' }).catch((error) => {
+    if (error) { console.log('>> jsondump.js: Failed to send HTML message, resend using Markdown') }
+    bot.sendMessage(msg.chat.id, '`' + jstring + '`', { parse_mode: 'Markdown' })
   })
 }
 
@@ -17,29 +19,27 @@ bot.onText(/^[/!#]dump$/, (msg) => {
     varDump(msg.reply_to_message)
   } else {
     if (msg.chat.type === 'private') {
+      const jdlang = utils.getUserLang(msg)
+      let jdmessage
+
       try {
         const getDumpState = utils.db.getData(`/${msg.from.id}/dump`)
-        const jdlang = utils.getUserLang(msg)
 
-        switch (getDumpState) {
-          case 'on':
-            utils.db.push(`/${msg.from.id}/`, {dump: 'off'}, false)
-            dumpState = 'off'
-            bot.sendMessage(msg.chat.id, `${jdlang.jsondump.dlg[0]}`, utils.optionalParams(msg))
-            break
-          case 'off':
-            utils.db.push(`/${msg.from.id}/`, {dump: 'on'}, false)
-            dumpState = 'on'
-            bot.sendMessage(msg.chat.id, `${jdlang.jsondump.dlg[1]}`, utils.optionalParams(msg))
-            break
-          default:
-            utils.db.push(`/${msg.from.id}/`, {dump: 'on'}, false)
-            break
+        if (getDumpState === 'on') {
+          utils.db.push(`/${msg.from.id}/`, {dump: 'off'}, false)
+          dumpState = 'off'
+          jdmessage = `${jdlang.jsondump.dlg[0]}`
+        } else {
+          utils.db.push(`/${msg.from.id}/`, {dump: 'on'}, false)
+          dumpState = 'on'
+          jdmessage = `${jdlang.jsondump.dlg[1]}`
         }
       } catch (error) {
         utils.db.push(`/${msg.from.id}/`, {dump: 'on'}, false)
-        console.error(error.message)
+        dumpState = 'on'
+        jdmessage = `${jdlang.jsondump.dlg[1]}`
       }
+      bot.sendMessage(msg.chat.id, jdmessage, utils.optionalParams(msg))
     }
   }
 })

@@ -2,6 +2,7 @@
 
 const bot = require('../core/telegram')
 const config = require('../data/config.json')
+const fs = require('fs')
 const JsonDB = require('node-json-db')
 const locale = require('../core/locale.json')
 const request = require('request')
@@ -11,36 +12,15 @@ const utilities = {}
 utilities.db = new JsonDB(config.database.DB, true, false)
 utilities.locale = locale
 
-utilities.buildChatName = function (chat, parse) {
-  let name = ''
+utilities.buildUserName = function (user) {
+  let name = `<b>${utilities.escapeHtml(user.first_name)}</b>`
 
-  if (chat.first_name) name += utilities.escapeHtml(chat.first_name) + ' '
-  if (chat.last_name) name += utilities.escapeHtml(chat.last_name) + ' '
-  if (chat.title) name = utilities.escapeHtml(chat.title) + ' '
+  if (user.last_name) name += ` <b>${utilities.escapeHtml(user.last_name)}</b>`
+  if (user.username) name += ` (@${user.username})`
 
-  if (parse === 'html') {
-    if (chat.username) name = `<b>${name}</b> @${chat.username} [<code>${chat.id}</code>] `
-  } else {
-    if (chat.username) name += `@${chat.username} [${chat.id}] `
-  }
-  // if (chat.type) name += `(${chat.type}) `;
+  name += ` [<code>${user.id}</code>]`
 
-  return name.trim()
-}
-
-utilities.buildUserName = function (user, parse) {
-  let name = ''
-
-  if (user.first_name) name += utilities.escapeHtml(user.first_name) + ' '
-  if (user.last_name) name += utilities.escapeHtml(user.last_name) + ' '
-
-  if (parse === 'html') {
-    if (user.username) name = `<b>${name}</b> @${user.username} [<code>${user.id}</code>] `
-  } else {
-    if (user.username) name += `@${user.username} [${user.id}] `
-  }
-
-  return name.trim()
+  return name
 }
 
 utilities.escapeHtml = function (string) {
@@ -93,11 +73,12 @@ utilities.escapeHtml = function (string) {
 
 // Gets coordinates for a location.
 utilities.getCoord = function (msg, input, callback) {
+  const lang = utilities.getUserLang(msg)
   const url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(input)
 
   request(url, function (error, response, body) {
     if (error) {
-      bot.sendMessage(msg.chat.id, 'Connection error.', utilities.optionalParams(msg))
+      bot.sendMessage(msg.chat.id, `${lang.error[0]}`, utilities.optionalParams(msg))
     } else {
       const coord = JSON.parse(body)
       if (coord.status === 'ZERO_RESULTS') {
@@ -125,6 +106,7 @@ utilities.getUserLang = function (msg) {
     }
   } catch (error) {
     console.error(error.message)
+    utilities.db.push(`/${msg.from.id}/`, {lang: `${lang}`}, false)
   }
 
   return locale[`${lang}`]
@@ -134,16 +116,16 @@ utilities.getUserLang = function (msg) {
 utilities.initialKeyboard = function (lang) {
   return [[{
     text: `${lang.admin.btn}`,
-    callback_data: 'ahelps'
+    callback_data: 'admmanpage_0'
   }, {
     text: `${lang.cmds.btn}`,
-    callback_data: 'cmds_1'
+    callback_data: 'manpage_0'
   }], [{
     text: `${lang.links.btn}`,
-    callback_data: 'links'
+    callback_data: 'links_'
   }, {
     text: `${lang.settings.btn}`,
-    callback_data: 'settings'
+    callback_data: 'settings_'
   }]]
 }
 
@@ -165,6 +147,21 @@ utilities.parseInline = function (message, commandName, options = {}) {
 // https://stackoverflow.com/questions/3561493
 utilities.regexEscape = function (str) {
   return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+}
+
+utilities.reloadModule = function (module) {
+  delete require.cache[require.resolve(module)]
+  return require(module)
+}
+
+utilities.saveToFile = function (file, data) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2), function (err) {
+    if (err) {
+      console.log(err)
+    } else {
+      console.log(`Output saved to ${file}`)
+    }
+  })
 }
 
 utilities.sendError = function (msg, error) {

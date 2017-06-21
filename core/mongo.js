@@ -1,22 +1,23 @@
 'use strict'
 
-const mongoose = require('mongoose')
-const rangi = require('rangi')
+const Ban = require('../models/banmodel')
 const config = require('../data/config.json')
 const cron = require('node-cron')
-const Ban = require('../models/banmodel')
+const mongoose = require('mongoose')
+const rangi = require('rangi')
+const mongoUri = (config.mongo.URI === 'OPENSHIFT_MONGODB_DB_URL') ? process.env.OPENSHIFT_MONGODB_DB_URL : config.mongo.URI
 
-mongoose.Promise = global.Promise;
-mongoose.connect(config.mongo.URI)
+mongoose.Promise = global.Promise
+mongoose.connect(mongoUri)
 
 const db = mongoose.connection
 
-db.on('error', console.error);
+db.on('error', console.error)
 db.once('open', () => {
-  console.log(rangi.green('Connected To MongoDB'))
-});
+  console.log(rangi.green('>> mongo.js: Connected To MongoDB'))
+})
 
-module.exports = db;
+module.exports = db
 
 cron.schedule('* 3 * * *', () => {
   const sync = mongoose.createConnection('mongodb://sync:sync@ds029665.mlab.com:29665/banhammer')

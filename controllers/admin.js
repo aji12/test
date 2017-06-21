@@ -1,55 +1,57 @@
 'use strict'
 
-const moment = require('moment')
-const tgresolve = require('tg-resolve')
 const bot = require('../core/telegram')
 const config = require('../data/config.json')
 const Mod = require('../models/modsmodel')
+const moment = require('moment')
+const tgresolve = require('tg-resolve')
 const utils = require('../core/utils')
-const html = {parse_mode: 'HTML'}
-
 let time = `${moment().format('YYYY-MM-DD HH:mm:ss')}`
 
-bot.onText(/^[/!#]leave$/, msg => {
-  if (msg.from.id === config.sudo.ID) {
-    bot.leaveChat(msg.chat.id)
-  }
-})
+bot.onText(/^[/!#](.+)$/, (msg, match) => {
+  const lang = utils.getUserLang(msg)
 
-bot.onText(/^[/!#]promote$/, msg => {
-  if (!msg) return console.log('Is it a bot?')
-  if (!msg.reply_to_message) return console.log('Not a reply')
-  if (msg.from.id === config.sudo.ID) {
-    let newMod = new Mod({
-      userid: msg.reply_to_message.from.id,
-      name: msg.reply_to_message.from.first_name
-    })
-    newMod.save(err => {
-      let user = utils.escapeHtml(msg.reply_to_message.from.first_name)
-
-      if (err && err.code === 11000) {
-        bot.sendMessage(msg.chat.id, `<b>${user}</b> is already a global admin.`, html)
-      } else {
-        bot.sendMessage(msg.chat.id, `<b>${user}</b> is now a global admin.`, html)
-        bot.sendMessage(config.log.CHANNEL, `<b>${user}</b>, is now a global admin.\n${time}`, html)
+  switch (match[1]) {
+    case 'leave':
+      if (msg.from.id === config.sudo.ID) {
+        bot.leaveChat(msg.chat.id)
       }
-    })
-  }
-})
+      break
+    case 'promote':
+      if (!msg) { return console.log('>> admin.js: Is it a bot?') }
+      if (!msg.reply_to_message) { return console.log('>> admin.js: Not a reply') }
+      if (msg.from.id === config.sudo.ID) {
+        let newMod = new Mod({
+          userid: msg.reply_to_message.from.id,
+          name: msg.reply_to_message.from.first_name
+        })
+        newMod.save(err => {
+          let user = utils.buildUserName(msg.reply_to_message.from)
 
-bot.onText(/^[/!#]demote$/, msg => {
-  if (!msg.reply_to_message) return console.log('Not a reply')
-  if (msg.from.id === config.sudo.ID) {
-    Mod.remove({
-      userid: msg.reply_to_message.from.id
-    }, () => {
-      // Demote A Global Admin
-    })
+          if (err && err.code === 11000) {
+            bot.sendMessage(msg.chat.id, `${user} ${lang.admin.dlg[0]}.`, utils.optionalParams(msg))
+          } else {
+            bot.sendMessage(msg.chat.id, `${user} ${lang.admin.dlg[1]}.`, utils.optionalParams(msg))
+            bot.sendMessage(config.log.CHANNEL, `${user} ${lang.admin.dlg[1]}.\n${time}`, utils.optionalParams(msg))
+          }
+        })
+      }
+      break
+    case 'demote':
+      if (!msg.reply_to_message) { return console.log('>> admin.js: Not a reply') }
+      if (msg.from.id === config.sudo.ID) {
+        Mod.remove({
+          userid: msg.reply_to_message.from.id
+        }, () => {
+          // Demote A Global Admin
+        })
 
-    let user = utils.escapeHtml(msg.reply_to_message.from.first_name)
+        let user = utils.buildUserName(msg.reply_to_message.from)
 
-    bot.sendMessage(msg.chat.id, `<b>${user}</b> is no longer a global admin.`, html)
-    bot.sendMessage(config.log.CHANNEL, `<b>${user}</b> is no longer a global admin.\n${time}`, html)
+        bot.sendMessage(msg.chat.id, `${user} ${lang.admin.dlg[2]}.`, utils.optionalParams(msg))
+        bot.sendMessage(config.log.CHANNEL, `${user} ${lang.admin.dlg[2]}.\n${time}`, utils.optionalParams(msg))
+      }
+      break
   }
 })
 
@@ -60,13 +62,14 @@ bot.onText(/^[/!#]promote (\d+) (.+)/, (msg, match) => {
       name: match[2]
     })
     newMod.save(err => {
-      let user = utils.escapeHtml(match[2])
+      const lang = utils.getUserLang(msg)
+      const user = utils.escapeHtml(match[2])
 
       if (err && err.code === 11000) {
-        bot.sendMessage(msg.chat.id, `<b>${user}</b> is already a global admin.`, html)
+        bot.sendMessage(msg.chat.id, `<b>${user}</b> ${lang.admin.dlg[0]}.`, utils.optionalParams(msg))
       } else {
-        bot.sendMessage(msg.chat.id, `<b>${user}</b> is now a global admin.`, html)
-        bot.sendMessage(config.log.CHANNEL, `<b>${user}</b> <code>([${match[1]}])</code> is now a global admin.\n${time}`, html)
+        bot.sendMessage(msg.chat.id, `<b>${user}</b> ${lang.admin.dlg[1]}.`, utils.optionalParams(msg))
+        bot.sendMessage(config.log.CHANNEL, `<b>${user}</b> <code>([${match[1]}])</code> ${lang.admin.dlg[1]}.\n${time}`, utils.optionalParams(msg))
       }
     })
   }
@@ -74,15 +77,16 @@ bot.onText(/^[/!#]promote (\d+) (.+)/, (msg, match) => {
 
 bot.onText(/^[/!#]demote (\d+) (.+)/, (msg, match) => {
   if (msg.from.id === config.sudo.ID) {
-    let user = utils.escapeHtml(match[2])
+    const lang = utils.getUserLang(msg)
+    const user = utils.escapeHtml(match[2])
 
     Mod.remove({
       userid: match[1]
     }, () => {
       // Demote A Global Admin
     })
-    bot.sendMessage(msg.chat.id, `<b>${user}</b> is no longer a global admin.`, html)
-    bot.sendMessage(config.log.CHANNEL, `<b>${user}</b> <code>([${match[1]}])</code> is no longer a global admin.\n${time}`, html)
+    bot.sendMessage(msg.chat.id, `<b>${user}</b> ${lang.admin.dlg[2]}.`, utils.optionalParams(msg))
+    bot.sendMessage(config.log.CHANNEL, `<b>${user}</b> <code>([${match[1]}])</code> ${lang.admin.dlg[2]}.\n${time}`, utils.optionalParams(msg))
   }
 })
 
@@ -95,13 +99,14 @@ bot.onText(/^[/!#]promote (@\w+) (.+)/, (msg, match) => {
         name: result.first_name
       })
       newMod.save(err => {
-        let user = utils.escapeHtml(result.first_name)
+        const lang = utils.getUserLang(msg)
+        const user = utils.buildUserName(result)
 
         if (err && err.code === 11000) {
-          bot.sendMessage(msg.chat.id, `<b>${user}</b> is already a global admin.`, html)
+          bot.sendMessage(msg.chat.id, `${user} ${lang.admin.dlg[0]}.`, utils.optionalParams(msg))
         } else {
-          bot.sendMessage(msg.chat.id, `<b>${user}</b> is now a global admin.`, html)
-          bot.sendMessage(config.log.CHANNEL, `<b>${user}</b> <code>([${result.id}])</code> is now a global admin.\n${time}`, html)
+          bot.sendMessage(msg.chat.id, `${user} ${lang.admin.dlg[1]}.`, utils.optionalParams(msg))
+          bot.sendMessage(config.log.CHANNEL, `${user} ${lang.admin.dlg[1]}.\n${time}`, utils.optionalParams(msg))
         }
       })
     })
@@ -117,11 +122,11 @@ bot.onText(/^[/!#]demote (@\w+) (.+)/, (msg, match) => {
       }, () => {
         // Demote A Global Admin
       })
+      const lang = utils.getUserLang(msg)
+      const user = utils.buildUserName(result)
 
-      let user = utils.escapeHtml(result.first_name)
-
-      bot.sendMessage(msg.chat.id, `*${user}* is no longer a global admin.`, html)
-      bot.sendMessage(config.log.CHANNEL, `<b>${user}</b> <code>([${result.id}])</code> is no longer a global admin.\n${time}`, html)
+      bot.sendMessage(msg.chat.id, `${user} ${lang.admin.dlg[2]}.`, utils.optionalParams(msg))
+      bot.sendMessage(config.log.CHANNEL, `${user} ${lang.admin.dlg[2]}.\n${time}`, utils.optionalParams(msg))
     })
   }
 })

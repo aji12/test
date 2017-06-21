@@ -7,9 +7,10 @@ const utils = require('../core/utils')
 bot.onText(/^[/!#]grouproll/, (msg, match) => {
   if (msg.from.id !== config.sudo.ID) { return }
 
-  let groups = (msg.reply_to_message) ? msg.reply_to_message.text : msg.text
+  const groups = (msg.reply_to_message) ? msg.reply_to_message.text : msg.text
+  const lang = utils.getUserLang(msg)
 
   utils.db.push('/grouproll', groups.replace(/^[/!#]grouproll/, ''))
 
-  bot.sendMessage(msg.chat.id, 'Group roll has been save.', utils.optionalParams(msg))
+  bot.sendMessage(msg.chat.id, `${lang.grouproll.dlg[0]}.`, utils.optionalParams(msg))
 })

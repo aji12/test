@@ -1,6 +1,6 @@
 {
   "name": "tgramindobot",
-  "version": "2.1.0",
+  "version": "3.1.0",
   "description": "A simple Node.js Telegram bot",
   "main": "bot.js",
   "scripts": {
@@ -27,6 +27,6 @@
     "rangi": "^1.0.1",
     "request": "^2.81.0",
     "tg-resolve": "^1.3.1",
-    "tgfancy": "^0.8.0",
+    "tgfancy": "^0.8.0"
   }
 }
