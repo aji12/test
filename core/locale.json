@@ -92,7 +92,7 @@
         "Username",
         "Language",
         "Unable to connect to @pwrtelegram.",
-        "Type /id, by post or reply.\nPost /id @username to resolve the @username\n\n<b>Disclaimer</b>: Resolving a username is using @pwrtelegram service, which is sometimes unreliable",
+        "Type /id, by post or reply.\nPost /id @username to resolve the @username\n\n<b>Disclaimer</b>: Resolving a username is using @pwrtelegram service, which is sometimes unreliable.",
         "and you are messaging",
         "You are"
       ]
@@ -338,14 +338,14 @@
         "Nama pengguna",
         "Bahasa",
         "Tidak dapat terhubung ke @pwrtelegram.",
-        "Kirim /id, dengan mengirim biasa atau dengan membalas pesan.\nKirim /id @username untuk mengetahui identitas @username\n\n<b>Maklumat</b>: Mengetahui identitas dari @username dimungkinkan dengan menggunakan layanan @pwrtelegram, yang kadangkala tidak dapat diandalkan",
+        "Kirim /id, dengan mengirim biasa atau dengan membalas pesan.\nKirim /id @username untuk mengetahui identitas @username\n\n<b>Maklumat</b>: Mengetahui identitas dari @username dimungkinkan dengan menggunakan layanan @pwrtelegram, yang kadangkala tidak dapat diandalkan.",
         "dan Anda mengirim pesan ke",
         "Anda adalah"
       ]
     },
     "info": {
       "dlg": [
-        "Generated on",
+        "Dibuat pada",
         "Admin Global"
       ]
     },

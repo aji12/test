@@ -1,7 +1,10 @@
 'use strict'
 
 const bot = require('../core/telegram')
+const config = require('../data/config.json')
 const utils = require('../core/utils')
+
+let db = utils.readJSONFile(config.database.DB)
 let dumpState
 
 function varDump (msg) {
@@ -23,19 +26,21 @@ bot.onText(/^[/!#]dump$/, (msg) => {
       let jdmessage
 
       try {
-        const getDumpState = utils.db.getData(`/${msg.from.id}/dump`)
+        const getDumpState = db[msg.from.id].dump
 
         if (getDumpState === 'on') {
-          utils.db.push(`/${msg.from.id}/`, {dump: 'off'}, false)
+          db[msg.from.id].dump = 'off'
           dumpState = 'off'
           jdmessage = `${jdlang.jsondump.dlg[0]}`
         } else {
-          utils.db.push(`/${msg.from.id}/`, {dump: 'on'}, false)
+          db[msg.from.id].dump = 'on'
           dumpState = 'on'
           jdmessage = `${jdlang.jsondump.dlg[1]}`
         }
+        utils.saveToFile(config.database.DB, db)
       } catch (error) {
-        utils.db.push(`/${msg.from.id}/`, {dump: 'on'}, false)
+        db[msg.from.id].dump = 'on'
+        utils.saveToFile(config.database.DB, db)
         dumpState = 'on'
         jdmessage = `${jdlang.jsondump.dlg[1]}`
       }

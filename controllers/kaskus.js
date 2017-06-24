@@ -3,9 +3,11 @@
 const bot = require('../core/telegram')
 const utils = require('../core/utils')
 const scrapy = require('node-scrapy')
-const kaskusUrl = 'https://m.kaskus.co.id'
-const instantViewHash = '&rhash=35800363c0e8b6'
+
 let forum
+const instantViewHash = '&rhash=35800363c0e8b6'
+let kasdb = utils.readJSONFile('data/kaskus.json')
+const kaskusUrl = 'https://m.kaskus.co.id'
 
 const kaskusForums = {
   6: 'Image',
@@ -388,7 +390,7 @@ function viewThread (msg, pageNum) {
   let page = Number(pageNum)
 
   try {
-    kaskus = utils.db.getData(`/${msg.chat.id}/kaskus`)
+    kaskus = kasdb[msg.chat.id]
   } catch (error) {
     console.error(error.message)
     return
@@ -421,6 +423,7 @@ function viewThread (msg, pageNum) {
   }
 
   bot.editMessageText(forum + '\n' + kasthread, threadParams).catch((error) => {
+    if (error) { console.log(error.response.body) }
     bot.sendMessage(msg.chat.id, forum + '\n' + kasthread, threadParams)
   })
 }
@@ -455,7 +458,7 @@ function getKaskus (msg, forumId) {
   }
 
   scrapy.scrape(url, model, (err, data) => {
-    if (err) return console.error(err)
+    if (err) { return console.error(err) }
 
     if (!data.tautan) {
       bot.sendMessage(msg.chat.id, `Gagal membaca forum <a href="${kaskusUrl}/forum/${forumId}">${kaskusForums[forumId]}</a>.`, utils.optionalParams(msg))
@@ -483,7 +486,8 @@ function getKaskus (msg, forumId) {
     }
 
     forum = '<b>' + data.forum + '</b>\n'
-    utils.db.push(`/${msg.chat.id}/kaskus`, threads)
+    kasdb[msg.chat.id] = threads
+    utils.saveToFile('data/kaskus.json', kasdb)
 
     switch (msg.chat.type) {
       case 'private':

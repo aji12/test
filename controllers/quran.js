@@ -1,8 +1,8 @@
 'use strict'
 
+const axios = require('axios')
 const bot = require('../core/telegram')
 const config = require('../data/config.json')
-const request = require('request')
 const utils = require('../core/utils')
 
 const surahName = {
@@ -174,26 +174,18 @@ function getVerseNum (verse) {
   }
 }
 
-function getAyah (num, callback) {
-  request(num, (error, res, body) => {
-    if (error) {
-      console.log(error)
-    } else {
-      const jayah = JSON.parse(body)
-      callback(jayah)
-    }
-  })
-}
-
-function getLang (id, callback) {
-  request(id, (error, res, body) => {
-    if (error) {
-      console.log(error)
-    } else {
-      const jlang = JSON.parse(body)
-      callback(jlang)
-    }
-  })
+function getAyahOrLang (msg, num, callback) {
+  axios.get(num)
+    .then(response => {
+      if (response.status !== 200) {
+        bot.sendMessage(msg.chat.id, `<code>Error ${response.status}: ${response.statusText}</code>`, utils.optionalParams(msg))
+        return
+      }
+      callback(response.data)
+    })
+    .catch(error => {
+      bot.sendMessage(msg.chat.id, `<code>${error}</code>`, utils.optionalParams(msg))
+    })
 }
 
 function quran (msg, surah, ayah, verse, lang) {
@@ -234,13 +226,13 @@ function quran (msg, surah, ayah, verse, lang) {
     }
   }
 
-  getAyah(gqAyah, (verse) => {
+  getAyahOrLang(msg, gqAyah, (verse) => {
     const verseNum = getVerseNum(verse)
     const surahNum = verse.quran['quran-simple'][`${verseNum}`].surah
     const ayahNum = verse.quran['quran-simple'][`${verseNum}`].ayah
 
     if (gqLang) {
-      getLang(gqLang, (language) => {
+      getAyahOrLang(msg, gqLang, (language) => {
         const verseTrans = language.quran[translation][`${verseNum}`].verse
         const gqOutput = verse.quran['quran-simple'][`${verseNum}`].verse + '\n\n' + verseTrans + ' (<b>' + surahName[surahNum] + ':' + ayahNum + '</b>)'
         bot.sendMessage(msg.chat.id, gqOutput, utils.optionalParams(msg))

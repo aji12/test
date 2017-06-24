@@ -1,11 +1,11 @@
 'use strict'
 
 const bot = require('../core/telegram')
-const cfg = 'data/config.json'
-const config = require(`../${cfg}`)
 const utils = require('../core/utils')
-const locale = utils.locale
-let db = utils.db
+
+const cfg = 'data/config.json'
+let config = utils.readJSONFile(cfg)
+let db = utils.readJSONFile(config.database.DB)
 
 function buildKbdPage (lang, ptype) {
   let man, plugins, usr
@@ -56,8 +56,7 @@ function buildKbdPage (lang, ptype) {
     manpage[p].push(mainmenuBtn)
   }
   config.plugins[usr] = JSON.stringify(manpage)
-  utils.saveToFile(cfg, config)
-  return utils.reloadModule(`../${cfg}`)
+  utils.saveToFile(cfg, config, true)
 }
 
 // Language settings
@@ -136,9 +135,8 @@ bot.on('callback_query', msg => {
 
       if (lnk === 'grouproll') {
         try {
-          db.reload()
-          const data = db.getData('/grouproll')
-          bot.editMessageText(data, params).catch((error) => console.log(error.response.body))
+          db = utils.readJSONFile(config.database.DB)
+          bot.editMessageText(db.grouproll, params).catch((error) => console.log(error.response.body))
         } catch (error) {
           bot.editMessageText(`${lang.menu.dlg[0]}`, params).catch((error) => console.log(error.response.body))
         }
@@ -160,14 +158,15 @@ bot.on('callback_query', msg => {
       break
     case 'setlang_':
       const setlangCode = msg.data.slice(8)
-      lang = locale[`${setlangCode}`]
+      lang = utils.locale[`${setlangCode}`]
       const setlangParams = params
       navi.unshift({
         text: `${lang.back.btn}`,
         callback_data: 'settings_'
       })
       setlangParams.reply_markup = { inline_keyboard: [navi] }
-      db.push(`/${msg.from.id}/`, { lang: setlangCode }, false)
+      db[msg.from.id] = {lang: setlangCode}
+      utils.saveToFile(config.database.DB, db)
 
       let choosenLang = ''
       if (setlangCode === 'en') choosenLang = '🇬🇧 English'

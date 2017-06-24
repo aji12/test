@@ -1,7 +1,7 @@
 'use strict'
 
+const axios = require('axios')
 const bot = require('../core/telegram')
-const request = require('request')
 const utils = require('../core/utils')
 
 bot.onText(/^[/!#]ud (.+)/, (msg) => {
@@ -9,23 +9,29 @@ bot.onText(/^[/!#]ud (.+)/, (msg) => {
   const slang = msg.text.slice(4)
   const url = 'http://api.urbandictionary.com/v0/define?term=' + encodeURIComponent(slang)
 
-  request(url, (error, response, body) => {
-    if (error || response.statusCode !== 200) {
-      return bot.sendMessage(msg.chat.id, `${lang.error[0]}`, utils.optionalParams(msg))
-    }
+  axios.get(url)
+    .then(response => {
+      if (response.status !== 200) {
+        bot.sendMessage(msg.chat.id, `<code>Error ${response.status}: ${response.statusText}</code>`, utils.optionalParams(msg))
+        return
+      }
 
-    const jud = JSON.parse(body)
+      const udata = response.data
 
-    if (jud.result_type === 'no_results') {
-      return bot.sendMessage(msg.chat.id, `${lang.urbandictionary.dlg[0]} "${slang}".`, utils.optionalParams(msg))
-    }
+      if (udata.result_type === 'no_results') {
+        bot.sendMessage(msg.chat.id, `${lang.urbandictionary.dlg[0]} "${slang}".`, utils.optionalParams(msg))
+        return
+      }
 
-    let output = jud.list[0].definition
+      let output = `<b>${udata.list[0].word}</b>\n${udata.list[0].definition}`
 
-    if (jud.list[0].example.length > 0) {
-      output += '\n\n<i>' + jud.list[0].example + '</i>'
-    }
+      if (udata.list[0].example.length > 0) {
+        output += '\n\n<i>' + udata.list[0].example + '</i>'
+      }
 
-    bot.sendMessage(msg.chat.id, output, utils.optionalParams(msg))
-  })
+      bot.sendMessage(msg.chat.id, output, utils.optionalParams(msg))
+    })
+    .catch(error => {
+      bot.sendMessage(msg.chat.id, `<code>${error}</code>`, utils.optionalParams(msg))
+    })
 })

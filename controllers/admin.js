@@ -93,7 +93,7 @@ bot.onText(/^[/!#]demote (\d+) (.+)/, (msg, match) => {
 bot.onText(/^[/!#]promote (@\w+) (.+)/, (msg, match) => {
   if (msg.from.id === config.sudo.ID) {
     tgresolve(config.bot.TOKEN, match[1], (error, result) => {
-      if (error) return console.log('Error')
+      if (error) { return console.log(error) }
       let newMod = new Mod({
         userid: result.id,
         name: result.first_name
@@ -116,7 +116,7 @@ bot.onText(/^[/!#]promote (@\w+) (.+)/, (msg, match) => {
 bot.onText(/^[/!#]demote (@\w+) (.+)/, (msg, match) => {
   if (msg.from.id === config.sudo.ID) {
     tgresolve(config.bot.TOKEN, match[1], (error, result) => {
-      if (error) return console.log('Error')
+      if (error) { return console.log(error) }
       Mod.remove({
         userid: result.id
       }, () => {

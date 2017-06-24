@@ -34,7 +34,7 @@ bot.onText(/^[/!#]kbbi (.+)/, (msg, match) => {
   }
 
   scrapy.scrape(url, model, (err, data) => {
-    if (err) return console.log(err)
+    if (err) { return console.log(err) }
 
     let artikata, lema, artisatu
     let kbbi = []

@@ -1,29 +1,27 @@
 'use strict'
 
+const axios = require('axios')
 const bot = require('../core/telegram')
 const FeedParser = require('feedparser')
-const request = require('request')
 const utils = require('../core/utils')
 let results = []
 
 bot.onText(/^[/!#](hn|hackernews)$/, (msg) => {
   const feedUrl = 'https://news.ycombinator.com/rss'
   const limit = (msg.chat.type === 'private') ? 8 : 4
-  const req = request(feedUrl)
   const feedparser = new FeedParser([feedUrl])
 
-  req.on('error', function (error) {
-    bot.sendMessage(msg.chat.id, 'Request error.', utils.optionalParams(msg))
-  })
-
-  req.on('response', function (res) {
-    const stream = this
-
-    if (res.statusCode !== 200) {
-      bot.sendMessage(msg.chat.id, 'Bad status code.', utils.optionalParams(msg))
-    } else {
-      stream.pipe(feedparser)
+  axios.get(feedUrl, {
+    responseType: 'stream'
+  }).then(response => {
+    if (response.status !== 200) {
+      bot.sendMessage(msg.chat.id, `<code>Error ${response.status}: ${response.statusText}</code>`, utils.optionalParams(msg))
+      return
     }
+    response.data.pipe(feedparser)
+  })
+  .catch(error => {
+    bot.sendMessage(msg.chat.id, `<code>${error}</code>`, utils.optionalParams(msg))
   })
 
   feedparser.on('error', function (error) {

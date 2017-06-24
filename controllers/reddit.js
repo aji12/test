@@ -1,7 +1,7 @@
 'use strict'
 
+const axios = require('axios')
 const bot = require('../core/telegram')
-const request = require('request')
 const utils = require('../core/utils')
 
 bot.onText(/^[/!#](reddit|r) (.+)/, (msg, match) => {
@@ -21,27 +21,34 @@ bot.onText(/^[/!#](reddit|r) (.+)/, (msg, match) => {
     url = `https://www.reddit.com/r/${input}/.json?limit=${limit}`
   }
 
-  request(url, (error, response, body) => {
-    const jreddit = JSON.parse(body)
-    const reddit = jreddit.data.children
-    let sub = []
-
-    if (error || response.statusCode !== 200) {
-      return bot.sendMessage(msg.chat.id, `Error <code>${response.statusCode}</code>`, utils.optionalParams(msg))
-    }
-    if (reddit.length === 0) {
-      if (jreddit.data.facets) {
-        return bot.sendMessage(msg.chat.id, `${lang.reddit.dlg[1]}`, utils.optionalParams(msg))
-      } else {
-        return bot.sendMessage(msg.chat.id, `${lang.reddit.dlg[2]}`, utils.optionalParams(msg))
+  axios.get(url)
+    .then(response => {
+      if (response.status !== 200) {
+        bot.sendMessage(msg.chat.id, `<code>Error ${response.status}: ${response.statusText}</code>`, utils.optionalParams(msg))
+        return
       }
-    }
-    for (let i = 0; i < reddit.length; i++) {
-      sub.push('• <a href="https://redd.it/' + reddit[i].data.id + '">' + utils.escapeHtml(reddit[i].data.title) + '</a>')
-    }
 
-    let subreddit = sub.join('\n')
+      const reddit = response.data.data.children
+      let sub = []
 
-    bot.sendMessage(msg.chat.id, `${title}\n${subreddit}`, utils.optionalParams(msg))
-  })
+      if (reddit.length === 0) {
+        if (response.data.data.facets) {
+          bot.sendMessage(msg.chat.id, `${lang.reddit.dlg[1]}`, utils.optionalParams(msg))
+          return
+        } else {
+          bot.sendMessage(msg.chat.id, `${lang.reddit.dlg[2]}`, utils.optionalParams(msg))
+          return
+        }
+      }
+      for (let i = 0; i < reddit.length; i++) {
+        sub.push('• <a href="https://redd.it/' + reddit[i].data.id + '">' + utils.escapeHtml(reddit[i].data.title) + '</a>')
+      }
+
+      let subreddit = sub.join('\n')
+
+      bot.sendMessage(msg.chat.id, `${title}\n${subreddit}`, utils.optionalParams(msg))
+    })
+    .catch(error => {
+      bot.sendMessage(msg.chat.id, `<code>${error}</code>`, utils.optionalParams(msg))
+    })
 })

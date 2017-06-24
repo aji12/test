@@ -18,7 +18,7 @@ bot.onText(/^[/!#](.+)$/, (msg, match) => {
       Mod.count({
         userid: msg.from.id
       }, (err, count) => {
-        if (err) return console.log('>> banhammer.js: Mod count error')
+        if (err) { return console.log('>> banhammer.js: Mod count error') }
         if (count > 0 || (config.sudo.ID === msg.from.id)) {
           bot.kickChatMember(msg.chat.id, msg.reply_to_message.from.id)
 
@@ -44,7 +44,7 @@ bot.onText(/^[/!#](.+)$/, (msg, match) => {
       Mod.count({
         userid: msg.from.id
       }, (err, count) => {
-        if (err) return console.log('>> banhammer.js: Mod count error')
+        if (err) { return console.log('>> banhammer.js: Mod count error') }
         if (count > 0 || (config.sudo.ID === msg.from.id)) {
           bot.unbanChatMember(msg.chat.id, msg.reply_to_message.from.id)
           Ban.remove({
@@ -67,7 +67,7 @@ bot.onText(/^[/!#]hammer (\d+)/, (msg, match) => {
   Mod.count({
     userid: msg.from.id
   }, (err, count) => {
-    if (err) return console.log('>> banhammer.js: Mod count error')
+    if (err) { return console.log('>> banhammer.js: Mod count error') }
     if (count > 0 || (config.sudo.ID === msg.from.id)) {
       let newBan = new Ban({
         userid: match[1]
@@ -91,7 +91,7 @@ bot.onText(/^[/!#]unhammer (\d+)/, (msg, match) => {
   Mod.count({
     userid: msg.from.id
   }, (err, count) => {
-    if (err) return console.log('>> banhammer.js: Mod count error')
+    if (err) { return console.log('>> banhammer.js: Mod count error') }
     if (count > 0 || (config.sudo.ID === msg.from.id)) {
       Ban.remove({
         userid: match[1]
@@ -114,10 +114,10 @@ bot.onText(/^[/!#]hammer (@\w+)/, (msg, match) => {
   Mod.count({
     userid: msg.from.id
   }, (err, count) => {
-    if (err) return console.log('>> banhammer.js: Mod count error')
+    if (err) { return console.log('>> banhammer.js: Mod count error') }
     if (count > 0 || (config.sudo.ID === msg.from.id)) {
       tgresolve(config.bot.TOKEN, match[1], (error, result) => {
-        if (error) return console.log('>> banhammer.js: tgresolve error')
+        if (error) { return console.log('>> banhammer.js: tgresolve error') }
         let newBan = new Ban({
           userid: result.id
         })
@@ -142,14 +142,14 @@ bot.onText(/^[/!#]unhammer (@\w+)/, (msg, match) => {
   Mod.count({
     userid: msg.from.id
   }, (err, count) => {
-    if (err) return console.log('>> banhammer.js: Mod count error')
+    if (err) { return console.log('>> banhammer.js: Mod count error') }
     if (count > 0 || (config.sudo.ID === msg.from.id)) {
       tgresolve(config.bot.TOKEN, match[1], (error, result) => {
-        if (error) return console.log('>> banhammer.js: tgresolve error')
+        if (error) { return console.log('>> banhammer.js: tgresolve error') }
         Ban.remove({
           userid: result.id
         }, (err, cb) => {
-          if (err) return console.log('>> banhammer.js: Ban remove error')
+          if (err) { return console.log('>> banhammer.js: Ban remove error') }
           if (cb.result.n == 0) {
             console.log('>> banhammer.js: User Not Found!')
           }

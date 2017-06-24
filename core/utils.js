@@ -3,13 +3,11 @@
 const bot = require('../core/telegram')
 const config = require('../data/config.json')
 const fs = require('fs')
-const JsonDB = require('node-json-db')
 const locale = require('../core/locale.json')
 const request = require('request')
 
 const utilities = {}
 
-utilities.db = new JsonDB(config.database.DB, true, false)
 utilities.locale = locale
 
 utilities.buildUserName = function (user) {
@@ -95,18 +93,19 @@ utilities.getCoord = function (msg, input, callback) {
   })
 }
 utilities.getUserLang = function (msg) {
+  let db = utilities.readJSONFile(config.database.DB)
   let lang = msg.from.language_code ? msg.from.language_code : 'en'
   lang = lang.match(/^id/i) ? 'id' : 'en'
 
   try {
-    utilities.db.reload()
-    const dbLang = utilities.db.getData(`/${msg.from.id}/lang`, false)
+    const dbLang = db[msg.from.id].lang
     if (dbLang) {
       lang = dbLang
     }
   } catch (error) {
     console.error(error.message)
-    utilities.db.push(`/${msg.from.id}/`, {lang: `${lang}`}, false)
+    db[msg.from.id] = {lang: lang}
+    utilities.saveToFile(config.database.DB, db)
   }
 
   return locale[`${lang}`]
@@ -144,6 +143,11 @@ utilities.parseInline = function (message, commandName, options = {}) {
   return this.parseCommand(message, commandName, options)
 }
 
+utilities.readJSONFile = function (file) {
+  const json = JSON.parse(fs.readFileSync(file, 'utf8'))
+  return json
+}
+
 // https://stackoverflow.com/questions/3561493
 utilities.regexEscape = function (str) {
   return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
@@ -154,14 +158,18 @@ utilities.reloadModule = function (module) {
   return require(module)
 }
 
-utilities.saveToFile = function (file, data) {
-  fs.writeFileSync(file, JSON.stringify(data, null, 2), function (err) {
-    if (err) {
-      console.log(err)
+utilities.saveToFile = function (file, data, humanReadable) {
+  try {
+    if (humanReadable) {
+      data = JSON.stringify(data, null, 2)
     } else {
-      console.log(`Output saved to ${file}`)
+      data = JSON.stringify(data)
     }
-  })
+    fs.writeFileSync(file, data, 'utf8')
+    console.log(`Data saved to ${file}`)
+  } catch (err) {
+    console.log("Can't save the data")
+  }
 }
 
 utilities.sendError = function (msg, error) {

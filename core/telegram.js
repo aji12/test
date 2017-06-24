@@ -1,10 +1,10 @@
 'use strict'
 
-const Tgfancy = require('tgfancy')
 const config = require('../data/config.json')
 const moment = require('moment')
-const rangi = require('rangi')
 const now = Math.round(+new Date() / 1000)
+const Tgfancy = require('tgfancy')
+const utils = require('../core/utils')
 
 function sendMonospace (target, msg) {
   let jstring = JSON.stringify(msg)
@@ -23,8 +23,11 @@ const bot = new Tgfancy(config.bot.TOKEN, {
 })
 
 bot.getMe().then(me => {
-  console.log(rangi.cyan(`Bot Is Running => ${me.username}`));
+  config.bot.ID = me.id
+  config.bot.UNAME = me.username
+  console.log(`>> telegram.js: Bot Is Running => ${me.username}`)
   bot.sendMessage(config.sudo.ID, `<b>I am alive!</b>\n<code>${moment().format('YYYY-MM-DD HH.mm.ss')}</code>`, {parse_mode: 'HTML'})
+  utils.saveToFile('data/config.json', config, true)
 })
 
 bot.on('text', msg => {

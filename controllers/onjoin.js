@@ -1,7 +1,8 @@
 'use strict'
 
-const bot = require('../core/telegram')
 const Ban = require('../models/banmodel')
+const bot = require('../core/telegram')
+const config = require('../data/config.json')
 const utils = require('../core/utils')
 
 bot.on('new_chat_participant', msg => {
@@ -20,17 +21,15 @@ bot.on('new_chat_participant', msg => {
 })
 
 bot.on('new_chat_participant', msg => {
-  bot.getMe().then(me => {
-    if (msg.new_chat_participant.username === me.username) {
-      bot.sendMessage(msg.chat.id, `<code>Hello there! I am a group administration bot, hit the button below to learn more about me!</code>`, {
-        parse_mode: 'HTML',
-        reply_markup: {
-          inline_keyboard: [[{
-            text: `Start Me`,
-            url: `https://telegram.me/${me.username}?start`
-          }]]
-        }
-      })
-    }
-  })
+  if (msg.new_chat_participant.id === config.bot.id) {
+    bot.sendMessage(msg.chat.id, `<code>Hello there! I am a group administration bot, hit the button below to learn more about me!</code>`, {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [[{
+          text: `Start Me`,
+          url: `https://telegram.me/${config.bot.UNAME}?start`
+        }]]
+      }
+    })
+  }
 })

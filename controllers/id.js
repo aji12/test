@@ -6,7 +6,7 @@ const config = require('../data/config.json')
 const utils = require('../core/utils')
 
 function getUserProperties (msg, lang, user) {
-  let name = `<b> ${utils.escapeHtml(user.first_name)} </b> `
+  let name = `<b>${utils.escapeHtml(user.first_name)}</b> `
 
   if (user.last_name) {
     name += `<b> ${utils.escapeHtml(user.last_name)}</b>`
@@ -14,8 +14,9 @@ function getUserProperties (msg, lang, user) {
   }
   if (user.username) name += `\n${lang.id.dlg[2]}: <a href="https://t.me/${user.username}">@${user.username}</a>`
 
-  name += `\nID: <code>${user.id}</code>\n${lang.id.dlg[3]}: ${user.language_code}`
+  name += `\nID: <code>${user.id}</code>`
 
+  if (user.language_code) name += `\n${lang.id.dlg[3]}: ${user.language_code}`
   if (user.type) name += `\nType: ${user.type}`
 
   bot.sendMessage(msg.chat.id, name, {

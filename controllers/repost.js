@@ -9,7 +9,8 @@ bot.onText(/^[/!#]repost (.+)/, (msg, match) => {
   const target = `${match[1]}`.replace(/ .+/, '')
 
   if ((!target.match(/^-/)) && (msg.from.id !== config.sudo.ID)) {
-    return bot.sendMessage(msg.from.id, `${lang.repost.dlg[0]}`, utils.optionalParams(msg))
+    bot.sendMessage(msg.from.id, `${lang.repost.dlg[0]}`, utils.optionalParams(msg))
+    return
   }
 
   bot.getChatAdministrators(target).then(admins => admins.some(child => child.user.id === msg.from.id)).then(isAdmin => {

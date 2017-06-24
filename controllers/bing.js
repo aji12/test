@@ -1,8 +1,8 @@
 'use strict'
 
+const axios = require('axios')
 const bot = require('../core/telegram')
 const config = require('../data/config.json')
-const request = require('request')
 const utils = require('../core/utils')
 
 function getBing (msg, query) {
@@ -14,18 +14,18 @@ function getBing (msg, query) {
     return
   }
 
-  request({
-    url: 'https://api.cognitive.microsoft.com/bing/v5.0/search?q=' + query + '&' + limit,
-    method: 'GET',
+  axios.get('https://api.cognitive.microsoft.com/bing/v5.0/search?q=' + query + '&' + limit, {
     headers: {
       'Ocp-Apim-Subscription-Key': config.bing.KEY
     }
-  }, (error, res, body) => {
-    if (error) return console.log(error)
-    if (!body) return console.log('>> bing.js: No results')
+  }).then(response => {
+    console.log(response)
+    if (response.status !== 200) {
+      bot.sendMessage(msg.chat.id, `<code>Error ${response.status}: ${response.statusText}</code>`, utils.optionalParams(msg))
+      return
+    }
 
-    const bbody = JSON.parse(body)
-    const webPages = bbody.webPages ? bbody.webPages.value : 0
+    const webPages = response.data.webPages ? response.data.webPages.value : 0
 
     if (webPages === 0) {
       bot.sendMessage(msg.chat.id, `${lang.bing.dlg[1]} <b>${query}</b>`, utils.optionalParams(msg))
@@ -43,6 +43,9 @@ function getBing (msg, query) {
     const title = `<b>${lang.bing.dlg[2]} </b>${query}<b>:</b>`
 
     bot.sendMessage(msg.chat.id, `${title}\n${subreddit}`, utils.optionalParams(msg))
+  })
+  .catch(error => {
+    bot.sendMessage(msg.chat.id, `<code>${error}</code>`, utils.optionalParams(msg))
   })
 }
 

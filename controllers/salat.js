@@ -1,30 +1,33 @@
 'use strict'
 
+const axios = require('axios')
 const bot = require('../core/telegram')
 const adhan = require('adhan')
 const moment = require('moment')
-const request = require('request')
 const utils = require('../core/utils')
 
 // Gets timezone for a location.
 function getTime (msg, area, lat, lng, callback) {
-  const lang = utils.getUserLang(msg)
   const url = 'https://maps.googleapis.com/maps/api/timezone/json?'
   const parameters = 'location=' + lat + ',' + lng + '&timestamp=' + msg.date
 
-  request(url + parameters, (error, response, body) => {
-    if (error) {
-      bot.sendMessage(msg.chat.id, `${lang.error[0]}`, utils.optionalParams(msg))
-    } else {
-      const tz = JSON.parse(body)
-      if (tz.status === 'ZERO_RESULTS') {
-        bot.sendMessage(msg.chat.id, `${tz.status} "<i>${area}</i>".`, utils.optionalParams(msg))
+  axios.get(url + parameters)
+    .then(response => {
+      console.log(response)
+      if (response.status !== 200) {
+        bot.sendMessage(msg.chat.id, `<code>Error ${response.status}: ${response.statusText}</code>`, utils.optionalParams(msg))
+        return
+      }
+      if (response.data.status === 'ZERO_RESULTS') {
+        bot.sendMessage(msg.chat.id, `${response.data.status} "<i>${area}</i>".`, utils.optionalParams(msg))
       } else {
-        const timezone = tz
+        const timezone = response.data
         callback(timezone)
       }
-    }
-  })
+    })
+    .catch(error => {
+      bot.sendMessage(msg.chat.id, `<code>${error}</code>`, utils.optionalParams(msg))
+    })
 }
 
 bot.onText(/^[/!#]s(a|o|ha|ho)lat (.+)/, (msg, match) => {
