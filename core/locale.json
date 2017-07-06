@@ -2,7 +2,11 @@
   "en": {
     "about": {
       "btn": "About",
-      "info": "<b>TGramIndoBot</b> is written by @si_kabayan based on <a href=\"https://github.com/kamikazechaser/ThorsHammer\">ThorsHammer</a> licensed as AGPL-v3.0."
+      "info": "<b>TGramIndoBot</b> is written by @si_kabayan based on <a href=\"https://github.com/kamikazechaser/ThorsHammer\">ThorsHammer</a> and licensed as AGPL-v3.0."
+    },
+    "apod": {
+      "btn": "APOD",
+      "info": "<b>APOD</b>\n\nReturns the NASA's Astronomy Picture of the Day.\n\n<code>/apod</code>\nReturns today NASA's APOD.\n\n<code>/apodtext</code>\nReturns today NASA's APOD with explanation.\n\n<code>/apod [YYYY-MM-DD]</code>\nReturns NASA's APOD on <code>YYYY-MM-DD</code>.\n\n<code>/apodtext [YYYY-MM-DD]</code>\nReturns NASA's APOD on <code>YYYY-MM-DD</code> with explanation.\n\n<b>Example:</b>\n• /apod\n• <code>/apod 2010-11-12</code>\n• /apodtext\n• <code>/apodtext 2010-11-12</code>"
     },
     "admin": {
       "btn": "Admin Help",
@@ -12,9 +16,6 @@
         "is now a global admin",
         "is no longer a global admin"
       ]
-    },
-    "back": {
-      "btn": "<< Back"
     },
     "banhammer": {
       "btn": "Banhammer",
@@ -38,12 +39,28 @@
       "btn": "Commands",
       "info": "Press command buttons below to see the instruction on how to use the plugins.\n\nYou can use either <code>/, !, or #</code> as command prefixes."
     },
+    "code": "en",
     "credits": {
       "btn": "Credits"
     },
+    "currency": {
+      "btn": "Currency",
+      "info": "<b>Currency</b>\n\nConverts exchange rates for various currencies via <a href=\"https://www.google.com/finance/converter\">Google Finance</a>.\n\n<code>/cash [amount] [from] to [to]</code>\n<code>/currency [amount] [from] to [to]</code>\nExchange rate for <code>amount</code> of <code>from</code> to <code>to</code>.\n\nMonetary units is in form of three letter <a href=\"https://en.wikipedia.org/wiki/ISO_4217\">ISO 4217</a>.\n\n<b>Example</b>:\n• <code>/cash 10 usd to idr</code>\n• <code>/currency 1000000 idr to gbp</code>",
+      "dlg": [
+        "No results. Make sure you correctly type the currency units."
+      ]
+    },
+    "dialog": {
+      "back": "< Back",
+      "connection": "Connection error",
+      "more": "Read more...",
+      "next": "Next >",
+      "prev": "< Previous",
+      "source": "Source"
+    },
     "dictionary": {
       "btn": "Dictionary",
-      "info": "<b>Oxford Dictionary</b>\n\nReturns English words definition or translations from www.oxforddictionaries.com.\n\n<code>/d [word]</code>\n<code>/dict [word]</code>\n<code>/dictionary [word]</code>\nRetrieve English dictionary entries for a given word.\n\n<code>/t [source]-[target] [word]</code>\n<code>/trans [source]-[target] [word]</code>\n<code>/translate [source]-[target] [word]</code>\nReturns target language translations for a given word ID and source language.\nTarget and source languages are:\n• en - English:\n• es - Spanish\n• ro - Romanian\n• ms - Malaysia\n• id - Indonesian\n\n<b>Example:</b>\n• <code>/d change</code>\n• <code>/dict robot</code>\n• <code>/dictionary telegram</code>\n• <code>/t en-id change</code>\n• <code>/trans ms-en pusing</code>\n• <code>/translate en-es crazy</code>",
+      "info": "<b>Oxford Dictionary</b>\n\nReturns English words definition or translations from www.oxforddictionaries.com.\n\n<code>/d [word]</code>\n<code>/dict [word]</code>\n<code>/dictionary [word]</code>\nRetrieve English dictionary entries for a given word.\n\n<code>/t [source]-[target] [word]</code>\n<code>/trans [source]-[target] [word]</code>\n<code>/translate [source]-[target] [word]</code>\nReturns target language translations for a given word ID and source language.\n\nSource languages are:\n• en - English\n• es - Spanish\n• zu - isiZulu\n• ms - Malaysia\n• id - Indonesian\n• tn - Setswana\n• ur - Urdu\n• de - German\n• pt - Portuguese\n\nTarget languages are:\n• en - English\n• zu - isiZulu\n• ms - Malaysia\n• id - Indonesian\n• tn - Setswana\n• ro - Romania\n• de - German\n• pt - Portuguese\n\n<b>Example:</b>\n• <code>/d change</code>\n• <code>/dict robot</code>\n• <code>/dictionary telegram</code>\n• <code>/t en-id change</code>\n• <code>/trans ms-en pusing</code>\n• <code>/translate en-es crazy</code>",
       "dlg": [
         "No exact matches found for",
         "An error occurred while processing the data",
@@ -64,11 +81,12 @@
       "btn": "Global Admin",
       "info": "<b>Global Admins Commands</b>\n\nGlobal admins can fully utilize the banhammer, a global admin can only be promoted by the superuser.\n\n• <code>/banlist</code>: sends the latest banlist to the log channel."
     },
-    "grouproll": {
-      "btn": "Group Roll",
-      "info": "<b>Group Roll</b>\n\nPromote channels or groups network to bot users.\nThis function is for bot owner (sudo users) only.\n\n<code>/grouproll</code>\nReply the groups/channels list.\n\n<code>/grouproll [the-list]</code>\nSends channels/groups list message.\n\n<b>Example:</b>\n• <code>/grouproll &lt;b&gt;Join Pegel Empire!&lt;/b&gt;\n➜ @pegel10N\n➜ @pegelaudio\n➜ @pegeldroid\n➜ @pegelEnglish\n➜ @pegeLinux\n➜ @pegelthinkpad\n➜ @pegelwindows\n➜ @pegelwrt\n➜ @tgramindo</code>",
+    "groups": {
+      "btn": "Groups",
+      "info": "<b>Groups</b>\n\nReturns channels or groups list by bots owner.\n\n/groups\nReturns a list of groups.\n\nBots owner (sudo users) can set those list by following command:\n<code>/groups [the-list]</code>\n\n<b>Example:</b>\n• /groups\n• <code>/groups &lt;b&gt;Join Pegel Empire!&lt;/b&gt;\n➜ @pegel10N\n➜ @pegelaudio\n➜ @pegeldroid\n➜ @pegelEnglish\n➜ @pegeLinux\n➜ @pegelthinkpad\n➜ @pegelwindows\n➜ @pegelwrt\n➜ @tgramindo</code>",
       "dlg": [
-        "Group roll has been save"
+        "There are currently no listed groups.",
+        "Group list has been save."
       ]
     },
     "hackernews": {
@@ -146,15 +164,11 @@
     },
     "math": {
       "btn": "Math",
-      "info": "<b>Math</b>\n\nReturns solutions to mathematical expressions and conversions between common units. Results provided by mathjs.org.\n\n<code>/calc [expression]</code>\nSolves the given mathematical expression.\n\n<b>Example:</b>\n• <code>/calc 1000000*(1+.25)/6</code>"
+      "info": "<b>Math</b>\n\nReturns solutions to mathematical expressions and conversions between common units.\nResults provided by mathjs.org.\n\n<code>/calc [expression]</code>\nSolves the given mathematical expression.\n\n<code>/calc [amount] [unit] to [unit]</code>\nConvert the given <code>amount</code>  of <code>unit</code>.\n\n<b>Example:</b>\n• <code>/calc 1000000*(1+.25)/6</code>\n• <code>/calc 17 inch to cm</code>"
     },
-    "menu": {
-      "dlg": [
-        "Still empty.\nSee manual for Group Roll, or type <code>/help grouproll</code>"
-      ]
-    },
-    "next": {
-      "btn": "Next >"
+    "ninegag": {
+      "btn": "9gag",
+      "info": "<b>9gag</b>\n\nReturns a random image from the latest 9gag posts.\n\n<b>Example:</b>\n• /9gag"
     },
     "onmessage": {
       "dlg": [
@@ -167,9 +181,6 @@
       "dlg": [
         "Did you mean"
       ]
-    },
-    "prev": {
-      "btn": "< Previous"
     },
     "quran": {
       "btn": "Al Qur'an",
@@ -193,7 +204,7 @@
       "btn": "Repost",
       "info": "<b>Repost</b>\n\nSends a replied message to a channel or group.\nWhile the sudoers have no limitations to repost, this feature can only be used by groups owner or admins to repost message to their own groups.\n\nChannel or group must be specified via its ID.\nUse <code>/whoami</code> or <code>/dump</code> in the channel/group to know its ID, or <code>/id @public_username</code> on bots PM.\n\nThe text message will be parsed in HTML form.\nMake sure the bot is a member of the target group.\n\n<code>/repost [chat-id] [caption]</code>\nRepost a replied message to given <code>chat-id</code> of a channel or group, and give it the given <code>caption</code>.\n\n<b>Example:</b>\n• <code>/repost -1001100562814 Test</code>\n\nYou can directly sends text messages without replying another post:\n<code>/repost [chat-id] [text-message]</code>",
       "dlg": [
-        "You can only <code>/repost</code> to <i>(super)groups</i> or <i>channels</i>."
+        "Failed to reposting.\n• Make sure the <code>chat_id</code> is correct.\n• You can only /repost to (super)groups or channels."
       ]
     },
     "salat": {
@@ -230,8 +241,12 @@
     "settings": {
       "btn": "Settings"
     },
-    "source": {
-      "btn": "Source"
+    "share": {
+      "btn": "Share",
+      "info": "<b>Share</b>\n\nShare the given URL through an inline button, with the specified text as the caption.\nCaption accept HTML formatted text.\nYour post command then will only be deleted if the bot is the admin of the group.\n\n<code>/share [URL] [text]</code>\nShare <code>URL</code> and captioned by <code>text</code>.\n\n<b>Example:</b>\n• <code>/share https://t.me/joinchat/AAAAAADqyq6uZsuRVG7wZQ PegeLinux</code>",
+      "dlg": [
+        "Share it"
+      ]
     },
     "start": {
       "info": "I'm a simple bot who is packed with features that can be usefull for you or your group. And if added as an administrator, I can administrate your groups too!\n\nPress \"Commands\" button to learn what commands I'm capable of."
@@ -240,11 +255,40 @@
       "btn": "Superuser",
       "info": "<b>Superuser Commands</b>\n\n• <code>/promote [by reply|username|id]</code>: promotes a user to a global admin.\n• <code>/demote [by reply|username|id]</code>: demotes a user from a global admin."
     },
+    "time": {
+      "btn": "Time",
+      "info": "<b>Time</b>\n\nReturns current time, date and timezone for the given location.\nThe returned location is the first relevant result on Google Maps for the given search query.\n\n<code>/time [location]</code>\nReturns current time, date and timezone for the given <code>location</code>\n\n<b>Example:</b>\n• <code>/time bogor</code>",
+      "dlg": [
+        "Current time in"
+      ]
+    },
     "urbandictionary": {
       "btn": "Urban Dictionary",
       "info": "<b>Urban Dictionary</b>\n\nReturns a definition from www.urbandictionary.com.\n\n<code>/ud [query]</code>\nReturns <code>word</code> definition from www.urbandictionary.com.\n\n<b>Example:</b>\n• <code>/ud fam</code>",
       "dlg": [
-        "There aren't yet any definitions for"
+        "There aren't any definitions for <i>%s</i> yet."
+      ]
+    },
+    "weather": {
+      "btn": "Weather",
+      "info": "<b>Weather</b>\n\nWeather forecast for the given location.\n\n• <code>/weather [location]</code>\n• <code>/forecast [location]</code>\nReturns weather forecast for the given <code>location</code>.\n\n<b>Example:</b>\n• <code>/weather Bogor</code>\n• <code>/forecast Timika</code>"
+    },
+    "wikipedia": {
+      "btn": "Wikipedia",
+      "info": "<b>Wikipedia</b>\n\nSearches Wikipedia for the given search query and returns the most relevant article.\n\n• <code>/wiki [query]</code>\nSearches Wikipedia for the given search <code>query</code> and returns the most relevant article.\n\n• <code>/wiki.[language] [query]</code>\nSearches Wikipedia for the given search <code>query</code> and <code>language</code>, then returns the most relevant article.\n<code>language</code> is <a href=\"https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes\">ISO 639-1 language code</a>.\n\n<b>Example:</b>\n• <code>/wiki telegram messaging</code>\n• <code>/wiki.id telegram</code>",
+      "dlg": [
+        "There were no results matching the query."
+      ]
+    },
+    "xkcd": {
+      "btn": "xkcd",
+      "info": "<b>xkcd</b>\n\nReturns the latest xkcd strip and its alt text.\nIf a number is given, returns that number strip.\nAny other text passed as the command argument will search Google for a relevant strip and, if applicable, return it.\n\n/xkcd\nReturns the latest xkcd strip.\n\n<code>/xkcd [number]</code>\nReturns xkcd <code>number</code> strip\n\n<code>/xkcd [query]</code>\nReturns <code>query</code> search result xkcd.\n\n<b>Example:</b>\n• /xkcd\n• <code>/xkcd 838</code>\n• <code>/xkcd sudo</code>"
+    },
+    "yify": {
+      "btn": "Yify",
+      "info": "<b>Yify</b>\n\nSearches Yify Torrents for the given search query and returns the most relevant result.\n\n• <code>/yify [title]</code>\n• <code>/yts [title]</code>\nSearches Yify Torrents for the given <code>title</code>.\n\n<b>Example:</b>\n• <code>/yify the raid redemption</code>\n• <code>/yts the raid 2</code>",
+      "dlg": [
+        "I couldn't find any results for that."
       ]
     }
   },
@@ -252,6 +296,10 @@
     "about": {
       "btn": "Tentang",
       "info": "<b>TGramIndoBot</b> ditulis oleh @si_kabayan berdasarkan <a href=\"https://github.com/kamikazechaser/ThorsHammer\">ThorsHammer</a> dan dilisensikan dalam AGPL-v3.0."
+    },
+    "apod": {
+      "btn": "APOD",
+      "info": "<b>APOD</b>\n\nMenampilkan Astronomy Picture of the Day dari NASA.\n\n<code>/apod</code>\nMenampilkan APOD untuk hari ini.\n\n<code>/apodtext</code>\nMenampilkan APOD untuk hari ini disertai keterangannya.\n\n<code>/apod [YYYY-MM-DD]</code>\nMenampilkan APOD untuk tanggal <code>YYYY-MM-DD</code>.\n\n<code>/apodtext [YYYY-MM-DD]</code>\nMenampilkan APOD untuk tanggal <code>YYYY-MM-DD</code> disertai keterangannya.\n\n<b>Example:</b>\n• /apod\n• <code>/apod 2010-11-12</code>\n• /apodtext\n• <code>/apodtext 2010-11-12</code>"
     },
     "admin": {
       "btn": "Bantuan Admin",
@@ -261,9 +309,6 @@
         "kini adalah seorang admin global",
         "bukan lagi seorang admin global"
       ]
-    },
-    "back": {
-      "btn": "<< Kembali"
     },
     "banhammer": {
       "btn": "Banhammer",
@@ -287,12 +332,28 @@
       "btn": "Perintah",
       "info": "Tekan tombol perintah di bawah ini untuk mengetahui tata-cara penggunaannya.\n\nAwali perintah dengan <code>/</code>, <code>!</code>, atau <code>#</code>."
     },
+    "code": "id",
     "credits": {
       "btn": "Kredit"
     },
+    "currency": {
+      "btn": "Nilai Tukar",
+      "info": "<b>Nilai Tukar</b>\n\nNilai tukar berbagai mata uang berdasarkan <a href=\"https://www.google.com/finance/converter\">Google Finance</a>.\n\n<code>/cash [kisaran] [dari] to [ke]</code>\n<code>/currency [kisaran] [dari] to [ke]</code>\nNilai tukar untuk <code>kisaran</code> mata uang <code>dari</code> ke <code>ke</code>.\n\nSatuan mata uang adalah tiga huruf berdasar <a href=\"https://en.wikipedia.org/wiki/ISO_4217\">ISO 4217</a>.\n\n<b>Contoh</b>:\n• <code>/cash 10 usd to idr</code>\n• <code>/currency 1000000 idr to gbp</code>",
+      "dlg": [
+        "Nihil. Pastikan Anda menuliskan satuan mata uangnya dengan benar."
+      ]
+    },
+    "dialog": {
+      "back": "< Kembali",
+      "connection": "Connection error",
+      "more": "Selengkapnya...",
+      "next": "Berikutnya >",
+      "prev": "< Sebelumnya",
+      "source": "Sumber"
+    },
     "dictionary": {
       "btn": "Kamus",
-      "info": "<b>Oxford Dictionary</b>\n\nMenampilkan arti kata bahasa Inggris atau terjemah dari www.oxforddictionaries.com.\n\n<code>/d [kata]</code>\n<code>/dict [kata]</code>\n<code>/dictionary [kata]</code>\nMenampilkan definisi dari <code>kata</code> bahasa Inggris.\n\n<code>/t [source]-[target] [kata]</code>\n<code>/trans [source]-[target] [kata]</code>\n<code>/translate [source]-[target] [kata]</code>\nMenerjemahkan <code>kata</code> dari <code>source</code> ke <code>target</code>.\nKode bahasa untuk <code>target</code> dan <code>source</code> adalah:\n• en - Inggris\n• es - Spanyol\n• ro - Rumania\n• ms - Malaysia\n• id - Indonesia\n\n<b>Contoh:</b>\n• <code>/d change</code>\n• <code>/dict robot</code>\n• <code>/dictionary telegram</code>\n• <code>/t en-id change</code>\n• <code>/trans ms-en pusing</code>\n• <code>/translate en-es crazy</code>",
+      "info": "<b>Kamus Oxford</b>\n\nMenampilkan arti kata bahasa Inggris atau terjemah dari www.oxforddictionaries.com.\n\n<code>/d [kata]</code>\n<code>/dict [kata]</code>\n<code>/dictionary [kata]</code>\nMenampilkan definisi dari <code>kata</code> bahasa Inggris.\n\n<code>/t [source]-[target] [kata]</code>\n<code>/trans [source]-[target] [kata]</code>\n<code>/translate [source]-[target] [kata]</code>\nMenerjemahkan <code>kata</code> dari <code>source</code> ke <code>target</code>.\n\nKode bahasa untuk <code>source</code> adalah:\n• en - Inggris\n• es - Spanyol\n• zu - isiZulu\n• ms - Malaysia\n• id - Indonesia\n• tn - Setswana\n• ur - Urdu\n• de - Jerman\n• pt - Portuguese\n\nKode bahasa untuk <code>target</code> adalah:\n• en - Inggris\n• zu - isiZulu\n• ms - Malaysia\n• id - Indonesia\n• tn - Setswana\n• ro - Rumania\n• de - Jerman\n• pt - Portugis\n\n<b>Contoh:</b>\n• <code>/d change</code>\n• <code>/dict robot</code>\n• <code>/dictionary telegram</code>\n• <code>/t en-id change</code>\n• <code>/trans ms-en pusing</code>\n• <code>/translate en-es crazy</code>",
       "dlg": [
         "Tiada hasil ditemukan untuk",
         "Terjadi galat ketika mengolah data",
@@ -301,20 +362,21 @@
     },
     "get": {
       "btn": "Unduh",
-      "info": "<b>Get</b>\n\nMengambil berkas dari internet.\n<i>Plugin</i> ini mendayagunakan kemampuan <a href=\"https://core.telegram.org/bots/api#sending-files\">bot yang dapat mengirim berkas yang terletak di suatu laman internet</a>. Berikan perintah <code>/get</code> sebuah alamat HTTP URL dari berkas yang hendak dikirim, dan ia akan mengunduh dan mengirimkan berkas tersebut. Batasan ukuran adalah 5 MB untuk foto dan 20 MB untuk jenis berkas lainnya.\n\n<code>/getphoto URL\n/getvoice URL\n/getaudio URL\n/getvideo URL\n/getdoc URL\n</code>\nUnduh foto, suara, audio, video, dan dokumen dari alamat URL ke percakapan kini.\n\n<b>Contoh:</b>\n• <code>/getphoto https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png</code>\n• <code>/getdoc http://bsd.pendidikan.id/data/SD_5/Senang_Belajar_Ilmu_Pengetahuan_Alam_Kelas_5_S_Rositawaty_Aris_Muharam_2008.pdf</code>",
+      "info": "<b>Ambil</b>\n\nMengambil berkas dari internet.\n<i>Plugin</i> ini mendayagunakan kemampuan <a href=\"https://core.telegram.org/bots/api#sending-files\">bot yang dapat mengirim berkas yang terletak di suatu laman internet</a>. Berikan perintah <code>/get</code> sebuah alamat HTTP URL dari berkas yang hendak dikirim, dan ia akan mengunduh dan mengirimkan berkas tersebut. Batasan ukuran adalah 5 MB untuk foto dan 20 MB untuk jenis berkas lainnya.\n\n<code>/getphoto URL\n/getvoice URL\n/getaudio URL\n/getvideo URL\n/getdoc URL\n</code>\nUnduh foto, suara, audio, video, dan dokumen dari alamat URL ke percakapan kini.\n\n<b>Contoh:</b>\n• <code>/getphoto https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png</code>\n• <code>/getdoc http://bsd.pendidikan.id/data/SD_5/Senang_Belajar_Ilmu_Pengetahuan_Alam_Kelas_5_S_Rositawaty_Aris_Muharam_2008.pdf</code>",
       "dlg": [
         "mencoba mengambil berkas lokal:"
       ]
     },
     "globaladmin": {
       "btn": "Admin Global",
-      "info": "<b>Perintah Admin Global</b>\n\nAdmin global dapat sepenuhnya menggunakan banhammer.\nSeorang admin global hanya bisa diangkat oleh <i>superuser</i>.\n\n<code>/banlist</code>\nKirim daftar <i>ban</i> ke kanal <i>log</i> (pencatat)."
+      "info": "<b>Admin Global</b>\n\nAdmin global dapat sepenuhnya menggunakan banhammer.\nSeorang admin global hanya bisa diangkat oleh <i>superuser</i>.\n\n<code>/banlist</code>\nKirim daftar <i>ban</i> ke kanal <i>log</i> (pencatat)."
     },
-    "grouproll": {
-      "btn": "Group Roll",
-      "info": "<b>Group Roll</b>\n\nMenampilkan daftar nama grup untuk dipromosikan kepada pengguna bot.\nFungsi ini hanya untuk pemilik bot (sudoer).\n\n<code>/grouproll</code>\nBalas pesan berisi daftar grup yang hendak ditampilkan.\n\n<code>/grouproll [daftar-grup]</code>\nMengirim <code>daftar-grup</code>.\n\n<b>Contoh:</b>\n• <code>/grouproll &lt;b&gt;Join Pegel Empire!&lt;/b&gt;\n➜ @pegel10N\n➜ @pegelaudio\n➜ @pegeldroid\n➜ @pegelEnglish\n➜ @pegeLinux\n➜ @pegelthinkpad\n➜ @pegelwindows\n➜ @pegelwrt\n➜ @tgramindo</code>",
+    "groups": {
+      "btn": "Grup",
+      "info": "<b>Grup</b>\n\nMenampilkan daftar nama grup atau kanal yang disusun pemilik bot.\n\n/groups\nMenampilkan daftar grup atau kanal.\n\nPemilik bot (atau <i>sudo users</i>) dapat membuat daftar tersebut dengan menggunakan perintah berikut:\n<code>/groups [daftar]</code>\n\n<b>Contoh:</b>\n• /groups\n• <code>/groups &lt;b&gt;Join Pegel Empire!&lt;/b&gt;\n➜ @pegel10N\n➜ @pegelaudio\n➜ @pegeldroid\n➜ @pegelEnglish\n➜ @pegeLinux\n➜ @pegelthinkpad\n➜ @pegelwindows\n➜ @pegelwrt\n➜ @tgramindo</code>",
       "dlg": [
-        "Group roll telah disimpan"
+        "Daftar grup masih kosong.",
+        "Daftar grup telah disimpan"
       ]
     },
     "hackernews": {
@@ -323,7 +385,7 @@
     },
     "help": {
       "btn": "Bantuan",
-      "info": "<b>Help</b>\n\nMenampilkan cara penggunaan dari suatu perintah.\n\n<code>/help</code>\nMenampilkan menu utama.\n\n<code>/help [plugin]</code>\nMenampilkan cara menggunakan <code>plugin</code>.\n\n<b>Example</b>\n• /help\n• <code>/help help</code>",
+      "info": "<b>Bantuan</b>\n\nMenampilkan cara penggunaan dari suatu perintah.\n\n<code>/help</code>\nMenampilkan menu utama.\n\n<code>/help [plugin]</code>\nMenampilkan cara menggunakan <code>plugin</code>.\n\n<b>Example</b>\n• /help\n• <code>/help help</code>",
       "dlg": [
         "Please BOT_LINK message me privately</a> for a list of commands.",
         "tidak ada"
@@ -385,22 +447,18 @@
     },
     "maps": {
       "btn": "Peta",
-      "info": "<b>Maps</b>\n\nMenampilkan suatu lokasi berdasar Google Maps.\n\n<code>/maps [tempat]\n/loc [tempat]</code>\nMenampilkan <code>tempat</code> pada Google Maps.\n\n<b>Contoh:</b>\n• <code>/maps raja ampat papua</code>\n• <code>/loc jakarta indonesia</code>",
+      "info": "<b>Peta</b>\n\nMenampilkan suatu lokasi berdasar Google Maps.\n\n<code>/maps [tempat]\n/loc [tempat]</code>\nMenampilkan <code>tempat</code> pada Google Maps.\n\n<b>Contoh:</b>\n• <code>/maps raja ampat papua</code>\n• <code>/loc jakarta indonesia</code>",
       "dlg": [
         "Buka di peramban"
       ]
     },
     "math": {
       "btn": "Kalkulator",
-      "info": "<b>Math</b>\n\nMenampilkan hasil perhitungan matematika. Hasil hitung didapat dari mathjs.org.\n\n<code>/calc [operasi-hitung]</code>\nMenampilkan hasil <code>operasi-hitung</code>.\n\n<b>Contoh:</b>\n• <code>/calc 1000000*(1+.25)/6</code>"
+      "info": "<b>Kalkulator</b>\n\nMenampilkan hasil perhitungan matematika dan konversi antar satuan yang umum.\nHasil hitung didapat dari mathjs.org.\n\n<code>/calc [operasi-hitung]</code>\nMenampilkan hasil <code>operasi-hitung</code>.\n\n<code>/calc [kisaran] [satuan] to [satuan]</code>\nMengubah <code>kisaran</code> antar <code>satuan</code>.\n\n<b>Contoh:</b>\n• <code>/calc 1000000*(1+.25)/6</code>\n• <code>/calc 17 inch to cm</code>"
     },
-    "menu": {
-      "dlg": [
-        "Masih kosong.\nLihat manual untuk Group Roll, atau ketik <code>/help grouproll</code>"
-      ]
-    },
-    "next": {
-      "btn": "Berikutnya >"
+    "ninegag": {
+      "btn": "9gag",
+      "info": "<b>9gag</b>\n\nMenampilkan secara acak gambar dari pos terakhir 9gag.com.\n\n<b>Contoh:</b>\n• /9gag"
     },
     "onmessage": {
       "dlg": [
@@ -409,17 +467,14 @@
     },
     "patterns": {
       "btn": "Pola",
-      "info": "<b>Patterns</b>\n\nMengganti semua kecocokan dengan pola yang diberikan.\n\n<code>s/[pola]/[pengganti]</code>\nGantikan semua <code>pola</code> yang ditemukan pada pesan yang dibalas dengan <code>pengganti</code>.\n\n<b>Contoh:</b>\n• <code>s/bener/benar</code>",
+      "info": "<b>Pola</b>\n\nMengganti semua kecocokan dengan pola yang diberikan.\n\n<code>s/[pola]/[pengganti]</code>\nGantikan semua <code>pola</code> yang ditemukan pada pesan yang dibalas dengan <code>pengganti</code>.\n\n<b>Contoh:</b>\n• <code>s/bener/benar</code>",
       "dlg": [
         "Apakah maksud Anda"
       ]
     },
-    "prev": {
-      "btn": "< Sebelumnya"
-    },
     "quran": {
       "btn": "Al Qur'an",
-      "info": "<b>Quran</b>\n\nMenampilkan ayat Al Qur'an dari http://globalquran.com.\n\n<code>/quran [nomor ayat]</code>\nMenampilkan ayat Qur'an berdasar <code>nomor ayat</code>.\n\n<code>/quran [nomor ayat] [bahasa]</code>\nMenampilkan nomor ayat Qur'an dan terjemahnya.\n\n<code>/quran [surat]:[ayat]</code>\nMenampilkan ayat Qur'an berdasar nomor surat dan ayat.\n\n<code>/quran [surat]:[ayat] [bahasa]</code>\nMenampilkan ayat Qur'an berdasar nomor surat, ayat, dan terjemahnya .\n\n<code>bahasa</code> adalah <a href=\"https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes\">sandi bahasa menurut ISO 639-1</a>.\n\n<b>Example</b>:\n<pre>/quran 234\n/quran 666 id\n/quran 17:8\n/quran 11:12 fa</pre>",
+      "info": "<b>Al Qur'an</b>\n\nMenampilkan ayat Al Qur'an dari http://globalquran.com.\n\n<code>/quran [nomor ayat]</code>\nMenampilkan ayat Qur'an berdasar <code>nomor ayat</code>.\n\n<code>/quran [nomor ayat] [bahasa]</code>\nMenampilkan nomor ayat Qur'an dan terjemahnya.\n\n<code>/quran [surat]:[ayat]</code>\nMenampilkan ayat Qur'an berdasar nomor surat dan ayat.\n\n<code>/quran [surat]:[ayat] [bahasa]</code>\nMenampilkan ayat Qur'an berdasar nomor surat, ayat, dan terjemahnya .\n\n<code>bahasa</code> adalah <a href=\"https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes\">sandi bahasa menurut ISO 639-1</a>.\n\n<b>Example</b>:\n<pre>/quran 234\n/quran 666 id\n/quran 17:8\n/quran 11:12 fa</pre>",
       "dlg": [
         "Bahasa tidak dikenali.\nSilakan rujuk http://api.globalquran.com/quran untuk melihat daftar bahasa yang didukung.",
         "Rentang nomor ayat adalah <code>1-6236</code>.",
@@ -437,14 +492,14 @@
     },
     "repost": {
       "btn": "Kirim Ulang",
-      "info": "<b>Repost</b>\n\nMengirim ulang pesan ke kanal atau grup.\nPemilik bot (<i>sudoer</i>) dapat menggunakan fitur ini tanpa batasan, namun pemilik grup dan admin hanya dapat mengirim pesan ke grup mereka sendiri.\n\nKanal atau grup tujuan harus ditulis dalam bentuk nomor ID grup/kanal tersebut.\nGunakan <code>/whoami</code> atau <code>/dump</code> di dalam grup/kanal tersebut untuk mengetahui nomor ID-nya, atau PM bot dan jalankan <code>/id @public_username</code>.\n\nPesan teks akan diolah sebagai HTML.\nPastikan bot telah menjadi anggota grup/kanal di mana pesan akan dikirim.\n\n<code>/repost [chat-id] [caption]</code>\nMengirim ulang pesan terbalas (<i>replied message</i>) ke <code>chat-id</code> suatu kanal atau grup, dan memberinya <code>caption</code>.\n\n<b>Contoh:</b>\n• <code>/repost -1001100562814 Test</code>\n\nAnda dapat mengirim pesan teks secara langsung tanpa harus membalas suatu pesan:\n<code>/repost [chat-id] [pesan-teks]</code>",
+      "info": "<b>Kirim Ulang</b>\n\nMengirim ulang pesan ke kanal atau grup.\nPemilik bot (<i>sudoer</i>) dapat menggunakan fitur ini tanpa batasan, namun pemilik grup dan admin hanya dapat mengirim pesan ke grup mereka sendiri.\n\nKanal atau grup tujuan harus ditulis dalam bentuk nomor ID grup/kanal tersebut.\nGunakan <code>/whoami</code> atau <code>/dump</code> di dalam grup/kanal tersebut untuk mengetahui nomor ID-nya, atau PM bot dan jalankan <code>/id @public_username</code>.\n\nPesan teks akan diolah sebagai HTML.\nPastikan bot telah menjadi anggota grup/kanal di mana pesan akan dikirim.\n\n<code>/repost [chat-id] [caption]</code>\nMengirim ulang pesan terbalas (<i>replied message</i>) ke <code>chat-id</code> suatu kanal atau grup, dan memberinya <code>caption</code>.\n\n<b>Contoh:</b>\n• <code>/repost -1001100562814 Test</code>\n\nAnda dapat mengirim pesan teks secara langsung tanpa harus membalas suatu pesan:\n<code>/repost [chat-id] [pesan-teks]</code>",
       "dlg": [
-        "<code>/repost</code> hanya bisa dikirimkan ke <i>(super)group</i> atau <i>channel</i>."
+        "Gagal mengirim ulang.\n• Pastikan <code>chat_id</code> adalah benar.\n• Anda hanya bisa /repost ke (super) grup atau kanal."
       ]
     },
     "salat": {
       "btn": "Salat",
-      "info": "<b>Salat</b>\n\nMenampilkan waktu salat untuk hari ini.\n\n<code>/salat [daerah]</code>\nMenampilkan waktu salat untuk daerah tersebut\n<b>Contoh</b>:\n<code>/salat Jakarta</code>\nAkan menampilkan waktu salat di Jakarta untuk hari ini.\n\n<code>/salat [metode] [daerah]</code>\nMenampilkan waktu salat hari ini untuk daerah tersebut berdasar perhitungan menggunakan <code>metode</code>\n<b>Contoh</b>:\n<code>/salat 1 Surabaya</code>\nAkan menampilkan waktu salat di Surabaya untuk hari ini berdasarkan metode perhitungan Muslim World League.\n\nMetode perhitungan yang bisa digunakan:\n1. Muslim World League.\n2. Egyptian General Authority of Survey.5\n3. University of Islamic Sciences, Karachi.\n4. Umm al-Qura University, Mekah.\n5. Versi modifikasi Umm al-Qura yang digunakan di UAE.\n6. Versi modifikasi Umm al-Qura yang digunakan di Qatar.\n7. Metode negara Kuwait.\n8. Moonsighting Committee.\n9. ISNA. Disertakan semata demi kelengkapan, namun tidak disarankan.\n10. Fajr angle: 0, Isha angle: 0.\n\nInformasi lebih lanjut: https://github.com/batoulapps/Adhan",
+      "info": "<b>Salat</b>\n\nMenampilkan waktu salat untuk hari ini.\n\n<code>/salat [daerah]</code>\nMenampilkan waktu salat untuk daerah tersebut\n<b>Contoh</b>:\n<code>/salat Jakarta</code>\nAkan menampilkan waktu salat di Jakarta untuk hari ini.\n\n<code>/salat [metode] [daerah]</code>\nMenampilkan waktu salat hari ini untuk daerah tersebut berdasar perhitungan menggunakan <code>metode</code>\n<b>Contoh</b>:\n<code>/salat 1 Surabaya</code>\nAkan menampilkan waktu salat di Surabaya untuk hari ini berdasarkan metode perhitungan Muslim World League.\n\nMetode perhitungan yang bisa digunakan:\n1. Muslim World League.\n2. Egyptian General Authority of Survey.5\n3. University of Islamic Sciences, Karachi.\n4. Umm al-Qura University, Mekah.\n5. Versi modifikasi Umm al-Qura yang digunakan di UAE.\n6. Versi modifikasi Umm al-Qura yang digunakan di Qatar.\n7. Metode negara Kuwait.\n8. Moonsighting Committee.\n9. ISNA. Disertakan semata demi kelengkapan, namun tidak disarankan.\n10. Sudut fajar: 0, Sudut Isya: 0.\n\nInformasi lebih lanjut: https://github.com/batoulapps/Adhan",
       "dlg": [
         "Liga Dunia Muslim",
         "Otoritas Umum Survey Mesir",
@@ -476,8 +531,12 @@
     "settings": {
       "btn": "Pengaturan"
     },
-    "source": {
-      "btn": "Sumber"
+    "share": {
+      "btn": "Bagikan",
+      "info": "<b>Bagikan</b>\n\nMembagikan tautan melalui tombol <i>inline</i>, dengan dibubuhi teks.\nTeks dapat diformat menggunakan HTML.\nPost Anda kemudian akan dihapus jika bot adalah admin grup.\n\n<code>/share [URL] [text]</code>\nMembagikan <code>URL</code> dengan diimbuhi <code>text</code>.\n\n<code>/share [URL] [teks]</code>\n\n<b>Contoh:</b>\n• <code>/share https://t.me/joinchat/AAAAAADqyq6uZsuRVG7wZQ PegeLinux</code>",
+      "dlg": [
+        "Bagikan"
+      ]
     },
     "start": {
       "info": "Saya adalah bot sederhana dengan beragam kemampuan yang dapat digunakan untuk menghidupkan percakapan dalam grup. Dan jika dijadikan sebagai admin grup, saya juga bisa membantu menjaga grup tersebut.\n\nTekan tombol \"<code>Perintah</code>\" untuk melihat apa saja yang dapat saya lakukan."
@@ -486,11 +545,40 @@
       "btn": "Superuser",
       "info": "<b>Perintah Superuser</b>\n\n<code>/promote [reply|username|id]</code>\nAngkat <i>user</i> menjadi admin global.\n\n<code>/demote [reply|username|id]</code>\nTurunkan <i>user</i> dari jabatan admin global."
     },
+    "time": {
+      "btn": "Waktu",
+      "info": "<b>Waktu</b>\n\nMenampilkan jam, tanggal, dan zona waktu kini untuk lokasi yang diminta.\nLokasi yang ditampilkan adalah hasil pertama pencarian di Google Maps untuk nama lokasi tersebut.\n\n<code>/time [lokasi]</code>\nMenampilkan jam, tanggal, dan zona waktu kini untuk <code>lokasi</code>\n\n<b>Contoh:</b>\n• <code>/time bogor</code>",
+      "dlg": [
+        "Waktu kini di"
+      ]
+    },
     "urbandictionary": {
       "btn": "Kamus Urban",
-      "info": "<b>Urban Dictionary</b>\n\nMenampilkan arti kata <i>slang</i> (gaul) dari www.urbandictionary.com.\n\n<code>/ud [kata]</code>\nMenampilkan penjelasan arti <code>kata</code> dari www.urbandictionary.com.\n\n<b>Contoh:</b>\n• <code>/ud fam</code>",
+      "info": "<b>Kamus Urban</b>\n\nMenampilkan arti kata <i>slang</i> (gaul) dari www.urbandictionary.com.\n\n<code>/ud [kata]</code>\nMenampilkan penjelasan arti <code>kata</code> dari www.urbandictionary.com.\n\n<b>Contoh:</b>\n• <code>/ud fam</code>",
       "dlg": [
-        "Belum ada definisi untuk"
+        "Belum ada definisi untuk <i>%s</i>."
+      ]
+    },
+    "weather": {
+      "btn": "Cuaca",
+      "info": "<b>Cuaca</b>\n\nRamalan cuaca.\n\n• <code>/weather [lokasi]</code>\n• <code>/forecast [lokasi]</code>\nPerkiraan cuaca untuk <code>lokasi</code> yang diberikan.\n\n<b>Contoh:</b>\n• <code>/weather Bogor</code>\n• <code>/forecast Timika</code>"
+    },
+    "wikipedia": {
+      "btn": "Wikipedia",
+      "info": "<b>Wikipedia</b>\n\nMencari artikel di wikipedia.\n\n• <code>/wiki [kriteria]</code>\nMenampilkan artikel dari Wikipedia sesuai <code>kriteria</code>.\n\n• <code>/wiki.[bahasa] [kriteria]</code>\nMenampilkan artikel dalam <code>bahasa</code> dari Wikipedia yang sesuai <code>kriteria</code>.\n<code>bahasa</code> adalah dalam bentuk <a href=\"https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes\">sandi bahasa menurut ISO 639-1</a>.\n\n<b>Contoh:</b>\n• <code>/wiki telegram</code>\n• <code>/wiki.id telegram</code>",
+      "dlg": [
+        "Tidak ada hasil yang sesuai dengan kriteria."
+      ]
+    },
+    "xkcd": {
+      "btn": "xkcd",
+      "info": "<b>xkcd</b>\n\nMenampilkan komik xkcd terakhir beserta <i>alt text</i>-nya.\nJika ditambahkan nomor maka akan ditampilakn komik bernomor tersebut.\nDan jika ditambahkan kata lain maka akan dilakukan pencarian kata tersebut untuk kemudian ditampilkan komik xkcd yang relevan.\n\n/xkcd\nMenampilkan komik xkcd teranyar.\n\n<code>/xkcd [nomor]</code>\nMenampilkan xkcd edisi <code>nomor</code>.\n\n<code>/xkcd [kriteria]</code>\nMenampilkan xkcd yang relevan dengan <code>kriteria</code>.\n\n<b>Contoh:</b>\n• /xkcd\n• <code>/xkcd 838</code>\n• <code>/xkcd sudo</code>"
+    },
+    "yify": {
+      "btn": "Yify",
+      "info": "<b>Yify</b>\n\nMencari torrent film melalui Yify.\n\n• <code>/yify [judul]</code>\n• <code>/yts [judul]</code>\nMencari torrent <code>judul</code> di Yify.\n\n<b>Contoh:</b>\n• <code>/yify the raid redemption</code>\n• <code>/yts the raid 2</code>",
+      "dlg": [
+        "Saya tidak menemukan hasil untuk film tersebut."
       ]
     }
   }

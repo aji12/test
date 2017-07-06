@@ -9,7 +9,7 @@ for (let i = 0; i < scripts.length; i++) {
       return console.error(err)
     }
     files.forEach((file) => {
-      console.log(`Loading ${file}`)
+      console.log(`=> Loading ${file}`)
       require(`./${scripts[i]}/${file}`)
     })
   })

@@ -1,7 +1,7 @@
 {
   "name": "tgramindobot",
-  "version": "3.2.0",
-  "description": "A simple Node.js Telegram bot",
+  "version": "3.3.0",
+  "description": "A simple, plugin-wielding, and multipurpose Node.js Telegram bot.",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js"
@@ -18,7 +18,6 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "adhan": "^2.0.1",
-    "axios": "^0.16.2",
     "feedparser": "^2.2.0",
     "moment": "^2.17.1",
     "mongoose": "^4.7.8",

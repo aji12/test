@@ -1,39 +1,14 @@
 'use strict'
 
-const axios = require('axios')
 const bot = require('../core/telegram')
 const adhan = require('adhan')
 const moment = require('moment')
 const utils = require('../core/utils')
 
-// Gets timezone for a location.
-function getTime (msg, area, lat, lng, callback) {
-  const url = 'https://maps.googleapis.com/maps/api/timezone/json?'
-  const parameters = 'location=' + lat + ',' + lng + '&timestamp=' + msg.date
-
-  axios.get(url + parameters)
-    .then(response => {
-      console.log(response)
-      if (response.status !== 200) {
-        bot.sendMessage(msg.chat.id, `<code>Error ${response.status}: ${response.statusText}</code>`, utils.optionalParams(msg))
-        return
-      }
-      if (response.data.status === 'ZERO_RESULTS') {
-        bot.sendMessage(msg.chat.id, `${response.data.status} "<i>${area}</i>".`, utils.optionalParams(msg))
-      } else {
-        const timezone = response.data
-        callback(timezone)
-      }
-    })
-    .catch(error => {
-      bot.sendMessage(msg.chat.id, `<code>${error}</code>`, utils.optionalParams(msg))
-    })
-}
-
 bot.onText(/^[/!#]s(a|o|ha|ho)lat (.+)/, (msg, match) => {
   const lang = utils.getUserLang(msg)
   let params = adhan.CalculationMethod.MuslimWorldLeague()
-  let area = match[2]
+  let address = encodeURIComponent(match[2])
   let method, methodNum
 
   if (match[2].match(/^\d+/)) {
@@ -41,7 +16,7 @@ bot.onText(/^[/!#]s(a|o|ha|ho)lat (.+)/, (msg, match) => {
   }
 
   if (methodNum) {
-    area = match[2].match(/ \w+/)
+    address = encodeURIComponent(match[2].match(/ \w+/))
 
     switch (methodNum) {
       case '1':
@@ -87,26 +62,32 @@ bot.onText(/^[/!#]s(a|o|ha|ho)lat (.+)/, (msg, match) => {
     }
   }
 
-  utils.getCoord(msg, area, (geo) => {
+  utils.getGeoLocation(msg, address, (geo) => {
+    if (geo.status !== 'OK') {
+      return bot.reply(msg, `<code>${geo.status}</code>`)
+    }
+
     const date = new Date()
-    const coordinates = new adhan.Coordinates(geo.lat, geo.lon)
+    const coordinates = new adhan.Coordinates(geo.latitude, geo.longitude)
     params.madhab = adhan.Madhab.Shafi
     const prayerTimes = new adhan.PrayerTimes(coordinates, date, params)
     const formattedTime = adhan.Date.formattedTime
     method = method ? `${lang.salat.dlg[10]}: ${method}.` : ''
 
-    getTime(msg, area, geo.lat, geo.lon, (tz) => {
+    utils.getTime(msg, geo.latitude, geo.longitude, (tz) => {
+      moment.locale(`${lang.code}`)
       const offset = Math.round((tz.rawOffset + tz.dstOffset) / 3600)
-      const salat = `<b>${lang.salat.dlg[11]} ${geo.formatted_address}</b>\n` +
-                  `\n${lang.salat.dlg[12]}: <code>${moment.utc((msg.date + tz.rawOffset + tz.dstOffset) * 1000).format('YYYY-MM-DD HH:mm:ss')}</code>` +
-                  `\n• <b>${lang.salat.dlg[13]}</b>: <code>${formattedTime(prayerTimes.fajr, offset, '24h')}</code>` +
-                  `\n• <b>${lang.salat.dlg[14]}</b>: <code>${formattedTime(prayerTimes.sunrise, offset, '24h')}</code>` +
-                  `\n• <b>${lang.salat.dlg[15]}</b>: <code>${formattedTime(prayerTimes.dhuhr, offset, '24h')}</code>` +
-                  `\n• <b>${lang.salat.dlg[16]}</b>: <code>${formattedTime(prayerTimes.asr, offset, '24h')}</code>` +
-                  `\n• <b>${lang.salat.dlg[17]}</b>: <code>${formattedTime(prayerTimes.maghrib, offset, '24h')}</code>` +
-                  `\n• <b>${lang.salat.dlg[18]}</b>: <code>${formattedTime(prayerTimes.isha, offset, '24h')}</code>\n\n` + method
+      let salat = `<b>${lang.salat.dlg[11]} ${geo.formatted_address}</b>\n`
+      salat += `\n${lang.salat.dlg[12]}: ${moment.utc((msg.date + tz.rawOffset + tz.dstOffset) * 1000).format('LLLL')}`
+      salat += `\n• <b>${lang.salat.dlg[13]}</b>: <code>${formattedTime(prayerTimes.fajr, offset, '24h')}</code>`
+      salat += `\n• <b>${lang.salat.dlg[14]}</b>: <code>${formattedTime(prayerTimes.sunrise, offset, '24h')}</code>`
+      salat += `\n• <b>${lang.salat.dlg[15]}</b>: <code>${formattedTime(prayerTimes.dhuhr, offset, '24h')}</code>`
+      salat += `\n• <b>${lang.salat.dlg[16]}</b>: <code>${formattedTime(prayerTimes.asr, offset, '24h')}</code>`
+      salat += `\n• <b>${lang.salat.dlg[17]}</b>: <code>${formattedTime(prayerTimes.maghrib, offset, '24h')}</code>`
+      salat += `\n• <b>${lang.salat.dlg[18]}</b>: <code>${formattedTime(prayerTimes.isha, offset, '24h')}</code>\n\n`
+      salat += method
 
-      bot.sendMessage(msg.chat.id, salat, utils.optionalParams(msg))
+      bot.reply(msg, salat)
     })
   })
 })

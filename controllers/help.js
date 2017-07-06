@@ -16,8 +16,7 @@ bot.onText(/^[/!#]help$/, msg => {
     }
   }).catch((error) => {
     if (error) {
-      const initchat = `${lang.help.dlg[0]}`.replace(/BOT_LINK /, `<a href="https://t.me/${config.bot.UNAME}?start">`)
-      bot.sendMessage(msg.chat.id, initchat, utils.optionalParams(msg))
+      bot.reply(msg, `${lang.help.dlg[0]}`.replace(/BOT_LINK /, `<a href="https://t.me/${config.bot.UNAME}?start">`))
     }
   })
 })
@@ -26,7 +25,7 @@ bot.onText(/^[/!#]help (\w+)/, (msg, match) => {
   const lang = utils.getUserLang(msg)
 
   if (lang[`${match[1]}`]) {
-    bot.sendMessage(msg.chat.id, lang[`${match[1]}`].info, utils.optionalParams(msg))
+    bot.reply(msg, lang[`${match[1]}`].info)
   } else {
     const noplug = `<code>${match[1]}</code> ${lang.help.dlg[1]}`
     let pluglist = []
@@ -36,6 +35,6 @@ bot.onText(/^[/!#]help (\w+)/, (msg, match) => {
     }
     pluglist = pluglist.join('\n')
 
-    bot.sendMessage(msg.chat.id, noplug + '.\n\n' + pluglist, utils.optionalParams(msg))
+    bot.reply(msg, noplug + '.\n\n' + pluglist)
   }
 })

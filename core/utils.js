@@ -1,9 +1,9 @@
 'use strict'
 
-const bot = require('../core/telegram')
 const config = require('../data/config.json')
 const fs = require('fs')
 const locale = require('../core/locale.json')
+const moment = require('moment')
 const request = require('request')
 
 const utilities = {}
@@ -19,6 +19,22 @@ utilities.buildUserName = function (user) {
   name += ` [<code>${user.id}</code>]`
 
   return name
+}
+
+// Temporary function until node-telegram-bot-api provide this
+utilities.deleteMessage = function (chatId, messageId) {
+  const url = `https://api.telegram.org/bot${config.bot.TOKEN}/deleteMessage`
+
+  request.post(url, {
+    form: {
+      chat_id: chatId,
+      message_id: messageId
+    }
+  }, (error, response, body) => {
+    if (error) {
+      return console.log(`=> utils.js: ${error.response.body.description}`)
+    }
+  })
 }
 
 utilities.escapeHtml = function (string) {
@@ -69,29 +85,69 @@ utilities.escapeHtml = function (string) {
     : html
 }
 
-// Gets coordinates for a location.
-utilities.getCoord = function (msg, input, callback) {
+// Convert msg.date to human readable format
+utilities.formatMsgDate = function (msg, utc) {
+  let ft
   const lang = utilities.getUserLang(msg)
-  const url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(input)
+  moment.locale(`${lang.code}`)
+
+  if (utc) {
+    ft = `${moment.utc(msg.date * 1000).format('LLLL')}`
+  } else {
+    ft = `${moment(msg.date * 1000).format('LLLL')}`
+  }
+  return ft
+}
+
+// Gets coordinates for a location.
+utilities.getGeoLocation = function (msg, address, callback) {
+  const url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(address)
+  let geo = {}
 
   request(url, function (error, response, body) {
     if (error) {
-      bot.sendMessage(msg.chat.id, `${lang.error[0]}`, utilities.optionalParams(msg))
+      geo = { status: error }
     } else {
-      const coord = JSON.parse(body)
-      if (coord.status === 'ZERO_RESULTS') {
-        bot.sendMessage(msg.chat.id, coord.status, utilities.optionalParams(msg))
+      const jgeo = JSON.parse(body)
+
+      if (jgeo.status !== 'OK') {
+        geo = { status: jgeo.status }
       } else {
-        const geo = {
-          lat: coord.results[0].geometry.location.lat,
-          lon: coord.results[0].geometry.location.lng,
-          formatted_address: coord.results[0].formatted_address
+        geo = {
+          status: jgeo.status,
+          latitude: jgeo.results[0].geometry.location.lat,
+          longitude: jgeo.results[0].geometry.location.lng,
+          formatted_address: jgeo.results[0].formatted_address
         }
-        callback(geo)
       }
+      callback(geo)
     }
   })
 }
+
+// Gets timezone for a location.
+utilities.getTime = function (msg, latitude, longitude, callback) {
+  const parameters = `location=${latitude},${longitude}&timestamp=${msg.date}`
+  const url = 'https://maps.googleapis.com/maps/api/timezone/json?'
+
+  request(url + parameters, (error, response, body) => {
+    let time = {}
+
+    if (error) {
+      time = { status: error }
+    } else {
+      const tz = JSON.parse(body)
+
+      if (tz.status !== 'OK') {
+        time = { status: tz.status }
+      } else {
+        time = tz
+      }
+      callback(time)
+    }
+  })
+}
+
 utilities.getUserLang = function (msg) {
   let db = utilities.readJSONFile(config.database.DB)
   let lang = msg.from.language_code ? msg.from.language_code : 'en'
@@ -128,15 +184,6 @@ utilities.initialKeyboard = function (lang) {
   }]]
 }
 
-utilities.optionalParams = function (msg) {
-  const opts = {
-    reply_to_message_id: msg.message_id,
-    disable_web_page_preview: 'true',
-    parse_mode: 'HTML'
-  }
-  return opts
-}
-
 utilities.parseInline = function (message, commandName, options = {}) {
   options.noRequireTrigger = true
 
@@ -166,19 +213,10 @@ utilities.saveToFile = function (file, data, humanReadable) {
       data = JSON.stringify(data)
     }
     fs.writeFileSync(file, data, 'utf8')
-    console.log(`Data saved to ${file}`)
+    console.log(`=> utils.js: Data saved to ${file}`)
   } catch (err) {
-    console.log("Can't save the data")
+    console.log(`=> utils.js: Can't save the data`)
   }
-}
-
-utilities.sendError = function (msg, error) {
-  let err = JSON.parse(error.response.body)
-
-  bot.sendMessage(msg.chat.id, `${err.description}`, {
-    reply_to_message_id: msg.message_id,
-    parse_mode: 'HTML'
-  })
 }
 
 utilities.startsWith = function (string, what) {

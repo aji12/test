@@ -1,8 +1,8 @@
 'use strict'
 
-const axios = require('axios')
 const bot = require('../core/telegram')
 const config = require('../data/config.json')
+const request = require('request')
 const utils = require('../core/utils')
 
 const surahName = {
@@ -174,18 +174,19 @@ function getVerseNum (verse) {
   }
 }
 
-function getAyahOrLang (msg, num, callback) {
-  axios.get(num)
-    .then(response => {
-      if (response.status !== 200) {
-        bot.sendMessage(msg.chat.id, `<code>Error ${response.status}: ${response.statusText}</code>`, utils.optionalParams(msg))
-        return
-      }
-      callback(response.data)
-    })
-    .catch(error => {
-      bot.sendMessage(msg.chat.id, `<code>${error}</code>`, utils.optionalParams(msg))
-    })
+function getAyahOrLang (msg, number, callback) {
+  request(number, (error, response, body) => {
+    if (error) {
+      bot.reply(msg, `API query failure: <code>${error.message}</code>`)
+      return
+    }
+    if (response.statusCode !== 200) {
+      bot.reply(msg, `<code>Error ${response.statusCode}: ${response.statusMessage}</code>`)
+      return
+    }
+    const jayah = JSON.parse(body)
+    callback(jayah)
+  })
 }
 
 function quran (msg, surah, ayah, verse, lang) {
@@ -205,7 +206,7 @@ function quran (msg, surah, ayah, verse, lang) {
   }
 
   if (malformQuery) {
-    bot.sendMessage(msg.chat.id, malformQuery, utils.optionalParams(msg))
+    bot.reply(msg, malformQuery)
     return
   }
 
@@ -235,11 +236,11 @@ function quran (msg, surah, ayah, verse, lang) {
       getAyahOrLang(msg, gqLang, (language) => {
         const verseTrans = language.quran[translation][`${verseNum}`].verse
         const gqOutput = verse.quran['quran-simple'][`${verseNum}`].verse + '\n\n' + verseTrans + ' (<b>' + surahName[surahNum] + ':' + ayahNum + '</b>)'
-        bot.sendMessage(msg.chat.id, gqOutput, utils.optionalParams(msg))
+        bot.reply(msg, gqOutput)
       })
     } else {
       const gqOutput = verse.quran['quran-simple'][`${verseNum}`].verse + '\n\n(<b>' + surahName[surahNum] + ':' + ayahNum + '</b>)'
-      bot.sendMessage(msg.chat.id, gqOutput, utils.optionalParams(msg))
+      bot.reply(msg, gqOutput)
     }
   })
 }

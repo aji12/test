@@ -7,10 +7,7 @@ const utils = require('../core/utils')
 function sendError (msg, error) {
   let err = JSON.parse(error.response.body)
 
-  bot.sendMessage(msg.chat.id, `<code>${err.description}</code>`, {
-    reply_to_message_id: msg.message_id,
-    parse_mode: 'HTML'
-  })
+  bot.reply(msg, `<code>${err.description}</code>`)
 }
 
 bot.onText(/^[/!#]get(.+) (.+)/, (msg, match) => {

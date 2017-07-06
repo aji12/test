@@ -2,7 +2,6 @@
 
 const bot = require('../core/telegram')
 const scrapy = require('node-scrapy')
-const utils = require('../core/utils')
 
 function tagCleaner (str) {
   const rem = new RegExp(/<font.+?>|<\/font>|<span.+?>|<\/span>|<\/?li>|<\/?sup>/, 'gim')
@@ -34,7 +33,9 @@ bot.onText(/^[/!#]kbbi (.+)/, (msg, match) => {
   }
 
   scrapy.scrape(url, model, (err, data) => {
-    if (err) { return console.log(err) }
+    if (err) {
+      return console.log(`=> kbbi.js: ${err}`)
+    }
 
     let artikata, lema, artisatu
     let kbbi = []
@@ -93,6 +94,6 @@ bot.onText(/^[/!#]kbbi (.+)/, (msg, match) => {
         if (artisatu) artikata = lema + '\n' + artisatu
       }
     }
-    bot.sendMessage(msg.chat.id, tagCleaner(artikata), utils.optionalParams(msg))
+    bot.reply(msg, tagCleaner(artikata))
   })
 })

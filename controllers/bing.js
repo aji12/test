@@ -1,8 +1,8 @@
 'use strict'
 
-const axios = require('axios')
 const bot = require('../core/telegram')
 const config = require('../data/config.json')
+const request = require('request')
 const utils = require('../core/utils')
 
 function getBing (msg, query) {
@@ -10,25 +10,31 @@ function getBing (msg, query) {
   const limit = (msg.chat.type === 'private') ? 8 : 4
 
   if (!query) {
-    bot.sendMessage(msg.chat.id, `${lang.bing.dlg[0]}.`, utils.optionalParams(msg))
+    bot.reply(msg, `${lang.bing.dlg[0]}.`)
     return
   }
 
-  axios.get('https://api.cognitive.microsoft.com/bing/v5.0/search?q=' + query + '&' + limit, {
+  request({
+    url: 'https://api.cognitive.microsoft.com/bing/v5.0/search?q=' + query + '&' + limit,
+    method: 'GET',
     headers: {
       'Ocp-Apim-Subscription-Key': config.bing.KEY
     }
-  }).then(response => {
-    console.log(response)
-    if (response.status !== 200) {
-      bot.sendMessage(msg.chat.id, `<code>Error ${response.status}: ${response.statusText}</code>`, utils.optionalParams(msg))
+  }, (error, response, body) => {
+    if (error) {
+      bot.reply(msg, `API query failure: <code>${error.message}</code>`)
+      return
+    }
+    if (response.statusCode !== 200) {
+      bot.reply(msg, `<code>Error ${response.statusCode}: ${response.statusMessage}</code>`)
       return
     }
 
-    const webPages = response.data.webPages ? response.data.webPages.value : 0
+    const bbody = JSON.parse(body)
+    const webPages = bbody.webPages ? bbody.webPages.value : 0
 
     if (webPages === 0) {
-      bot.sendMessage(msg.chat.id, `${lang.bing.dlg[1]} <b>${query}</b>`, utils.optionalParams(msg))
+      bot.reply(msg, `${lang.bing.dlg[1]} <b>${query}</b>`)
       return
     }
 
@@ -42,10 +48,7 @@ function getBing (msg, query) {
     const subreddit = bingo.join('\n')
     const title = `<b>${lang.bing.dlg[2]} </b>${query}<b>:</b>`
 
-    bot.sendMessage(msg.chat.id, `${title}\n${subreddit}`, utils.optionalParams(msg))
-  })
-  .catch(error => {
-    bot.sendMessage(msg.chat.id, `<code>${error}</code>`, utils.optionalParams(msg))
+    bot.reply(msg, `${title}\n${subreddit}`)
   })
 }
 

@@ -26,7 +26,7 @@ bot.onText(/^\/?s\/(.+)\/(.+)\/?/, (msg, match) => {
   try {
     re = new RegExp(match[1], 'g')
   } catch (error) {
-    bot.sendMessage(msg.chat.id, `SyntaxError: Invalid regular expression: <code>/${match[1]}/</code>: Nothing to repeat`, utils.optionalParams(msg))
+    bot.reply(msg, `SyntaxError: Invalid regular expression: <code>/${match[1]}/</code>: Nothing to repeat`)
     return
   }
 
@@ -34,10 +34,10 @@ bot.onText(/^\/?s\/(.+)\/(.+)\/?/, (msg, match) => {
 
   // 4096 is the characters limit count of Telegram post
   if (utils.escapeHtml(output).length >= 4000) {
-    output = utils.escapeHtml(output).slice(0, 4000)
+    output = utils.escapeHtml(output).substr(0, 4000)
   } else {
     output = utils.escapeHtml(output)
   }
 
-  bot.sendMessage(msg.chat.id, `<b>${lang.patterns.dlg[0]}:</b>\n"${output}"`, utils.optionalParams(message))
+  bot.reply(msg, `<b>${lang.patterns.dlg[0]}:</b>\n"${output}"`)
 })

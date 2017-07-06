@@ -423,12 +423,19 @@ function viewThread (msg, pageNum) {
   }
 
   bot.editMessageText(forum + '\n' + kasthread, threadParams).catch((error) => {
-    if (error) { console.log(error.response.body) }
+    if (error) {
+      console.log(`=> kaskus.js: ${error.response.body.description}`)
+    }
     bot.sendMessage(msg.chat.id, forum + '\n' + kasthread, threadParams)
   })
 }
 
 function getKaskus (msg, forumId) {
+  if ((forumId !== 'hotthread') && !kaskusForums[forumId]) {
+    bot.reply(msg, 'Invalid Forum specified. If you followed a valid link, please notify <a href="http://cs.kaskus.co.id/">us</a>.')
+    return
+  }
+
   let url = kaskusUrl + '/forum/' + forumId
   let model = {
     forum: 'title',
@@ -461,7 +468,7 @@ function getKaskus (msg, forumId) {
     if (err) { return console.error(err) }
 
     if (!data.tautan) {
-      bot.sendMessage(msg.chat.id, `Gagal membaca forum <a href="${kaskusUrl}/forum/${forumId}">${kaskusForums[forumId]}</a>.`, utils.optionalParams(msg))
+      bot.reply(msg, `Gagal membaca forum <a href="${kaskusUrl}/forum/${forumId}">${kaskusForums[forumId]}</a>.`)
       return
     }
 
@@ -501,7 +508,7 @@ function getKaskus (msg, forumId) {
         }
 
         kasForum = kasForum.join('\n')
-        bot.sendMessage(msg.chat.id, forum + kasForum, utils.optionalParams(msg))
+        bot.reply(msg, forum + kasForum)
         break
     }
   })
@@ -519,7 +526,7 @@ bot.onText(/^[/!#](k|kaskus) (.+)/, (msg, match) => {
     let fid
 
     if (query.length < 3) {
-      bot.sendMessage(msg.chat.id, 'Ketik nama forum Kaskusnya minimal 3 huruf.', utils.optionalParams(msg))
+      bot.reply(msg, 'Ketik nama forum Kaskusnya minimal 3 huruf.')
       return
     }
 
@@ -538,14 +545,14 @@ bot.onText(/^[/!#](k|kaskus) (.+)/, (msg, match) => {
           }
         }
       } catch (error) {
-        console.log('>> kaskus.js: The query is a regular expression.')
+        console.log('=> kaskus.js: The query is a regular expression.')
         return
       }
     }
 
     switch (ids.length) {
       case 0:
-        bot.sendMessage(msg.chat.id, 'Invalid Forum specified.', utils.optionalParams(msg))
+        bot.reply(msg, 'Invalid Forum specified.')
         break
       case 1:
         getKaskus(msg, fid)
@@ -562,7 +569,7 @@ bot.onText(/^[/!#](k|kaskus) (.+)/, (msg, match) => {
             })
             break
           default:
-            bot.sendMessage(msg.chat.id, header + ids.join('\n'), utils.optionalParams(msg))
+            bot.reply(msg, header + ids.join('\n'))
             break
         }
     }
@@ -571,9 +578,9 @@ bot.onText(/^[/!#](k|kaskus) (.+)/, (msg, match) => {
 
 bot.on('callback_query', msg => {
   if (msg.data.match(/^kaskus_/)) {
-    getKaskus(msg.message, msg.data.slice(7))
+    getKaskus(msg.message, msg.data.substr(7))
   }
   if (msg.data.match(/^page_/)) {
-    viewThread(msg.message, msg.data.slice(5))
+    viewThread(msg.message, msg.data.substr(5))
   }
 })

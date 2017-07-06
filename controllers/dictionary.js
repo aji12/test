@@ -1,8 +1,8 @@
 'use strict'
 
-const axios = require('axios')
 const bot = require('../core/telegram')
 const config = require('../data/config.json')
+const request = require('request')
 const utils = require('../core/utils')
 
 function getDescription (msg, word, source, target) {
@@ -16,23 +16,26 @@ function getDescription (msg, word, source, target) {
     url = 'https://od-api.oxforddictionaries.com/api/v1/entries/' + 'en/' + input
   }
 
-  axios.get(url, {
+  request({
+    uri: url,
     headers: {
       'app_id': config.oxford.ID,
       'app_key': config.oxford.KEY
     }
-  }).then(response => {
-    console.log(response)
-    if (response.status !== 200) {
-      let message = response.statusText
-      message = (response.status !== 404) ? `${lang.dictionary.dlg[0]} "${word}"` : message
-      message = (response.status !== 500) ? `${lang.dictionary.dlg[1]}` : message
-
-      bot.sendMessage(msg.chat.id, `<code>Error ${response.status}: ${message}</code>`, utils.optionalParams(msg))
+  }, (error, response, body) => {
+    if (error) {
+      bot.reply(msg, lang.common.connection)
       return
     }
-    const title = utils.escapeHtml(response.data.results[0].word)
-    let results = response.data.results[0].lexicalEntries
+    if (response.statusCode !== 200) {
+      const err = response.body.match(/[<]p[>](.*?)[<][/]p[>]/)[1]
+      bot.reply(msg, `Error <code>${response.statusCode}</code>:\n${err}`)
+      return
+    }
+
+    const oxdat = JSON.parse(body)
+    const title = utils.escapeHtml(oxdat.results[0].word)
+    let results = oxdat.results[0].lexicalEntries
     let oxford = []
     const max = (results.length > 4) ? 4 : results.length
 
@@ -52,7 +55,7 @@ function getDescription (msg, word, source, target) {
         oxford.push(`➜ ${lang.dictionary.dlg[2]} <a href="https://en.oxforddictionaries.com/definition/${derivative}">${derivative}</a>`)
       } else {
         for (let i = 0; i < max; i++) {
-          let sense = response.data.results[0].lexicalEntries[i].entries[0].senses[0]
+          let sense = oxdat.results[0].lexicalEntries[i].entries[0].senses[0]
           if (sense.definitions) {
             oxford.push('• ' + sense.definitions[0])
           } else {
@@ -63,10 +66,7 @@ function getDescription (msg, word, source, target) {
       oxford = oxford.join('\n')
     }
     oxford = (results.length === 1) ? oxford.replace(/^• /, '') : oxford
-    bot.sendMessage(msg.chat.id, '<b>' + title + '</b>\n' + oxford, utils.optionalParams(msg))
-  })
-  .catch(error => {
-    bot.sendMessage(msg.chat.id, `<code>${error}</code>`, utils.optionalParams(msg))
+    bot.reply(msg, '<b>' + title + '</b>\n' + oxford)
   })
 }
 
@@ -74,7 +74,7 @@ bot.onText(/^[/!#](d|dict|dictionary) (.+)/, (msg, match) => {
   getDescription(msg, `${match[2]}`.toLowerCase())
 })
 
-bot.onText(/^[/!#](t|trans|translate) (en|es|ro|ms|id)-(en|es|ro|ms|id) (.+)/, (msg, match) => {
+bot.onText(/^[/!#](t|trans|translate) (\w\w)-(\w\w) (.+)/, (msg, match) => {
   // https://developer.oxforddictionaries.com/documentation/languages
   const source = `${match[2]}`
   const target = `${match[3]}`

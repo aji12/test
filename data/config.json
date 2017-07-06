@@ -1,4 +1,8 @@
 {
+  "apod": {
+    "comment": "http://api.nasa.gov",
+    "KEY": ""
+  },
   "mongo": {
     "comment": "MongoDB database. Openshift: OPENSHIFT_MONGODB_DB_URL. Mongolab: e.g 'mongodb://USERNAME:PASSWORD@ds027479.mongolab.com:27479/DATABASE_NAME'",
     "URI": "OPENSHIFT_MONGODB_DB_URL"
@@ -17,11 +21,11 @@
   },
   "sudo": {
     "comment": "Bot owner ID number. Is number and not quoted.",
-    "ID": 
+    "ID":
   },
   "log": {
     "comment": "The channel, group, or user to send error reports to. Is number and not quoted.",
-    "CHANNEL": 
+    "CHANNEL":
   },
   "bing": {
     "comment": "https://www.microsoft.com/cognitive-services/en-us/bing-web-search-api",
@@ -40,15 +44,18 @@
     "admin": [
       "banhammer",
       "globaladmin",
-      "grouproll",
+      "groups",
       "ingroup",
       "repost",
       "superuser"
     ],
     "user": [
+      "apod",
       "bing",
+      "currency",
       "dictionary",
       "get",
+      "groups",
       "hackernews",
       "help",
       "id",
@@ -57,12 +64,19 @@
       "kbbi",
       "maps",
       "math",
+      "ninegag",
       "patterns",
       "quran",
       "reddit",
       "repost",
       "salat",
-      "urbandictionary"
+      "share",
+      "time",
+      "urbandictionary",
+      "weather",
+      "wikipedia",
+      "xkcd",
+      "yify"
     ]
   }
 }

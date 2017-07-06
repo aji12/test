@@ -7,19 +7,9 @@ const utils = require('../core/utils')
 let db = utils.readJSONFile(config.database.DB)
 let dumpState
 
-function varDump (msg) {
-  let jstring = JSON.stringify(msg, null, 2)
-  jstring = jstring.substring(0, 4080)
-
-  bot.sendMessage(msg.chat.id, `<pre>${jstring}</pre>`, { parse_mode: 'HTML' }).catch((error) => {
-    if (error) { console.log('>> jsondump.js: Failed to send HTML message, resend using Markdown') }
-    bot.sendMessage(msg.chat.id, '`' + jstring + '`', { parse_mode: 'Markdown' })
-  })
-}
-
 bot.onText(/^[/!#]dump$/, (msg) => {
   if (msg.reply_to_message) {
-    varDump(msg.reply_to_message)
+    bot.sendMonospace(msg.chat.id, msg.reply_to_message, 2)
   } else {
     if (msg.chat.type === 'private') {
       const jdlang = utils.getUserLang(msg)
@@ -44,13 +34,13 @@ bot.onText(/^[/!#]dump$/, (msg) => {
         dumpState = 'on'
         jdmessage = `${jdlang.jsondump.dlg[1]}`
       }
-      bot.sendMessage(msg.chat.id, jdmessage, utils.optionalParams(msg))
+      bot.reply(msg, jdmessage)
     }
   }
 })
 
 bot.on('message', (msg) => {
   if ((msg.chat.type === 'private') && (dumpState === 'on')) {
-    varDump(msg)
+    bot.sendMonospace(msg.chat.id, msg, 2)
   }
 })

@@ -38,7 +38,7 @@ bot.onText(/^[/!#](.+)$/, (msg, match) => {
               const lang = utils.getUserLang(msg)
 
               bot.sendDocument(config.log.CHANNEL, `banlist.txt`, {
-                caption: `${lang.info.dlg[0]} ${moment().format('YYYY-MM-DD HH.mm.ss')}`
+                caption: `${lang.info.dlg[0]} ${moment().format('LLLL')}`
               })
             })
           })
@@ -63,7 +63,7 @@ bot.onText(/^[/!#](.+)$/, (msg, match) => {
         let fixed = arr.join('\n')
         const lang = utils.getUserLang(msg)
 
-        bot.sendMessage(msg.chat.id, `<b>${lang.info.dlg[1]}</b>\n${fixed}`, utils.optionalParams(msg))
+        bot.reply(msg, `<b>${lang.info.dlg[1]}</b>\n${fixed}`)
       })
       break
   }

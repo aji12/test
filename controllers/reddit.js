@@ -1,10 +1,10 @@
 'use strict'
 
-const axios = require('axios')
 const bot = require('../core/telegram')
+const request = require('request')
 const utils = require('../core/utils')
 
-bot.onText(/^[/!#](reddit|r) (.+)/, (msg, match) => {
+bot.onText(/^[/!#](r|reddit) (.+)/, (msg, match) => {
   const lang = utils.getUserLang(msg)
   // Returns 8 results if in private, and 4 if in groups
   const limit = (msg.chat.type === 'private') ? 8 : 4
@@ -21,34 +21,35 @@ bot.onText(/^[/!#](reddit|r) (.+)/, (msg, match) => {
     url = `https://www.reddit.com/r/${input}/.json?limit=${limit}`
   }
 
-  axios.get(url)
-    .then(response => {
-      if (response.status !== 200) {
-        bot.sendMessage(msg.chat.id, `<code>Error ${response.status}: ${response.statusText}</code>`, utils.optionalParams(msg))
+  request(url, (error, response, body) => {
+    if (error) {
+      bot.reply(msg, `API query failure: <code>${error.message}</code>`)
+      return
+    }
+    if (response.statusCode !== 200) {
+      bot.reply(msg, `<code>${response.statusMessage}</code>`)
+      return
+    }
+
+    const jeddit = JSON.parse(body)
+    const reddit = jeddit.data.children
+    let sub = []
+
+    if (reddit.length === 0) {
+      if (body.data.facets) {
+        bot.reply(msg, `${lang.reddit.dlg[1]}`)
+        return
+      } else {
+        bot.reply(msg, `${lang.reddit.dlg[2]}`)
         return
       }
+    }
+    for (let i = 0; i < reddit.length; i++) {
+      sub.push('• <a href="https://redd.it/' + reddit[i].data.id + '">' + utils.escapeHtml(reddit[i].data.title) + '</a>')
+    }
 
-      const reddit = response.data.data.children
-      let sub = []
+    let subreddit = sub.join('\n')
 
-      if (reddit.length === 0) {
-        if (response.data.data.facets) {
-          bot.sendMessage(msg.chat.id, `${lang.reddit.dlg[1]}`, utils.optionalParams(msg))
-          return
-        } else {
-          bot.sendMessage(msg.chat.id, `${lang.reddit.dlg[2]}`, utils.optionalParams(msg))
-          return
-        }
-      }
-      for (let i = 0; i < reddit.length; i++) {
-        sub.push('• <a href="https://redd.it/' + reddit[i].data.id + '">' + utils.escapeHtml(reddit[i].data.title) + '</a>')
-      }
-
-      let subreddit = sub.join('\n')
-
-      bot.sendMessage(msg.chat.id, `${title}\n${subreddit}`, utils.optionalParams(msg))
-    })
-    .catch(error => {
-      bot.sendMessage(msg.chat.id, `<code>${error}</code>`, utils.optionalParams(msg))
-    })
+    bot.reply(msg, `${title}\n${subreddit}`)
+  })
 })

@@ -6,7 +6,7 @@ const Mod = require('../models/modsmodel')
 const moment = require('moment')
 const tgresolve = require('tg-resolve')
 const utils = require('../core/utils')
-let time = `${moment().format('YYYY-MM-DD HH:mm:ss')}`
+let time = `${moment().format('LLLL')}`
 
 bot.onText(/^[/!#](.+)$/, (msg, match) => {
   const lang = utils.getUserLang(msg)
@@ -18,8 +18,8 @@ bot.onText(/^[/!#](.+)$/, (msg, match) => {
       }
       break
     case 'promote':
-      if (!msg) { return console.log('>> admin.js: Is it a bot?') }
-      if (!msg.reply_to_message) { return console.log('>> admin.js: Not a reply') }
+      if (!msg) { return console.log('=> admin.js: Is it a bot?') }
+      if (!msg.reply_to_message) { return console.log('=> admin.js: Not a reply') }
       if (msg.from.id === config.sudo.ID) {
         let newMod = new Mod({
           userid: msg.reply_to_message.from.id,
@@ -29,16 +29,16 @@ bot.onText(/^[/!#](.+)$/, (msg, match) => {
           let user = utils.buildUserName(msg.reply_to_message.from)
 
           if (err && err.code === 11000) {
-            bot.sendMessage(msg.chat.id, `${user} ${lang.admin.dlg[0]}.`, utils.optionalParams(msg))
+            bot.reply(msg, `${user} ${lang.admin.dlg[0]}.`)
           } else {
-            bot.sendMessage(msg.chat.id, `${user} ${lang.admin.dlg[1]}.`, utils.optionalParams(msg))
-            bot.sendMessage(config.log.CHANNEL, `${user} ${lang.admin.dlg[1]}.\n${time}`, utils.optionalParams(msg))
+            bot.reply(msg, `${user} ${lang.admin.dlg[1]}.`)
+            bot.sendMonospace(config.log.CHANNEL, `${user} ${lang.admin.dlg[1]}.\n${time}`)
           }
         })
       }
       break
     case 'demote':
-      if (!msg.reply_to_message) { return console.log('>> admin.js: Not a reply') }
+      if (!msg.reply_to_message) { return console.log('=> admin.js: Not a reply') }
       if (msg.from.id === config.sudo.ID) {
         Mod.remove({
           userid: msg.reply_to_message.from.id
@@ -48,8 +48,8 @@ bot.onText(/^[/!#](.+)$/, (msg, match) => {
 
         let user = utils.buildUserName(msg.reply_to_message.from)
 
-        bot.sendMessage(msg.chat.id, `${user} ${lang.admin.dlg[2]}.`, utils.optionalParams(msg))
-        bot.sendMessage(config.log.CHANNEL, `${user} ${lang.admin.dlg[2]}.\n${time}`, utils.optionalParams(msg))
+        bot.reply(msg, `${user} ${lang.admin.dlg[2]}.`)
+        bot.sendMonospace(config.log.CHANNEL, `${user} ${lang.admin.dlg[2]}.\n${time}`)
       }
       break
   }
@@ -66,10 +66,10 @@ bot.onText(/^[/!#]promote (\d+) (.+)/, (msg, match) => {
       const user = utils.escapeHtml(match[2])
 
       if (err && err.code === 11000) {
-        bot.sendMessage(msg.chat.id, `<b>${user}</b> ${lang.admin.dlg[0]}.`, utils.optionalParams(msg))
+        bot.reply(msg, `<b>${user}</b> ${lang.admin.dlg[0]}.`)
       } else {
-        bot.sendMessage(msg.chat.id, `<b>${user}</b> ${lang.admin.dlg[1]}.`, utils.optionalParams(msg))
-        bot.sendMessage(config.log.CHANNEL, `<b>${user}</b> <code>([${match[1]}])</code> ${lang.admin.dlg[1]}.\n${time}`, utils.optionalParams(msg))
+        bot.reply(msg, `<b>${user}</b> ${lang.admin.dlg[1]}.`)
+        bot.sendMonospace(config.log.CHANNEL, `<b>${user}</b> <code>([${match[1]}])</code> ${lang.admin.dlg[1]}.\n${time}`)
       }
     })
   }
@@ -85,8 +85,8 @@ bot.onText(/^[/!#]demote (\d+) (.+)/, (msg, match) => {
     }, () => {
       // Demote A Global Admin
     })
-    bot.sendMessage(msg.chat.id, `<b>${user}</b> ${lang.admin.dlg[2]}.`, utils.optionalParams(msg))
-    bot.sendMessage(config.log.CHANNEL, `<b>${user}</b> <code>([${match[1]}])</code> ${lang.admin.dlg[2]}.\n${time}`, utils.optionalParams(msg))
+    bot.reply(msg, `<b>${user}</b> ${lang.admin.dlg[2]}.`)
+    bot.sendMonospace(config.log.CHANNEL, `<b>${user}</b> <code>([${match[1]}])</code> ${lang.admin.dlg[2]}.\n${time}`)
   }
 })
 
@@ -103,10 +103,10 @@ bot.onText(/^[/!#]promote (@\w+) (.+)/, (msg, match) => {
         const user = utils.buildUserName(result)
 
         if (err && err.code === 11000) {
-          bot.sendMessage(msg.chat.id, `${user} ${lang.admin.dlg[0]}.`, utils.optionalParams(msg))
+          bot.reply(msg, `${user} ${lang.admin.dlg[0]}.`)
         } else {
-          bot.sendMessage(msg.chat.id, `${user} ${lang.admin.dlg[1]}.`, utils.optionalParams(msg))
-          bot.sendMessage(config.log.CHANNEL, `${user} ${lang.admin.dlg[1]}.\n${time}`, utils.optionalParams(msg))
+          bot.reply(msg, `${user} ${lang.admin.dlg[1]}.`)
+          bot.sendMonospace(config.log.CHANNEL, `${user} ${lang.admin.dlg[1]}.\n${time}`)
         }
       })
     })
@@ -125,8 +125,8 @@ bot.onText(/^[/!#]demote (@\w+) (.+)/, (msg, match) => {
       const lang = utils.getUserLang(msg)
       const user = utils.buildUserName(result)
 
-      bot.sendMessage(msg.chat.id, `${user} ${lang.admin.dlg[2]}.`, utils.optionalParams(msg))
-      bot.sendMessage(config.log.CHANNEL, `${user} ${lang.admin.dlg[2]}.\n${time}`, utils.optionalParams(msg))
+      bot.reply(msg, `${user} ${lang.admin.dlg[2]}.`)
+      bot.sendMonospace(config.log.CHANNEL, `${user} ${lang.admin.dlg[2]}.\n${time}`)
     })
   }
 })

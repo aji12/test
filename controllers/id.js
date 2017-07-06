@@ -27,8 +27,8 @@ function getUserProperties (msg, lang, user) {
 
 bot.onText(/^[/!#]id/, msg => {
   const lang = utils.getUserLang(msg)
-  const cmd = msg.text.slice(-3)
-  const uname = msg.text.slice(4)
+  const cmd = msg.text.substr(0, 3)
+  const uname = msg.text.substr(4)
   let user = msg.from
 
   if (msg.reply_to_message) user = msg.reply_to_message.from
@@ -36,8 +36,7 @@ bot.onText(/^[/!#]id/, msg => {
   if (uname.match(/@\w+/)) {
     tgresolve(config.bot.TOKEN, uname, (error, result) => {
       if (error) {
-        console.log(error)
-        bot.sendMessage(msg.chat.id, `${lang.id.dlg[4]}`, utils.optionalParams(msg))
+        bot.reply(msg, `${lang.id.dlg[4]}`)
       } else {
         if (result.title) result.first_name = result.title
         getUserProperties(msg, lang, result)
@@ -46,8 +45,7 @@ bot.onText(/^[/!#]id/, msg => {
   } else if (msg.text === cmd) {
     getUserProperties(msg, lang, user)
   } else {
-    let help = `${lang.id.dlg[5]}`
-    bot.sendMessage(msg.chat.id, help, utils.optionalParams(msg))
+    bot.reply(msg, `${lang.id.dlg[5]}`)
   }
 })
 
@@ -63,13 +61,13 @@ bot.onText(/^[/!#]whoami$/, msg => {
       bot.getMe().then(me => {
         name += `, ${lang.id.dlg[6]} <b>${utils.escapeHtml(me.first_name)}</b> (@${me.username}) [<code>${me.id}</code>]`
 
-        bot.sendMessage(msg.chat.id, `${lang.id.dlg[7]} ${name}.`, {parse_mode: 'HTML'})
+        bot.reply(msg, `${lang.id.dlg[7]} ${name}.`)
       })
       break
     default:
       name += `${chat} [<code>${msg.chat.id}</code>]`
 
-      bot.sendMessage(msg.chat.id, `${lang.id.dlg[7]} ${name}.`, utils.optionalParams(msg))
+      bot.reply(msg, `${lang.id.dlg[7]} ${name}.`)
       break
   }
 })

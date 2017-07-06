@@ -2,7 +2,6 @@
 
 const bot = require('../core/telegram')
 const utils = require('../core/utils')
-const html = {parse_mode: 'HTML'}
 
 bot.onText(/^[/!#](.+)$/, (msg, match) => {
   if (msg.chat.type === 'private') { return }
@@ -19,28 +18,28 @@ bot.onText(/^[/!#](.+)$/, (msg, match) => {
       case 'kick':
         if (kickerIsAdmin) {
           if (victimIsAdmin) {
-            bot.sendMessage(msg.chat.id, `${user} ${lang.ingroup.dlg[0]}`, html)
+            bot.reply(msg, `${user} ${lang.ingroup.dlg[0]}`)
           } else {
             bot.kickChatMember(msg.chat.id, msg.reply_to_message.from.id)
             bot.unbanChatMember(msg.chat.id, msg.reply_to_message.from.id)
-            bot.sendMessage(msg.chat.id, `${user} ${lang.ingroup.dlg[1]}`, html)
+            bot.reply(msg, `${user} ${lang.ingroup.dlg[1]}`)
           }
         }
         break
       case 'ban':
         if (kickerIsAdmin) {
           if (victimIsAdmin) {
-            bot.sendMessage(msg.chat.id, `${user} ${lang.ingroup.dlg[2]}`, html)
+            bot.reply(msg, `${user} ${lang.ingroup.dlg[2]}`)
           } else {
             bot.kickChatMember(msg.chat.id, msg.reply_to_message.from.id)
-            bot.sendMessage(msg.chat.id, `${user} ${lang.ingroup.dlg[3]}`, html)
+            bot.reply(msg, `${user} ${lang.ingroup.dlg[3]}`)
           }
         }
         break
       case 'unban':
         if (kickerIsAdmin) {
           bot.unbanChatMember(msg.chat.id, msg.reply_to_message.from.id)
-          bot.sendMessage(msg.chat.id, `${user} ${lang.ingroup.dlg[4]}`, html)
+          bot.reply(msg, `${user} ${lang.ingroup.dlg[4]}`)
         }
         break
     }
@@ -51,6 +50,6 @@ bot.onText(/^[/!#]admins$/, msg => {
   bot.getChatAdministrators(msg.chat.id).then(admins => {
     let chatAdmins = admins.map(admin => `• ${utils.buildUserName(admin.user)}`).join('\n')
 
-    bot.sendMessage(msg.chat.id, `<b>Administrators</b>:\n${chatAdmins}`, html)
+    bot.reply(msg, `<b>Administrators</b>:\n${chatAdmins}`)
   })
 })

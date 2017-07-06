@@ -1,21 +1,16 @@
 'use strict'
 
-const axios = require('axios')
 const bot = require('../core/telegram')
-const utils = require('../core/utils')
+const request = require('request')
 
-bot.onText(/^[/!#]calc (.+)/, (msg, match) => {
-  const url = 'http://api.mathjs.org/v1/?expr=' + encodeURIComponent(`${match[1]}`)
+bot.onText(/^[/!#](calc|math) (.+)/, (msg, match) => {
+  const url = 'http://api.mathjs.org/v1/?expr=' + encodeURIComponent(`${match[2]}`)
 
-  axios.get(url)
-    .then(response => {
-      if (response.status !== 200) {
-        bot.sendMessage(msg.chat.id, `<code>Error ${response.status}: ${response.statusText}</code>`, utils.optionalParams(msg))
-        return
-      }
-      bot.sendMessage(msg.chat.id, `<code>${response.data}</code>`, utils.optionalParams(msg))
-    })
-    .catch(error => {
-      bot.sendMessage(msg.chat.id, `<code>${error}</code>`, utils.optionalParams(msg))
-    })
+  request(url, (error, response, body) => {
+    if (error) {
+      bot.reply(msg, error)
+    } else {
+      bot.reply(msg, `<code>${body}</code>`)
+    }
+  })
 })

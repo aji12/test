@@ -7,13 +7,12 @@ const cfg = 'data/config.json'
 let config = utils.readJSONFile(cfg)
 let db = utils.readJSONFile(config.database.DB)
 
-function buildKbdPage (lang, ptype) {
+// Build menus keyboard
+function buildKbdPage (pluginType) {
   let man, plugins, usr
-  let manpage = []
-  let kbd = []
-  let size = 3
 
-  if (ptype === 'user') {
+  // There are two types of plugins for; (1) administrator, (2) regular user
+  if (pluginType === 'user') {
     man = 'manpage'
     plugins = config.plugins.user
     usr = 'usr'
@@ -22,41 +21,62 @@ function buildKbdPage (lang, ptype) {
     plugins = config.plugins.admin
     usr = 'adm'
   }
-  for (let i = 0; i < plugins.length; i += size) {
-    let row = plugins.slice(i, i + size)
-    let button = []
-    let num = Math.floor(i / 8)
-    for (let b = 0; b < row.length; b++) {
-      button.push({
-        text: lang[`${row[b]}`].btn,
-        callback_data: `cmd_${usr}_${num}_${row[b]}`
-      })
+
+  config.plugins[usr] = { en: '', id: '' }
+  const languageCode = ['en', 'id']
+
+  languageCode.forEach((lc) => {
+    let kbd = []
+    let lang = utils.locale[lc]
+    let manpage = []
+    let size = 3
+
+    // Slice plugins array into 3 columns arrays
+    for (let i = 0; i < plugins.length; i += size) {
+      let row = plugins.slice(i, i + size)
+      let button = []
+      let num = Math.floor(i / 8)
+
+      for (let b = 0; b < row.length; b++) {
+        button.push({
+          text: lang[`${row[b]}`].btn,
+          callback_data: `cmd_${usr}_${num}_${row[b]}`
+        })
+      }
+      kbd.push(button)
     }
-    kbd.push(button)
-  }
-  for (let b = 0; b < kbd.length; b += 3) {
-    manpage.push(kbd.slice(b, b + 3))
-  }
-  for (let p = 0; p < manpage.length; p++) {
-    let mainmenuBtn = [{text: `${lang.mainmenu.btn}`, callback_data: 'mainMenu_'}]
-    let prev = p - 1
-    prev = (prev < 0) ? 'mainMenu_' : `${man}_${prev}`
-    let next = p + 1
-    if (next === manpage.length) {
-      mainmenuBtn.unshift({
-        text: `${lang.prev.btn}`,
-        callback_data: prev
-      })
-    } else {
-      mainmenuBtn.push({
-        text: `${lang.next.btn}`,
-        callback_data: `${man}_${next}`
-      })
+    // Slice kbd array into 3 columns x 3 rows arrays pages)
+    for (let b = 0; b < kbd.length; b += 3) {
+      manpage.push(kbd.slice(b, b + 3))
     }
-    manpage[p].push(mainmenuBtn)
-  }
-  config.plugins[usr] = JSON.stringify(manpage)
-  utils.saveToFile(cfg, config, true)
+    // Add navigation button to each pages
+    for (let p = 0; p < manpage.length; p++) {
+      let mainmenuBtn = [{
+        text: `${lang.mainmenu.btn}`,
+        callback_data: 'mainMenu_'
+      }]
+      let prev = p - 1
+      prev = (prev < 0) ? 'mainMenu_' : `${man}_${prev}`
+      let next = p + 1
+      // After first page
+      if (next > 1) {
+        mainmenuBtn.unshift({
+          text: `${lang.dialog.prev}`,
+          callback_data: prev
+        })
+      }
+      // Before last page
+      if (next < manpage.length) {
+        mainmenuBtn.push({
+          text: `${lang.dialog.next}`,
+          callback_data: `${man}_${next}`
+        })
+      }
+      manpage[p].push(mainmenuBtn)
+    }
+    config.plugins[usr][lc] = JSON.stringify(manpage)
+    utils.saveToFile(cfg, config, true)
+  })
 }
 
 // Language settings
@@ -78,104 +98,150 @@ bot.onText(/^[/!#]start/, msg => {
 })
 
 bot.on('callback_query', msg => {
-  let lang = utils.getUserLang(msg)
-  let params = utils.optionalParams(msg.message)
-  let navi = [{text: `${lang.mainmenu.btn}`, callback_data: 'mainMenu_'}]
-  params.chat_id = msg.message.chat.id
-  params.message_id = msg.message.message_id
-
   let command = msg.data.match(/^.+?_/)
+  let lang = utils.getUserLang(msg)
+  let navi = [{
+    text: `${lang.mainmenu.btn}`,
+    callback_data: 'mainMenu_'
+  }]
+  let params = {
+    chat_id: msg.message.chat.id,
+    disable_web_page_preview: 'true',
+    message_id: msg.message.message_id,
+    parse_mode: 'HTML'
+  }
+  let text
+
   switch (command[0]) {
     case 'admmanpage_':
-      if (!config.plugins.adm) { buildKbdPage(lang, 'admin') }
-      const admKbd = JSON.parse(config.plugins.adm)
-      const admCmdNum = msg.data.slice(11)
-      params.reply_markup = { inline_keyboard: admKbd[admCmdNum] }
-      bot.editMessageText(`${lang.admin.info}`, params).catch((error) => console.log(error.response.body))
+      if (!config.plugins.adm) { buildKbdPage('admin') }
+      const admKbd = JSON.parse(config.plugins.adm[lang.code])
+      const admCmdNum = msg.data.substr(11)
+      params.reply_markup = {
+        inline_keyboard: admKbd[admCmdNum]
+      }
+      bot.editMessageText(`${lang.admin.info}`, params).catch((error) => {
+        console.log(`=> menu.js: ${error.response.body.description}`)
+      })
       break
     case 'cmd_':
-      const plug = msg.data.slice(10)
+      const plug = msg.data.substr(10)
       let type = msg.data.substr(4, 3)
       type = (type === 'usr') ? 'manpage' : 'admmanpage'
       navi.unshift({
-        text: `${lang.back.btn}`,
+        text: `${lang.dialog.back}`,
         callback_data: `${type}_${msg.data.charAt(8)}`
       })
-      params.reply_markup = { inline_keyboard: [navi] }
-      bot.editMessageText(`${lang[plug].info}`, params).catch((error) => console.log(error.response.body))
+      params.reply_markup = {
+        inline_keyboard: [navi]
+      }
+      bot.editMessageText(`${lang[plug].info}`, params).catch((error) => {
+        console.log(`=> menu.js: ${error.response.body.description}`)
+      })
       break
     case 'links_':
       params.reply_markup = {
         inline_keyboard: [[{
-          text: `${lang.source.btn}`,
+          text: `${lang.dialog.source}`,
           url: 'https://github.com/rizaumami/TGramIndoBot'
         }, {
           text: 'TGramIndo',
           url: 'https://t.me/tgramindo'
         }], [{
-          text: `${lang.grouproll.btn}`,
-          callback_data: 'lnk_grouproll'
+          text: `${lang.groups.btn}`,
+          callback_data: 'lnk_groups'
         }, {
           text: `${lang.about.btn}`,
           callback_data: 'lnk_about'
         }], [{
-          text: `${lang.back.btn}`,
+          text: `${lang.dialog.back}`,
           callback_data: 'mainMenu_'
         }]]
       }
-      bot.editMessageText(`${lang.links.info}`, params).catch((error) => console.log(error.response.body))
+      bot.editMessageText(`${lang.links.info}`, params).catch((error) => {
+        console.log(`=> menu.js: ${error.response.body.description}`)
+      })
       break
     case 'lnk_':
-      const lnk = msg.data.slice(4)
+      const lnk = msg.data.substr(4)
       navi.unshift({
-        text: `${lang.back.btn}`,
+        text: `${lang.dialog.back}`,
         callback_data: 'links_'
       })
-      params.reply_markup = { inline_keyboard: [navi] }
+      params.reply_markup = {
+        inline_keyboard: [navi]
+      }
 
-      if (lnk === 'grouproll') {
-        try {
-          db = utils.readJSONFile(config.database.DB)
-          bot.editMessageText(db.grouproll, params).catch((error) => console.log(error.response.body))
-        } catch (error) {
-          bot.editMessageText(`${lang.menu.dlg[0]}`, params).catch((error) => console.log(error.response.body))
+      if (lnk === 'groups') {
+        config = utils.readJSONFile(cfg)
+
+        if (config.groups) {
+          bot.editMessageText(config.groups, params).catch((error) => {
+            console.log(`=> menu.js: ${error.response.body.description}`)
+          })
+        } else {
+          bot.editMessageText(`${lang.groups.dlg[0]}`, params).catch((error) => {
+            console.log(`=> menu.js: ${error.response.body.description}`)
+          })
         }
       } else {
-        bot.editMessageText(`${lang[lnk].info}`, params).catch((error) => console.log(error.response.body))
+        bot.editMessageText(`${lang[lnk].info}`, params).catch((error) => {
+          console.log(`=> menu.js: ${error.response.body.description}`)
+        })
       }
       break
     case 'manpage_':
-      if (!config.plugins.usr) { buildKbdPage(lang, 'user') }
-      const usrKbd = JSON.parse(config.plugins.usr)
-      const usrCmdNum = msg.data.slice(8)
-      params.reply_markup = { inline_keyboard: usrKbd[usrCmdNum] }
-      bot.editMessageText(`${lang.cmds.info}`, params).catch((error) => console.log(error.response.body))
+      if (!config.plugins.usr) { buildKbdPage('user') }
+      const usrKbd = JSON.parse(config.plugins.usr[lang.code])
+      const usrCmdNum = msg.data.substr(8)
+      params.reply_markup = {
+        inline_keyboard: usrKbd[usrCmdNum]
+      }
+      bot.editMessageText(`${lang.cmds.info}`, params).catch((error) => {
+        console.log(`=> menu.js: ${error.response.body.description}`)
+      })
       break
     case 'mainMenu_':
       const initKbd = utils.initialKeyboard(lang)
-      params.reply_markup = { inline_keyboard: initKbd }
-      bot.editMessageText(`<b>Hai ${utils.escapeHtml(msg.from.first_name)},</b>\n\n${lang.start.info}`, params).catch((error) => console.log(error.response.body))
+      text = `<b>Hai ${utils.escapeHtml(msg.from.first_name)},</b>\n\n${lang.start.info}`
+      params.reply_markup = {
+        inline_keyboard: initKbd
+      }
+      bot.editMessageText(text, params).catch((error) => {
+        console.log(`=> menu.js: ${error.response.body.description}`)
+      })
       break
     case 'setlang_':
-      const setlangCode = msg.data.slice(8)
+      const setlangCode = msg.data.substr(8)
       lang = utils.locale[`${setlangCode}`]
       const setlangParams = params
       navi.unshift({
-        text: `${lang.back.btn}`,
+        text: `${lang.dialog.back}`,
         callback_data: 'settings_'
       })
-      setlangParams.reply_markup = { inline_keyboard: [navi] }
+      setlangParams.reply_markup = {
+        inline_keyboard: [navi]
+      }
       db[msg.from.id] = {lang: setlangCode}
       utils.saveToFile(config.database.DB, db)
 
       let choosenLang = ''
       if (setlangCode === 'en') choosenLang = '🇬🇧 English'
       if (setlangCode === 'id') choosenLang = '🇮🇩 Bahasa Indonesia'
-      bot.editMessageText(`${lang.settedlang.info} <b>${choosenLang}</b>!`, setlangParams).catch((error) => console.log(error.response.body))
+
+      text = `${lang.settedlang.info} <b>${choosenLang}</b>!`
+      bot.editMessageText(text, setlangParams).catch((error) => {
+        console.log(`=> menu.js: ${error.response.body.description}`)
+      })
       break
     case 'settings_':
-      params.reply_markup = { inline_keyboard: langKeyboard }
-      bot.editMessageText(`<b>${lang.selectlang.btn}:</b>`, params).catch((error) => console.log(error.response.body))
+      text = `<b>${lang.selectlang.btn}:</b>`
+      params.reply_markup = {
+        inline_keyboard: langKeyboard
+      }
+      bot.editMessageText(text, params).catch((error) => {
+        console.log(`=> menu.js: ${error.response.body.description}`)
+      })
       break
   }
 })
